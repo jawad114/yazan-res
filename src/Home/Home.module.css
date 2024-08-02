@@ -1,0 +1,170 @@
+/* Reset styles */
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
+  @apply m-0 p-0;
+}
+
+/* Container styles */
+.marketplace-container {
+  @apply flex justify-center max-w-screen-sm mx-auto;
+}
+
+/* Filter list styles */
+.filter-list {
+  @apply w-40 max-w-[120px] p-3 bg-white shadow-md;
+}
+
+.filter-list h2 {
+  @apply mb-2 text-base text-gray-700;
+}
+
+.filter-list ul {
+  @apply list-none p-0;
+}
+
+.filter-list li {
+  @apply cursor-pointer p-2 mb-2 rounded transition-colors;
+}
+
+.filter-list li:hover {
+  @apply bg-gray-100;
+}
+
+.filter-list li.selected {
+  @apply bg-blue-500 text-white p-2 w-[100px];
+}
+
+/* Main content styles */
+.main-content {
+  @apply box-border p-3 mx-auto;
+}
+
+/* Header styles */
+.header {
+  @apply relative;
+}
+
+
+.header-image {
+  @apply w-full mt-24 rounded shadow-md;
+}
+
+/* Selected item details styles */
+.selected-item-details {
+  @apply flex flex-wrap gap-2 justify-between relative;
+}
+
+/* Item row styles */
+.selected-item-row,
+.market-item-row {
+  @apply flex flex-wrap justify-between;
+}
+
+/* Item styles */
+.selected-item,
+.market-item {
+  @apply relative overflow-hidden rounded shadow-md transition-transform bg-white w-[48%];
+}
+
+.selected-item:nth-child(odd),
+.market-item:nth-child(odd) {
+  @apply mr-2;
+}
+
+.selected-item:nth-child(even),
+.market-item:nth-child(even) {
+  @apply ml-2;
+}
+
+.selected-item:hover,
+.market-item:hover {
+  @apply scale-105;
+}
+
+.selected-item-image,
+.market-item-image {
+  @apply w-full rounded-tl rounded-tr;
+}
+
+/* Details styles */
+.details,
+.market-details {
+  @apply w-full p-3 box-border rounded-b;
+}
+
+.details h3,
+.market-details h3 {
+  @apply text-base mt-2 mb-1 text-gray-800;
+}
+
+.details p,
+.market-details p {
+  @apply text-blue-500 text-sm mb-3;
+}
+
+/* Order button styles */
+.order-btn,
+.market-order-btn {
+  @apply bg-blue-500 text-white border-none p-2 rounded text-sm transition-colors w-full;
+}
+
+.order-btn:hover,
+.market-order-btn:hover {
+  @apply bg-blue-700;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .filter-list {
+    @apply w-full max-w-full mb-4;
+  }
+
+  .selected-item,
+  .market-item {
+    @apply w-full mb-4;
+  }
+
+  .selected-item:nth-child(odd),
+  .market-item:nth-child(odd) {
+    @apply mr-0 ml-0;
+  }
+
+  .selected-item:nth-child(even),
+  .market-item:nth-child(even) {
+    @apply ml-0 mr-0;
+  }
+}
+
+/* Other styles */
+.container {
+  @apply flex justify-center;
+}
+
+.loadingContainer {
+  @apply flex items-center justify-center mx-auto;
+}
+
+.containerr {
+  @apply grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 sm:grid-cols-2 gap-4 p-4;
+}
+
+.headerImage {
+  @apply w-full h-[10%] object-cover mb-4;
+}
+
+.Btn2 {
+  @apply bg-blue-500 text-white px-4 py-2 rounded font-bold text-base cursor-pointer;
+}
+
+.Btn2:hover {
+  @apply bg-blue-700;
+}
+
+.newCssClass {
+  /* Your styles for Btn2 when isOwner is true */
+}

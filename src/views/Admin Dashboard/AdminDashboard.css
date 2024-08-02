@@ -1,0 +1,143 @@
+/* AdminDashboard.css */
+
+/* Main container */
+.container {
+  /* margin: 5vh auto; */
+  /* padding: 2vw; */
+  width: 90vw;
+  max-width: 800px;
+  background-color: #f9f9f9;
+  /* border-radius: 10px; */
+  height: 100vh;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin-top: 2vh;
+  overflow: auto;
+}
+
+/* Form fields */
+.form-field {
+  width: 100%;
+}
+
+/* Add category button */
+.add-category-btn {
+  align-self: center;
+  padding: 0.5vh 1vw;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2vw;
+}
+
+.add-category-btn:hover {
+  background-color: #0056b3;
+}
+
+.add-extra-btn {
+  align-self: center;
+  padding: 0.5vh 1vw;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2vw;
+}
+
+.add-extra-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Add dish button */
+.add-dish-btn {
+  align-self: center;
+  padding: 0.5vh 1vw;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2vw;
+}
+
+.add-dish-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Submit button */
+.submit-btn {
+  align-self: center;
+  padding: 0.5vh 1vw;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2vw;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+/* Error message */
+.error-message {
+  color: #dc3545;
+  font-size: 1.2vw;
+  margin-top: 0.5vh;
+}
+
+/* Restaurant image preview */
+.restaurant-image-preview {
+  margin-top: 1vh;
+  display: flex;
+  justify-content: center;
+}
+
+.restaurant-image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Category container */
+.category-container {
+  margin-top: 1.5vh;
+}
+
+/* Dish container */
+.dish-container {
+  margin-top: 1vh;
+}
+
+.extras-container{
+  margin-top: 1vh;
+
+}
+
+/* Image preview */
+.image-preview {
+  margin-top: 1vh;
+  display: flex;
+  justify-content: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

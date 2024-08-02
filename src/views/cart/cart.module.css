@@ -1,0 +1,26 @@
+.card {
+    
+    width: 45%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+  }
+  .btn{
+    background-color: rgb(70, 79, 186);
+    color: white;
+    border: 1px solid #ccc;
+    padding: 1%;
+    margin-top: 1%;
+    font-weight: 900;
+    font-size: 20px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+  }
+  .btn:hover {
+    background-color: blue;
+    color: white;
+  }

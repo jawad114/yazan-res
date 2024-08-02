@@ -1,0 +1,182 @@
+/* Converted to Material Tailwind CSS */
+
+/* Existing CSS styles */
+.navbar-container {
+    @apply flex justify-between w-full items-center max-w-screen-lg mx-auto text-blue-500 mt-20;
+}
+
+body {
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
+    @apply m-0 p-0;
+}
+
+.navbar {
+    @apply bg-gradient-to-r from-blue-500 to-blue-200 py-2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.scrolling {
+    @apply bg-blue-700 shadow-md transform translate-y-0;
+}
+
+.logo {
+    @apply text-black bottom-4 font-bold no-underline items-center;
+}
+
+.logo img {
+    @apply w-32 h-12 mr-5;
+}
+
+.search-bar {
+    @apply flex items-center mt-10;
+}
+
+.search-bar input {
+    @apply p-2 mr-2 border border-white rounded w-full;
+}
+
+.user-actions {
+    @apply flex justify-end items-center absolute right-10 bottom-4 flex-row items-center mt-10;
+}
+
+.action-btn {
+    @apply bg-white w-[10vw] text-blue-500 font-bold px-3 py-2 ml-10 border-none rounded cursor-pointer text-sm;
+}
+
+.action-btn1 {
+    @apply mt-10 bg-gray-600 text-white px-3 py-2 ml-10 border-none rounded cursor-pointer text-xs;
+}
+
+.dropdown {
+    @apply bg-white text-blue-500 font-bold px-3 py-2 ml-10 rounded cursor-pointer text-sm;
+}
+
+.dropbtn {
+    @apply mt-0 bg-white px-3 py-2 border-none rounded cursor-pointer text-sm text-left;
+}
+
+.dropdown-content {
+    @apply hidden absolute bg-gray-200 shadow-md z-10 rounded text-sm py-2 px-3;
+
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dropdown-content button {
+    @apply block py-2 px-3 text-left;
+}
+
+.dropdown-content button:hover {
+    @apply bg-gray-300;
+}
+
+.dropdown:hover .dropdown-content {
+    @apply block;
+}
+
+/* Responsive styles */
+/* @media (max-width: 768px) {
+    .navbar-container {
+        @apply flex-col;
+    }
+
+    .search-bar {
+        @apply mt-10;
+    }
+
+    .user-actions {
+        @apply mt-10;
+    }
+
+    .navbar {
+        @apply py-2;
+    }
+} */
+
+#SearchBtn {
+    @apply mt-10 w-20 h-8 text-xs;
+}
+
+.action-btn {
+    @apply text-black no-underline ml-4 flex items-center relative mt-3;
+}
+
+.action-btn img {
+    @apply w-6 mr-2;
+}
+
+.cart-count {
+    @apply absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs px-2 py-1;
+}
+
+#Fav {
+    @apply bg-white text-black;
+}
+
+.action-btn1 {
+    @apply bg-blue-500;
+}
+
+#Logo2 {
+    @apply text-white text-sm ml-4;
+}
+
+.logo-container {
+    @apply flex flex-col absolute left-2 bottom-2
+}
+
+.action-btn:hover {
+    @apply bg-gray-600;
+}
+
+.action-btn.active {
+    @apply text-gray-300;
+}
+
+/* Navbar.css */
+/* Add your existing CSS styles here */
+
+/* Hide mobile view by default */
+.navbar.mobile-view {
+    display: none;
+}
+
+/* Show mobile view when max width is reached */
+@media (max-width: 768px) {
+    .navbar.desktop-view {
+        display: none;
+    }
+
+    .navbar.mobile-view {
+        @apply w-full;
+        display: block;
+    }
+}
+
+#SideTextNav {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: rgb(255, 255, 255);
+    background-color: rgb(18, 102, 155);
+    font-weight: bold;
+    /* Add this line to make the text bold */
+}
+
+.mobile-menu {
+    font-weight: bold;
+    /* Make the font bold */
+    width: 200px;
+    /* Adjust the width of the menu item */
+}

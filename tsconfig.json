@@ -1,0 +1,58 @@
+// {
+//   "compilerOptions": {
+//     "target": "es5",
+//     "lib": [
+//       "dom",
+//       "dom.iterable",
+//       "esnext"
+//     ],
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "esModuleInterop": true,
+//     "allowSyntheticDefaultImports": true,
+//     "strict": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "module": "esnext",
+//     "moduleResolution": "node",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "noEmit": true,
+//     "jsx": "react-jsx"
+//   },
+//   "include": [
+//     "src"
+//   ]
+// }
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react", // Specify JSX options
+    "skipDefaultLibCheck": true // Skip type checking of declaration files (declaration files are files ending in '.d.ts')
+  },
+  "include": [
+    "src",
+    "app.js",
+    "src/Backend/Components/Routes"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

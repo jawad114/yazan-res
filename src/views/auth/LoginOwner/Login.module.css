@@ -1,0 +1,81 @@
+/* Login.module.css */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #f0f0f0;
+  /* Add a background color */
+}
+
+.formContainer {
+  width: 400px;
+  /* Increase the width */
+  padding: 40px;
+  /* Increase the padding */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Add a shadow */
+  background-color: #ffffff;
+  /* Set a white background */
+}
+
+.formTitle {
+  margin-bottom: 30px;
+  /* Increase the margin */
+  text-align: center;
+  font-size: 24px;
+  /* Increase the font size */
+}
+
+.formError {
+  color: #ff0000;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.formField {
+  margin-bottom: 20px;
+}
+
+.inputField {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  /* Increase the font size */
+}
+
+.submitButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #1291c7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 18px;
+  /* Increase the font size */
+}
+
+.submitButton:hover {
+  background-color: #0a9647;
+}
+
+.requestCredentials {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.textBtn {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.textBtn:hover {
+  color: #0056b3;
+}

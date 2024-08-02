@@ -1,0 +1,54 @@
+.firstContainerHo {
+  display: flex;
+}
+
+.image-containerHo {
+  width: 40%;
+  margin-left: 6%;
+  margin-top: 1%;
+  border-radius: 20px;
+}
+
+.home-imgHo {
+  width: 90%;
+  height: auto;
+}
+
+.text-containerHo {
+  flex: 1;
+}
+
+.title1Ho {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: sans-serif;
+  margin-bottom: 5%;
+}
+
+.paragraph1Ho {
+  font-size: xx-large;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+
+.techHo {
+  background-color: #5e5e5e;
+  border-radius: 25px;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 15px 40px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.techHo:hover {
+  background-color: #444444;
+}
+
+.techHo:active {
+  transform: translateY(1px);
+}

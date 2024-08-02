@@ -1,0 +1,81 @@
+/* FavoritePage.css */
+
+.favorite-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 175px;
+    /* Keep this if you want a margin at the top */
+    background-color: #fff;
+}
+
+.favorite-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.favorite-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.favorite-location {
+    font-size: 16px;
+    color: #f71c1c;
+    margin-bottom: 20px;
+}
+
+/* Styles for the new elements */
+
+.favorite-list {
+    margin-top: 20px;
+}
+
+.favorite-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.favorite-card p {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.favorite-card button {
+    background-color: #f71c1c;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.favorite-button {
+    background-color: #f71c1c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.favorite-button.favorite-active {
+    background-color: #ccc;
+    /* Change the color for active state */
+}

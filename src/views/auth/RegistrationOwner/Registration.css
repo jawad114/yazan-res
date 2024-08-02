@@ -1,0 +1,66 @@
+.containerReg {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  margin-top: 400px;
+}
+
+.grid-containerReg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: 80%;
+  max-width: 960px;
+  gap: 30px;
+}
+
+.paperReg {
+  padding: 20px;
+  /* Erhöhe den Padding-Wert, um den Bereich des Papiers zu vergrößern */
+  border-radius: 10px;
+  margin-right: 40px;
+  margin-left: 0px;
+  width: 300px;
+  max-width: 100%;
+  /* Ändere die maximale Breite nach Bedarf */
+}
+
+.imgReg {
+  height: 350px;
+  width: auto;
+  margin-left: 100px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  resize: none;
+  height: 30px;
+  /* Ändere die Höhe der Eingabefelder */
+}
+
+.myButtonReg {
+  background-color: #5e5e5e;
+  border-radius: 25px;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 15px 40px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.myButtonReg:hover {
+  background-color: #444444;
+}
+
+.myButtonReg:active {
+  transform: translateY(1px);
+}

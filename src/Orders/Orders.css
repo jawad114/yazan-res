@@ -1,0 +1,112 @@
+.orders-header {
+    margin-top: 20vh;
+    margin-bottom: 4vh;
+}
+
+.orders-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-orders {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    /* Center the text horizontally */
+}
+
+.loading-spinner {
+    margin-top: 20vh;
+}
+
+.orders-list {
+    display: flex;
+    width: 100vw;
+    max-width: 40vw;
+    /* Limit the width of the orders list */
+    padding: 6vh;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    margin-top: 6vh;
+    /* Add margin from the heading */
+    height: 100vh;
+    /* Set container height to full viewport height */
+    overflow: auto;
+    /* Add vertical scroll if content exceeds viewport height */
+
+}
+
+.order-item {
+    margin-bottom: 6vh;
+}
+
+.order-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.order-info>div {
+    flex: 1 1 80vh;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.order-info h4 {
+    margin-bottom: 10px;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity span {
+    margin: 0 10px;
+}
+
+.quantity-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.quantity-icons button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.btn-global {
+    width: 200px;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-global:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+    .orders-list {
+        max-width: 100%;
+        /* Adjust the width for smaller screens */
+    }
+}

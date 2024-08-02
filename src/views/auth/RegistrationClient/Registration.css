@@ -1,0 +1,50 @@
+/* Styles for the registration form */
+.form-input {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.form-input input {
+    width: calc(100% - 20px);
+    /* Reduce the width by 20px to make room for padding */
+    padding: 8px;
+    /* Reduce the padding to make the fields smaller */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.form-input input:focus {
+    border-color: #007bff;
+}
+
+/* Styles for password visibility toggle icons */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* Styles for icon hover effect */
+.password-toggle:hover {
+    color: #007bff;
+}
+
+/* Styles for submit button */
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}

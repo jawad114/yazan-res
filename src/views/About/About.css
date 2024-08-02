@@ -1,0 +1,44 @@
+.containerAb {
+  max-width: 1000px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.boxAb {
+  margin-top: 0px;
+}
+
+.titleAb {
+  font-size: 35px;
+  margin-bottom: 3px;
+  margin-top: 10px;
+}
+
+.grid-containerAb {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.imgAb {
+  width: 400px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.text-sectionAb {
+  flex: 1;
+  text-align: left;
+  width: 600px;
+}
+
+.main-textAb {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}

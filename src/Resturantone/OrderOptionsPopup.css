@@ -1,0 +1,156 @@
+/* OrderOptionsPopup.css */
+
+.popup-overlay {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 120%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    width: 90%;
+    max-width: 30vw;
+    padding: 6px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-item-image {
+    width: 80%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.popup-item-details {
+    width: 97%;
+    margin: 0 auto;
+    /* Center the item details within the container */
+    flex-grow: 1;
+    max-height: 300px;
+    /* Set a maximum height for scrolling */
+    overflow-y: auto;
+}
+
+
+.popup-item-title {
+    font-size: 0.9rem;
+    color: #333;
+    text-align: center;
+    margin: 0 0 5px;
+}
+
+.popup-item-price {
+    font-size: 0.8rem;
+    color: #777;
+    margin: 0;
+}
+
+.popup-options label,
+.radio-options label {
+    display: flex;
+    align-items: center;
+    height: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 8px;
+    color: #555;
+}
+
+.popup-options input,
+.radio-options input {
+    margin-right: 4px;
+}
+
+.quantity-input,
+.comment-input {
+    margin-top: 2px;
+    margin-right: 0;
+}
+
+.quantity-input label,
+.comment-input label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.quantity-input input,
+.comment-input textarea {
+    width: 90%;
+    height: 18px;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.comment-input textarea {
+    resize: none;
+}
+
+.popup-confirm-btn {
+    padding: 6px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.popup-confirm-btn:hover {
+    background-color: #45a049;
+}
+
+.popup-overlay,
+.popup {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Media Query for smaller screens (phones) */
+@media (max-width: 600px) {
+    .popup {
+        max-width: 100%;
+        width: 90%;
+        height: 350px;
+        padding: 4px;
+    }
+}
+
+.quantity-arrows {
+    display: flex;
+    align-items: center;
+}
+
+.arrow {
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 0 4px;
+}

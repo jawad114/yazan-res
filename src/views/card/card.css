@@ -1,0 +1,55 @@
+/* Common styles */
+.card {
+  @apply w-full md:w-1/2 lg:w-1/3 xl:w-1/4 border border-gray-300 rounded-lg shadow-md p-4 m-2;
+}
+
+.productimage {
+  @apply w-full rounded-lg;
+}
+
+.productdetails {
+  @apply mt-4;
+}
+
+.productname {
+  @apply text-lg font-semibold mb-2;
+}
+
+.productprice {
+  @apply text-base text-gray-700;
+}
+
+.addtocartbtn {
+  @apply bg-blue-500 text-white border-none rounded-md px-4 py-2 text-base cursor-pointer;
+}
+
+.addtocartbtn:hover {
+  @apply bg-blue-700;
+}
+
+.cardcontainer {
+  @apply bg-white rounded-xl p-4 shadow-lg mb-6 mt-6;
+}
+
+.w50 {
+  @apply w-1/2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .card {
+    @apply w-full;
+  }
+
+  .productname {
+    @apply text-base font-semibold mb-1;
+  }
+
+  .productprice {
+    @apply text-sm;
+  }
+
+  .addtocartbtn {
+    @apply px-2 py-1 text-sm;
+  }
+}
