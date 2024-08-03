@@ -610,20 +610,26 @@ const CategoryDetails = () => {
           {products.map((product, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
               <ListItem
-                className="mt-5 mb-5 p-4 bg-light rounded-5 shadow-lg d-flex flex-column"
+                className="mt-5 mb-5 p-4 bg-light rounded-5  shadow-lg d-flex flex-column"
                 onClick={() => handleOpenModal(product)}
               >
                 <img width={100} className="d-block align-items-start" src={product.dishImage} />
                 <ListItemText
-                  primary={product.name}
+                   primary={
+                    <div className="text-center">
+                      {product.name}
+                    </div>
+                  }
                   secondary={
                     <>
-                      <Typography variant="body2" color="textPrimary">
+              <div className="flex flex-col items-center justify-center text-center">
+                  <Typography variant="body2" color="textPrimary">
                         {product.description}
                       </Typography>
                       <Typography variant="body2" color="textPrimary">
                         Price: {parseFloat(product.price).toFixed(2)} ₪
                       </Typography>
+                      </div>
                     </>
                   }
                 />
@@ -641,11 +647,13 @@ const CategoryDetails = () => {
         body={
           selectedProduct && (
             <>
-              <div className="flex flex-col items-start justify-center h-screen overflow-auto max-h-[70vh] ">
+              <div className="flex flex-col items-start justify-start h-screen overflow-auto max-h-[70vh] ">
+               <div className="flex items-center justify-center">
                 <img
-                  className="md:mt-[40vh] md:w-[20vw] items-center"
+                  className="md:w-[20vw] object-cover items-center"
                   src={selectedProduct.dishImage}
                 />
+                </div>
                 <ListItemText className="mt-5 mb-2 text-3xl">
                   {selectedProduct.name}
                 </ListItemText>
@@ -745,7 +753,7 @@ const CategoryDetails = () => {
                       </>
                       )}
                   {(isAdmin || isOwner) && (
-                    <div className="flex flex-row justify-between w-[25vw] mt-4">
+                    <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-0 w-[25vw] mt-4">
                       <Button
                         variant="outlined"
                         color="primary"
