@@ -9,6 +9,8 @@ import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
 import notificationSound from '../assets/notification.wav';
+import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 const Navbar: React.FC = () => {
@@ -163,9 +165,8 @@ const Navbar: React.FC = () => {
                     <div className='user-actions'>
                         {!isLoggedIn && (
                             <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>
-                                <Person /> Login As
-                            </button>
-                        )}
+                                <PersonIcon /> Login As
+                            </button>)}
                         <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
@@ -187,24 +188,22 @@ const Navbar: React.FC = () => {
 
                         {/* Conditionally render the button based on the logged-in restaurant name */}
                         {isOwner && (
-                            <Link to={`/owner/resName`} className="action-btn">
-                                <ListAlt /> Orders
-                            </Link>
+                            <Link to={`/owner/${'resName'}`} className="action-btn">
+                                <ListAlt />Orders                            </Link>
                         )}
                         {isAdmin && (
-                            <Link to={`/owner/resName`} className="action-btn">
-                                <ListAlt /> Orders
+                            <Link to={`/owner/${'resName'}`} className="action-btn">
+                                <ListAlt />Orders
                             </Link>
                         )}
 
                         {isOwner && (
                             <Link to={`/`} className="action-btn">
-                                <Settings /> Settings
-                            </Link>
+                                <SettingsIcon />Settings                            </Link>
                         )}
                         {isAdmin && (
                             <Link to={`/`} className="action-btn">
-                                <Settings /> Settings
+                                <SettingsIcon />Settings
                             </Link>
                         )}
                         {isClient && (
@@ -218,6 +217,7 @@ const Navbar: React.FC = () => {
 
                         {isLoggedIn && (
                             <>
+
                                 <Link to="/favorites" className='action-btn'>
                                     <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
                                         {favoriteUpdate ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder style={{ color: 'black' }} />}
@@ -227,22 +227,25 @@ const Navbar: React.FC = () => {
 
                                 {isLoggedIn && (isAdmin || isOwner) && (
                                     <Link to="/finance" className='action-btn'>
-                                        <div className={`cart-icon-container`}>
-                                            <Money /> Finance
+                                        <div className={`cart-icon-container}`}>
+                                            <Money />Finance
                                         </div>
                                     </Link>
                                 )}
                                 {isLoggedIn && isAdmin && (
                                     <Link to="/admin-dashboard" className='action-btn'>
-                                        <div className={`cart-icon-container`}>
+                                        <div className={`cart-icon-container}`}>
                                             <Dashboard className="w-6 h-6" />
                                             Dashboard
                                         </div>
                                     </Link>
                                 )}
+
+
                                 <button className='action-btn' onClick={handleLogout}>
                                     <ExitToApp style={{ marginRight: '0.5rem' }} /> Logout
                                 </button>
+
                             </>
                         )}
                     </div>
@@ -251,6 +254,7 @@ const Navbar: React.FC = () => {
 
             {/* Mobile View */}
             <nav className={`navbar mobile-view ${scrolling ? 'scrolling' : ''}`}>
+                {/* Mobile content */}
                 <div className='navbar-container'>
                     <Link to="/">
                         <div className='logo-container'>
@@ -266,12 +270,14 @@ const Navbar: React.FC = () => {
                     <div className='user-actions'>
                         {isLoggedIn && (
                             <div className='flex space-x-4'>
+
                                 <Link to="/favorites" className='action-btn'>
                                     <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
                                         {favoriteUpdate ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder style={{ color: 'black' }} />}
-                                        Favorite
                                     </div>
                                 </Link>
+
+
                                 <Link to="/cart" className='action-btn'>
                                     <div className="cart-icon-container">
                                         <img src={cartIcon} alt="Cart" className="cart-icon" />
@@ -280,59 +286,63 @@ const Navbar: React.FC = () => {
                                 </Link>
                             </div>
                         )}
-                        <IconButton onClick={toggleMenu}>
+                        <IconButton className="menu-icon" onClick={toggleMenu}>
                             <MenuIcon />
                         </IconButton>
-                    </div>
+                        <Drawer anchor="right" open={isMenuOpen} onClose={toggleMenu}>
+                            <h3 id='SideTextNav'>Layla</h3>
 
-                    <Drawer
-                        anchor="right"
-                        open={isMenuOpen}
-                        onClose={toggleMenu}
-                    >
-                        <div className="drawer-content">
-                            <Link to="/contact-us" onClick={toggleMenu}>
-                                <Phone /> Contact Us
-                            </Link>
-                            {!isLoggedIn && (
-                                <>
-                                    <MenuItem onClick={() => handleLoginRedirect('/login-client', 'isClient')}>Client</MenuItem>
-                                    <MenuItem onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>Res-Owner</MenuItem>
-                                    <MenuItem onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>Admin</MenuItem>
-                                </>
-                            )}
-                            {isOwner && (
-                                <Link to={`/owner/resName`} onClick={toggleMenu}>
-                                    <ListAlt /> Orders
-                                </Link>
-                            )}
-                            {isAdmin && (
-                                <Link to={`/owner/resName`} onClick={toggleMenu}>
-                                    <ListAlt /> Orders
-                                </Link>
-                            )}
-                            {isOwner && (
-                                <Link to={`/`} onClick={toggleMenu}>
-                                    <Settings /> Settings
-                                </Link>
-                            )}
-                            {isAdmin && (
-                                <Link to={`/`} onClick={toggleMenu}>
-                                    <Settings /> Settings
-                                </Link>
-                            )}
-                            {isAdmin && (
-                                <Link to="/admin-dashboard" onClick={toggleMenu}>
-                                    <Dashboard className="w-6 h-6" /> Dashboard
-                                </Link>
-                            )}
-                            {isLoggedIn && (
-                                <button onClick={handleLogout}>
-                                    <ExitToApp style={{ marginRight: '0.5rem' }} /> Logout
-                                </button>
-                            )}
-                        </div>
-                    </Drawer>
+
+                            <div className="mobile-menu mt-4 bg-white p-4">
+                                {!isLoggedIn && !isAdmin && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>
+                                        Admin
+                                    </MenuItem>
+                                )}
+                                {!isLoggedIn && !isClient && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => handleLoginRedirect('/login-client', 'isClient')}>
+                                        Client
+                                    </MenuItem>
+                                )}
+                                {!isLoggedIn && !isOwner && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>
+                                        Res-Owner
+                                    </MenuItem>
+                                )}
+                                {isLoggedIn && (isAdmin || isOwner) && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate('/finance')}>
+                                        Finance
+                                    </MenuItem>
+                                )}
+                                {isOwner && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate(`/owner/${'resName'}`)}>
+                                        Orders
+                                    </MenuItem>
+                                )}
+                                {isOwner && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate(`/`)}>
+                                        Settings
+                                    </MenuItem>
+                                )}
+                                {isAdmin && (
+                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate(`/`)}>
+                                        Settings
+                                    </MenuItem>
+                                )}
+                                <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate('/contact-us')}>
+                                    Contact Us
+                                </MenuItem>
+                                {isLoggedIn && (
+                                    <>
+                                        <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={handleLogout}>
+                                            Logout
+                                        </MenuItem>
+                                    </>
+                                )}
+                            </div>
+                        </Drawer>
+
+                    </div>
                 </div>
             </nav>
         </>
