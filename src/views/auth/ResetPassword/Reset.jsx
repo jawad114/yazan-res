@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from '@material-tailwind/react';
+import AxiosRequest from '../../../Components/AxiosRequest';
 
 const Reset = () => {
     const [state, setState] = useState({
@@ -37,7 +38,7 @@ const Reset = () => {
                 setSuccess(null)
                 return;
             }
-            const response = await axios.post('https://yazan-4.onrender.com/reset-password', state);
+            const response = await AxiosRequest.post('/reset-password', state);
             setSuccess(response.data.message);
             setError('');
             window.location.replace("/login-client");

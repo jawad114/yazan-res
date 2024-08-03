@@ -16,6 +16,7 @@ import {
 import { CheckCircle, Cancel, Delete, LocalShipping, Timelapse } from '@mui/icons-material';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from '../../Components/AxiosRequest';
 
 
 export default function OwnerDashboard() {
@@ -49,7 +50,7 @@ export default function OwnerDashboard() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get(`https://yazan-4.onrender.com/orders/${resName}`);
+                const response = await AxiosRequest.get(`/orders/${resName}`);
                 setOrders(response.data.orders);
             } catch (error) {
                 console.error('Error fetching orders:', error);
@@ -122,7 +123,7 @@ export default function OwnerDashboard() {
 
     const updateOrderStatus = async (orderId, status, preparingTime = null) => {
         try {
-            await axios.put(`https://yazan-4.onrender.com/orders/${orderId}`, { status, preparingTime });
+            await AxiosRequest.put(`/orders/${orderId}`, { status, preparingTime });
             // Update the order status locally
             setOrders(prevOrders =>
                 prevOrders.map(order =>
@@ -159,7 +160,7 @@ export default function OwnerDashboard() {
 
             if (confirmed) {
                 // Send delete request to server
-                await axios.delete(`https://yazan-4.onrender.com/orders/${orderId}`);
+                await AxiosRequest.delete(`/orders/${orderId}`);
 
                 // Update state to remove the deleted order from the list
                 setOrders((prevOrders) =>
@@ -214,7 +215,7 @@ export default function OwnerDashboard() {
         try {
             toast.info(`Setting Status To ${newStatus}`, { autoClose: 2000 }); // Show info toast for 5 seconds
             setTimeout(async () => { // Delay execution of the rest of the function
-                const response = await axios.put(`https://yazan-4.onrender.com/change-restaurant-status/${resName}/${newStatus}`);
+                const response = await AxiosRequest.put(`/change-restaurant-status/${resName}/${newStatus}`);
                 toast.success(`Status Set To ${newStatus} Successfully`);
                 window.location.reload();
             }, 2000);
@@ -269,18 +270,6 @@ export default function OwnerDashboard() {
 
     return (
         <Box className='min-w-screen flex flex-col items-center justify-center text-center'>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                style={toastStyle}
-            />
             <Typography className='mt-4' variant="h4" component="h1" gutterBottom>
                 Orders for {resName}
             </Typography>

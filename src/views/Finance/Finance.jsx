@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Box, Typography, TextField, Button, Card, CardContent, Grid } from '@mui/material';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import AxiosRequest from '../../Components/AxiosRequest';
 
 const Finance = () => {
   const [restaurantName, setRestaurantName] = useState('');
@@ -23,7 +24,7 @@ const Finance = () => {
   const handlePeriodButtonClick = async (period) => {
     try {
       setSelectedPeriod(period);
-      const response = await axios.post(`https://yazan-4.onrender.com/api/orders/completed`, { period, restaurantName: isOwner ? resName : restaurantName });
+      const response = await AxiosRequest.post(`/api/orders/completed`, { period, restaurantName: isOwner ? resName : restaurantName });
       setCompletedOrders(response.data);
       setDisplayedOrder(true);
       setTotalRevenue(null);
@@ -43,7 +44,7 @@ const Finance = () => {
 
   const handleCalculateRevenue = async () => {
     try {
-      const response = await axios.post(`https://yazan-4.onrender.com/api/revenue`, { period: currentPeriod, restaurantName: isOwner ? resName : restaurantName });
+      const response = await AxiosRequest.post(`/api/revenue`, { period: currentPeriod, restaurantName: isOwner ? resName : restaurantName });
       setTotalRevenue(response.data.totalRevenue);
       setError(response.data.totalRevenue === 0 || response.data.totalRevenue === undefined ? 'No revenue found in this date range.' : null);
       setshowCalculateRevenue(null);
@@ -55,7 +56,7 @@ const Finance = () => {
 
   const handleRejectedOrders = async () => {
     try {
-      const response = await axios.post(`https://yazan-4.onrender.com/api/orders/rejected`, { period: currentPeriod, restaurantName: isOwner ? resName : restaurantName });
+      const response = await AxiosRequest.post(`/api/orders/rejected`, { period: currentPeriod, restaurantName: isOwner ? resName : restaurantName });
       setCompletedOrders(response.data);
       setshowCalculateRevenue(null);
       setRejected(true);

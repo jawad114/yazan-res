@@ -3,6 +3,7 @@ import axios from 'axios';
 import './adminLogin.css'; // Import the CSS file
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from '../../Components/AxiosRequest';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const AdminLogin = () => {
     }
 
     try {
-      const response = await axios.post('https://yazan-4.onrender.com/admin/login', { email, password });
+      const response = await AxiosRequest.post('/admin/login', { email, password });
       if (response.data.status === 'ok') {
         toast.success('Login successful');
         localStorage.setItem('isAdmin', 'true');
@@ -43,18 +44,6 @@ const AdminLogin = () => {
 
   return (
     <div className="container">
-       <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <div className="form-container">
         <h2 className="form-title">Admin Login</h2>
         <form onSubmit={handleSubmit}>

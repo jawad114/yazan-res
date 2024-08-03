@@ -325,6 +325,7 @@ import { Typography, Box, TextField, Button } from "@mui/material";
 import "./AdminDashboard.css"; // Import the CSS file
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from "../../Components/AxiosRequest";
 
 const AdminDashboard = () => {
   const [restaurantName, setRestaurantName] = useState("");
@@ -390,7 +391,7 @@ const AdminDashboard = () => {
       menu,
     };
     try {
-      const response = await axios.post("https://yazan-4.onrender.com/add-restaurant", body);
+      const response = await AxiosRequest.post("/add-restaurant", body);
       const { generatedEmail, generatedPassword } = response.data;
       setGeneratedEmail(generatedEmail);
       setGeneratedPassword(generatedPassword);
@@ -445,18 +446,6 @@ const AdminDashboard = () => {
 
   return (
     <Box className="container flex flex-col mt-4">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <Typography variant="h4" component="h1" gutterBottom>
         Add Restaurant
       </Typography>

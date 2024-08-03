@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CircularProgress } from '@mui/material';
 import { Button } from '@material-tailwind/react';
+import AxiosRequest from '../../../../Components/AxiosRequest';
 
 const Verify = () => {
   const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ const Verify = () => {
     setSuccess('');
     setLoading(true);
     try {
-      const response = await axios.post(`https://yazan-4.onrender.com/verify-code/${email}`, {
+      const response = await AxiosRequest.post(`/verify-code/${email}`, {
         verificationCode: verificationCode
       });
       if (response.data.status === "ok") {
@@ -62,7 +63,7 @@ const Verify = () => {
   const handleResendCode = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`https://yazan-4.onrender.com/resend-verification-code`, { email });
+      const response = await AxiosRequest.post(`/resend-verification-code`, { email });
       if (response.data.message) {
         setSuccess(response.data.message);
         setCanResend(false);

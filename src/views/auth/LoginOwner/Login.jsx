@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import styles from "./Login.module.css";
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from "../../../Components/AxiosRequest";
 
 
 const LoginOwner = () => {
@@ -23,7 +24,7 @@ const LoginOwner = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://yazan-4.onrender.com/login-owner", state);
+      const response = await AxiosRequest.post("/login-owner", state);
       if (response.data.error === "Invalid password") {
         toast.error("Invalid credentials");
       } else if (response.data.error === "User not found") {
@@ -55,18 +56,6 @@ const LoginOwner = () => {
 
   return (
     <div className={styles.container}>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <div className={styles.formContainer}>
         <h3 className={styles.formTitle}>Login as Restaurant Owner..</h3>
         <form onSubmit={handleSubmit}>

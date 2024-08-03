@@ -152,6 +152,7 @@ import { useParams } from "react-router-dom";
 import { Button, TextField, Typography } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from "../../Components/AxiosRequest";
 
 const convertToBase64 = (file) => {
   return new Promise((resolve, reject) => {
@@ -200,7 +201,7 @@ const AddDish = () => {
       return;
     }
     try {
-      const response = await axios.post(`https://yazan-4.onrender.com/restaurant/${resName}/category/${categoryName}/add-dish`, {
+      const response = await AxiosRequest.post(`/restaurant/${resName}/category/${categoryName}/add-dish`, {
         name,
         price,
         dishImage,
@@ -248,18 +249,6 @@ const AddDish = () => {
 
   return (
     <div className="flex flex-col p-4 md:p-8">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <Typography variant="h5" gutterBottom>
         Add Dish
       </Typography>

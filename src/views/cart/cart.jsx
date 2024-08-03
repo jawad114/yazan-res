@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Typography } from '@mui/material'; // Import Typography component
+import AxiosRequest from '../../Components/AxiosRequest';
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -15,7 +16,7 @@ const Cart = () => {
     setLoading(true);
     const fetchCart = async () => {
       try {
-        const response = await axios.get(`https://yazan-4.onrender.com/get-cart/${customerId}`);
+        const response = await AxiosRequest.get(`/get-cart/${customerId}`);
         if (response.data.error === "Cart not found") {
           setError("Cart not found");
         } else if (response.data.error === "Internal Server Error") {
@@ -61,7 +62,7 @@ const Cart = () => {
 
   const removeFromCart = async (productId) => {
     try {
-      await axios.delete(`https://yazan-4.onrender.com/remove-from-cart/${productId}/${customerId}`);
+      await AxiosRequest.delete(`/remove-from-cart/${productId}/${customerId}`);
       setCart(prevCart => ({
         ...prevCart,
         products: prevCart.products.filter(product => product._id !== productId)
@@ -75,7 +76,7 @@ const Cart = () => {
 
   const clearCart = async () => {
     try {
-      await axios.delete(`https://yazan-4.onrender.com/clear-cart/${customerId}`);
+      await AxiosRequest.delete(`/clear-cart/${customerId}`);
       setCart(null);
       window.location.reload(); // Reload the page after clearing the cart
 

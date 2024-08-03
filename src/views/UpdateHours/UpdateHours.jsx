@@ -132,6 +132,7 @@ import { Button } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useParams } from "react-router-dom";
+import AxiosRequest from '../../Components/AxiosRequest';
 
 const UpdateHours = () => {
   const [day, setDay] = useState('');
@@ -161,7 +162,7 @@ const UpdateHours = () => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`https://yazan-4.onrender.com/update-opening-hours/${isOwner ? resName : restaurantName}/${day}`, {
+      const response = await AxiosRequest.put(`/update-opening-hours/${isOwner ? resName : restaurantName}/${day}`, {
         open: open ? open.getHours() + ':' + ('0' + open.getMinutes()).slice(-2) : '',
         close: close ? close.getHours() + ':' + ('0' + close.getMinutes()).slice(-2) : ''
       });

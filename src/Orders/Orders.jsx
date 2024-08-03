@@ -14,6 +14,7 @@ import {
   ButtonGroup,
   TextField,
 } from '@mui/material';
+import AxiosRequest from '../Components/AxiosRequest';
 
 const Orders = () => {
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`https://yazan-4.onrender.com/order/${customerId}`);
+        const response = await AxiosRequest.get(`/order/${customerId}`);
         setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {

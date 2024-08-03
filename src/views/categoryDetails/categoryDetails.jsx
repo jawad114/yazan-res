@@ -15,6 +15,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from '@mui/material/CircularProgress';
+import AxiosRequest from "../../Components/AxiosRequest";
 
 
 
@@ -37,8 +38,8 @@ const CategoryDetails = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          `https://yazan-4.onrender.com/restaurant/${resName}/category/${categoryName}/dishes`
+        const response = await AxiosRequest.get(
+          `/restaurant/${resName}/category/${categoryName}/dishes`
         );
         if (response && response.data && response.data.products) {
           setProducts(response.data.products);
@@ -108,7 +109,7 @@ const CategoryDetails = () => {
 
   const handleAddToCart = async (productId, price, name, description) => {
     try {
-      const resStatus = await axios.get(`https://yazan-4.onrender.com/restaurant-status/${resName}`);
+      const resStatus = await AxiosRequest.get(`/restaurant-status/${resName}`);
       const { status, coordinates } = resStatus.data;
       console.log(status);
       if (status === 'closed' || status === 'busy') {
@@ -120,7 +121,7 @@ const CategoryDetails = () => {
       const selectedOptionalExtras = selectedProduct.extras.optionalExtras.filter(extra => selectedExtras[extra._id]);
       const extras = selectedRequiredExtras.concat(selectedOptionalExtras).map(extra => ({ name: extra.name, price: extra.price }));
       console.log("ResName:", resName);
-      const response = await axios.post(`https://yazan-4.onrender.com/add-to-cart/${customerId}`, {
+      const response = await AxiosRequest.post(`/add-to-cart/${customerId}`, {
         name,
         description,
         price,
@@ -160,7 +161,7 @@ const CategoryDetails = () => {
       if (confirmed) {
         try {
           // Send delete request to server
-          await axios.delete(`https://yazan-4.onrender.com/delete-dish/${resName}/${categoryName}/${productId}`);
+          await AxiosRequest.delete(`/delete-dish/${resName}/${categoryName}/${productId}`);
 
           // Reload the page to reflect changes
           window.location.reload();
@@ -205,18 +206,6 @@ const CategoryDetails = () => {
 
   return (
     <div className="flex flex-col w-full items-center justify-center p-5">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <Typography
         className="mb-5 fs-3 fw-bold"
         textAlign={"center"}

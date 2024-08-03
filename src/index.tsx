@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from "@material-tailwind/react";
 import './global.css'
+import { WebSocketProvider } from './Components/WebSocketContext';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <ThemeProvider>
+      <WebSocketProvider>
     <App />
+    </WebSocketProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

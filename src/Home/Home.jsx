@@ -7,6 +7,7 @@ import './Home.module.css';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from '../Components/AxiosRequest';
 
 
 const HomeComponent = () => {
@@ -25,17 +26,17 @@ const HomeComponent = () => {
     const fetchProducts = async () => {
       try {
         const Owner = localStorage.getItem('isOwner');
-        let endpoint = 'https://yazan-4.onrender.com/get-restaurants';
+        let endpoint = '/get-restaurants';
         let headers = {};
         if (token) {
           headers.Authorization = `Bearer ${token}`;
         }
         if (Owner && resName) {
-          endpoint = `https://yazan-4.onrender.com/get-one-res/${resName}`;
+          endpoint = `/get-one-res/${resName}`;
           setIsOwner(Owner === "true");
         }
     
-        const response = await axios.get(endpoint, { headers });
+        const response = await AxiosRequest.get(endpoint, { headers });
         if (response && response.data) {
           setProducts(response.data.data);
         }
@@ -89,18 +90,6 @@ const HomeComponent = () => {
 
   return (
     <div>
-       <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <img src="https://beyondtype1.org/wp-content/uploads/2023/01/FAST-FOOD-CHAIN-NUTRITION-GUIDE-HEADER.jpg" alt="Header" className={styles.headerImage} />
       <div className={`${styles.p4}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h2>Restaurant Area</h2>

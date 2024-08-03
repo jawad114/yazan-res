@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Registration.css"; // Importieren der CSS-Datei für die Stildefinitionen
 import RegistrationForm from "./RegistrationForm";
 import registerImage from "../../../assets/register.svg";
+import AxiosRequest from "../../../Components/AxiosRequest";
 
 const RegistrationOwner = () => {
   const [formData, setFormData] = useState({
@@ -22,8 +23,8 @@ const RegistrationOwner = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("https://yazan-4.onrender.com/register-client", formData)
+    AxiosRequest
+      .post("/register-client", formData)
       .then((response) => {
         if (response.data.status === "ok") {
           alert("Registration successful");

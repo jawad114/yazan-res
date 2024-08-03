@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CircularProgress, Grid, Card, CardContent, Typography } from '@mui/material';
+import AxiosRequest from '../../Components/AxiosRequest';
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -13,7 +14,7 @@ const Favorites = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const response = await axios.get(`https://yazan-4.onrender.com/favorites/${id}`);
+        const response = await AxiosRequest.get(`/favorites/${id}`);
         setFavorites(response.data);
         setLoading(false);
       } catch (error) {
@@ -34,7 +35,7 @@ const Favorites = () => {
         if (token) {
           headers.Authorization = `Bearer ${token}`;
         }
-        const response = await axios.get(`https://yazan-4.onrender.com/get-one-res/${restaurantName}`, { headers });
+        const response = await AxiosRequest.get(`/get-one-res/${restaurantName}`, { headers });
         setRestaurantDetails((prevDetails) => ({
           ...prevDetails,
           [restaurantName]: response.data.data,

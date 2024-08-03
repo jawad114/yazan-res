@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import axios from 'axios';
+import AxiosRequest from '../../../Components/AxiosRequest';
 
 const Forgot = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ const Forgot = () => {
         setError('Please provide an email');
         return;
       }
-      const response = await axios.post('https://yazan-4.onrender.com/forgot-password', { email });
+      const response = await AxiosRequest.post('/forgot-password', { email });
       setVerificationCode(response.data.verificationCode);
       setSuccessMessage('Verification code sent successfully') && setError(null);
       window.location.replace("/reset-password");

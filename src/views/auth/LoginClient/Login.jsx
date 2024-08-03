@@ -4,6 +4,7 @@ import { useState } from "react";
 import PersonIcon from '@mui/icons-material/Person';
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from "../../../Components/AxiosRequest";
 
 const LoginClient = () => {
   const [state, setState] = useState({
@@ -22,8 +23,8 @@ const LoginClient = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("https://yazan-4.onrender.com/login-client", state)
+    AxiosRequest
+      .post("/login-client", state)
       .then((data) => {
         console.log(data);
 
@@ -58,18 +59,6 @@ const LoginClient = () => {
 
   return (
     <div>
-        <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <div className="mt-40">
         <div className="containerLo">
           <div className="paperLo">

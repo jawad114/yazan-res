@@ -3,6 +3,7 @@ import { TextField, Modal, Button, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import CustomModal from '../modal/modal';
 import MapModal from './Map/MapModal';
+import AxiosRequest from '../../Components/AxiosRequest';
 
 
 const mapContainerStyle = {
@@ -109,7 +110,7 @@ const Checkout = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axios.get(`https://yazan-4.onrender.com/get-cart/${customerId}`);
+        const response = await AxiosRequest.get(`/get-cart/${customerId}`);
         setCart(response.data.cart);
         setResName(response.data.cart.orderFrom);
         setResLocation(response.data.cart.coordinates);
@@ -135,7 +136,7 @@ const Checkout = () => {
       if (cart) {
         try {
           const productsWithDetails = await Promise.all(cart.products.map(async (product) => {
-            const response = await axios.get(`https://yazan-4.onrender.com/dishes/${product.productId}`);
+            const response = await AxiosRequest.get(`/dishes/${product.productId}`);
             return { ...product, dishDetails: response.data.data };
           }));
           setCart(prevCart => ({ ...prevCart, products: productsWithDetails }));
@@ -263,7 +264,7 @@ const Checkout = () => {
         userLocation: location
       };
       console.log('Order Data', orderData)
-      const response = await axios.post(`https://yazan-4.onrender.com/create-order/${customerId}`, orderData);
+      const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
       console.log('Order created successfully:', response.data.order);
       console.log('Order created successfully');
       setOpen(true);

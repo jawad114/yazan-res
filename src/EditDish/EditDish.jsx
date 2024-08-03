@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import AxiosRequest from '../Components/AxiosRequest';
 
 export default function EditRestaurant() {
   const { resName,categoryName, dishId } = useParams();
@@ -20,7 +21,7 @@ export default function EditRestaurant() {
         if (token) {
           headers.Authorization = `Bearer ${token}`;
         }
-        const response = await axios.get(`https://yazan-4.onrender.com/dishes/${dishId}`,{headers});
+        const response = await AxiosRequest.get(`/dishes/${dishId}`,{headers});
         setDish(response.data);
         setLoading(false);
       } catch (error) {
@@ -39,7 +40,7 @@ export default function EditRestaurant() {
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
-     const res= await axios.put(`https://yazan-4.onrender.com/update-dish/${resName}/${categoryName}/${dishId}`, {
+     const res= await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, {
         name: updatedDishName,
         price: updatedPrice,
         description: updatedDescription,

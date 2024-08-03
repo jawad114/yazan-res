@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosRequest from '../../../Components/AxiosRequest';
 
 export default function AddCategory() {
   const { resName } = useParams();
@@ -131,7 +132,7 @@ export default function AddCategory() {
     return;
   }
     try {
-      const response = await axios.post(`https://yazan-4.onrender.com/add-menu-to-restaurant/${resName}`, {menu});
+      const response = await AxiosRequest.post(`/add-menu-to-restaurant/${resName}`, {menu});
       toast.success(response.data.message);
       window.location.replace(`/categories/${resName}`)
     } catch (error) {
@@ -156,18 +157,6 @@ export default function AddCategory() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={toastStyle}
-      />
       <h1 className="text-2xl font-bold">Add Category</h1>
       <div className="mt-6">
         {menu.map((category, categoryIndex) => (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import AxiosRequest from '../Components/AxiosRequest';
 
 export default function EditRestaurant() {
   const { resName } = useParams();
@@ -19,7 +20,7 @@ export default function EditRestaurant() {
         if (token) {
           headers.Authorization = `Bearer ${token}`;
         }
-        const response = await axios.get(`https://yazan-4.onrender.com/get-one-res/${resName}`, { headers });
+        const response = await AxiosRequest.get(`/get-one-res/${resName}`, { headers });
         setRestaurant(response.data);
         // setUpdatedName(response.data.name);
         // setUpdatedLocation(response.data.location);
@@ -35,7 +36,7 @@ export default function EditRestaurant() {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`https://yazan-4.onrender.com/update-restaurant/${resName}`, {
+      const response = await AxiosRequest.put(`/update-restaurant/${resName}`, {
         newRestaurantName: updatedName,
         newLocation: updatedLocation
       });

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, Button, Box } from '@mui/material';
 import styles from './categories.module.css';
+import AxiosRequest from '../../Components/AxiosRequest';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -18,7 +19,7 @@ export default function Categories() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`https://yazan-4.onrender.com/restaurant-categories/${resName}`);
+        const response = await AxiosRequest.get(`/restaurant-categories/${resName}`);
         if (response.data.status === "ok") {
           setCategories(response.data.categories);
           setLoading(false);

@@ -36,8 +36,17 @@ import Verify from './views/auth/RegistrationClient/Verify/Verify';
 import UpdateHours from './views/UpdateHours/UpdateHours';
 import AddCategory from './views/categories/AddCategory/AddCategory';
 import AddDish from './views/AddDish/AddDish';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { WebSocketProvider } from './Components/WebSocketContext';
+
 
 const theme = createTheme();
+
+const toastStyle = {
+  container: "max-w-sm mx-auto",
+  toast: "bg-red-500 text-white font-bold",
+};
 
 const App = () => {
   return (
@@ -45,6 +54,19 @@ const App = () => {
       <Router>
         <FavoriteProvider>
           <Navbar />
+          <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        limit={1}
+        draggable
+        pauseOnHover
+        style={toastStyle}
+      />
           <div className='main-container'>
             <Routes>
               <Route path='/' element={<HomeComponent />} />

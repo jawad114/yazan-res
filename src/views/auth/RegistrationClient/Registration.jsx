@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import RegistrationForm from "./RegistrationForm";
 import registerImage from "../../../assets/register.svg";
+import AxiosRequest from "../../../Components/AxiosRequest";
 
 const Registration = () => {
   const [formData, setFormData] = useState({
@@ -20,8 +21,8 @@ const Registration = () => {
   };
 
   const handleSubmit = () => {
-    axios
-      .post("https://yazan-4.onrender.com/register-client", formData)
+    AxiosRequest
+      .post("/register-client", formData)
       .then((response) => {
         if (response.data.status === "ok") {
           alert("Registration successful");
