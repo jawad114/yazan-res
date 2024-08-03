@@ -38,7 +38,6 @@ import AddCategory from './views/categories/AddCategory/AddCategory';
 import AddDish from './views/AddDish/AddDish';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { WebSocketProvider } from './Components/WebSocketContext';
 
 
 const theme = createTheme();
