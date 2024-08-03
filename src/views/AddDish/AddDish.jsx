@@ -196,7 +196,7 @@ const AddDish = () => {
   const [optionalExtras, setOptionalExtras] = useState([{ name: "", price: "" }]);
 
   const handleAddDish = async () => {
-    if (!name || !price || !dishImage || !description || requiredExtras.some(extra => !extra.name || !extra.price)) {
+    if (!name || !price || !dishImage || !description ) {
       toast.error("Please fill in all required fields");
       return;
     }

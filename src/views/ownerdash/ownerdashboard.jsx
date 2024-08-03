@@ -271,6 +271,18 @@ export default function OwnerDashboard() {
 
     return (
         <Box className='min-w-screen flex flex-col items-center justify-center text-center'>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                style={toastStyle}
+            />
             <Typography className='mt-4' variant="h4" component="h1" gutterBottom>
                 Orders for {resName}
             </Typography>

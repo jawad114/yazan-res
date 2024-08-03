@@ -85,68 +85,76 @@ const Navbar: React.FC = () => {
                   if (data.restaurantName === ownerRestaurantName) {
                     console.log('New order received for your restaurant');
     
-                    // Create a new audio instance and set it to loop
-                    const newAudio = new Audio(notificationSound);
-                    newAudio.loop = true; // Set loop to true initially
-                    newAudio.play();
-                    setAudio(newAudio); // Store the new audio instance
-    
-                    // Show toast with 'Got it' button
-                    const id = toast.success(
-                      <div className="toast-custom">
-                        <div>New Order Received for {ownerRestaurantName}</div>
-                        <button
-                          onClick={() => {
-                            toast.dismiss(id); // Dismiss the toast
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                        audio.loop = false; // Ensure the loop is stopped
+                        setAudio(null); // Clear the audio object
+                      }
+      
+                      // Create a new audio instance and set it to loop
+                      const newAudio = new Audio(notificationSound);
+                      newAudio.loop = true; // Set loop to true initially
+                      newAudio.play();
+                      setAudio(newAudio); // Store the new audio instance
+      
+                      // Show toast with 'Got it' button
+                      const id = toast.success(
+                        <div className="toast-custom">
+                          <div>New Order Received for {ownerRestaurantName}</div>
+                          <button
+                            onClick={() => {
+                              toast.dismiss(id); // Dismiss the toast
+                              if (newAudio) {
+                                newAudio.pause();
+                                newAudio.currentTime = 0;
+                                newAudio.loop = false; // Stop the loop
+                                setAudio(null); // Clear the audio object
+                              }
+                              window.location.reload();
+                            }}
+                          >
+                            Got it
+                          </button>
+                        </div>,
+                        {
+                          autoClose: false, // Prevent auto-close
+                          closeButton: false,
+                          hideProgressBar: true,
+                          className: 'toast-custom',
+                          bodyClassName: 'toast-body',
+                          onClose: () => {
                             if (newAudio) {
                               newAudio.pause();
                               newAudio.currentTime = 0;
-                              newAudio.loop = false; // Stop the loop
+                              newAudio.loop = false; // Ensure loop is stopped
                               setAudio(null); // Clear the audio object
                             }
-                          }}
-                        >
-                          Got it
-                        </button>
-                      </div>,
-                      {
-                        autoClose: false, // Prevent auto-close
-                        closeButton: false,
-                        hideProgressBar: true,
-                        className: 'toast-custom',
-                        bodyClassName: 'toast-body',
-                        onClose: () => {
-                          if (newAudio) {
-                            newAudio.pause();
-                            newAudio.currentTime = 0;
-                            newAudio.loop = false; // Ensure loop is stopped
-                            setAudio(null); // Clear the audio object
                           }
                         }
-                      }
-                    );
-    
-                    setToastId(id as string); // Explicitly cast id to string
+                      );
+      
+                      setToastId(id as string); // Explicitly cast id to string
+                    }
                   }
+      
+                } catch (error) {
+                  console.error('Error parsing WebSocket message:', error);
                 }
-    
-              } catch (error) {
-                console.error('Error parsing WebSocket message:', error);
-              }
-            };
-    
-            ws.onerror = (event) => {
-              console.error('WebSocket error:', event);
-            };
-    
-            ws.onclose = (event) => {
-              console.log('WebSocket closed:', event);
-            };
-          }
-        };
-    
-        checkUserLogin();
-      }, [ws, audio, ownerRestaurantName]);
+              };
+      
+              ws.onerror = (event) => {
+                console.error('WebSocket error:', event);
+              };
+      
+              ws.onclose = (event) => {
+                console.log('WebSocket closed:', event);
+              };
+            }
+          };
+      
+          checkUserLogin();
+        }, [ws, audio, ownerRestaurantName]);
 
     const fetchCart = async (customerId: string | null) => {
         try {

@@ -9,7 +9,6 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     const socket = new WebSocket('wss://yazan-4.onrender.com');
     setWs(socket);
-
     socket.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       // Handle messages
