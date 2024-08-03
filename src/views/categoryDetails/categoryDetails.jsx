@@ -638,9 +638,11 @@ const CategoryDetails = () => {
           ))}
         </Grid>
       )}
+      {(isAdmin && isOwner) &&(
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
         Add Dish
       </Button>
+      )}
       <CustomModal
         open={selectedProduct !== null}
         handleClose={handleCloseModal}
