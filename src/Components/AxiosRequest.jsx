@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const AxiosRequest = axios.create({
-  baseURL: 'https://yazan-4.onrender.com'
+  baseURL: 'https://yazan-s1ux.onrender.com'
 });
 
 export default AxiosRequest;
