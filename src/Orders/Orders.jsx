@@ -102,7 +102,7 @@ useEffect(() => {
   }).filter(order =>
     order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.resName.toLowerCase().includes(searchQuery.toLowerCase()) // Filter by order ID or restaurant name
-  );
+  ).sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
 
   return (
     <Box className='container flex flex-col items-center text-center mt-10'>

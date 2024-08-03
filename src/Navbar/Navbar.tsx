@@ -11,6 +11,8 @@ import { useWebSocket } from '../Components/WebSocketContext';
 import notificationSound from '../assets/notification.wav';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { toast } from 'react-toastify';
+import AxiosRequest from '../Components/AxiosRequest';
 
 
 const Navbar: React.FC = () => {
@@ -26,6 +28,9 @@ const Navbar: React.FC = () => {
     const isOwner = localStorage.getItem('isOwner') === 'true';
     const isClient = localStorage.getItem('isClient') === 'true';
     const ws = useWebSocket() as WebSocket | null;
+    const [ownerRestaurantName, setOwnerRestaurantName] = useState('');
+    const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+    const [toastId, setToastId] = useState<string | null>(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -41,68 +46,111 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         const checkUserLogin = () => {
-            const customerId = localStorage.getItem('id');
-            const loggedIn = localStorage.getItem('token') !== null;
-
-            if (isAdmin) {
-                setIsLoggedIn(true);
-                setUserRole('isAdmin');
-            } else if (isOwner) {
-                setIsLoggedIn(true);
-                setUserRole('isOwner');
-            } else if (isClient) {
-                setIsLoggedIn(true);
-                setUserRole('isClient');
-                fetchCartDebounced(customerId);
-            }else {
-                setIsLoggedIn(loggedIn);
-            }
-            // WebSocket connection setup for all logged-in users
-            if (loggedIn && ws) {
-                ws.onopen = () => {
-                    console.log('WebSocket connection opened');
-                };
+          const customerId = localStorage.getItem('id');
+          const loggedIn = localStorage.getItem('token') !== null;
+          const restaurantName = localStorage.getItem('resName') ?? '';
     
-                ws.onmessage = (event: MessageEvent) => {
-                    console.log('WebSocket message received:', event.data);
-                    try {
-                        const data = JSON.parse(event.data);
-                        
-                        // Common WebSocket message handling
-                        if (isClient && data.type === 'cartUpdated') {
-                            fetchCartDebounced(customerId);
-                        } else if (isClient && data.type === 'favoritesUpdated') {
-                            setFavoritesUpdated(true);
+          if (isAdmin) {
+            setIsLoggedIn(true);
+            setUserRole('isAdmin');
+          } else if (isOwner) {
+            setIsLoggedIn(true);
+            setUserRole('isOwner');
+            setOwnerRestaurantName(restaurantName); // Store the restaurant name
+          } else if (isClient) {
+            setIsLoggedIn(true);
+            setUserRole('isClient');
+            if (customerId) fetchCartDebounced(customerId);
+          } else {
+            setIsLoggedIn(loggedIn);
+          }
+    
+          if (loggedIn && ws) {
+            ws.onopen = () => {
+              console.log('WebSocket connection opened');
+            };
+    
+            ws.onmessage = (event: MessageEvent) => {
+              console.log('WebSocket message received:', event.data);
+              try {
+                const data = JSON.parse(event.data);
+    
+                if (isClient && data.type === 'cartUpdated') {
+                  if (customerId) fetchCartDebounced(customerId);
+                } else if (isClient && data.type === 'favoritesUpdated') {
+                  setFavoritesUpdated(true);
+                }
+    
+                if (isOwner && data.type === 'newOrderReceived') {
+                  if (data.restaurantName === ownerRestaurantName) {
+                    console.log('New order received for your restaurant');
+    
+                    // Create a new audio instance and set it to loop
+                    const newAudio = new Audio(notificationSound);
+                    newAudio.loop = true; // Set loop to true initially
+                    newAudio.play();
+                    setAudio(newAudio); // Store the new audio instance
+    
+                    // Show toast with 'Got it' button
+                    const id = toast.success(
+                      <div className="toast-custom">
+                        <div>New Order Received for {ownerRestaurantName}</div>
+                        <button
+                          onClick={() => {
+                            toast.dismiss(id); // Dismiss the toast
+                            if (newAudio) {
+                              newAudio.pause();
+                              newAudio.currentTime = 0;
+                              newAudio.loop = false; // Stop the loop
+                              setAudio(null); // Clear the audio object
+                            }
+                          }}
+                        >
+                          Got it
+                        </button>
+                      </div>,
+                      {
+                        autoClose: false, // Prevent auto-close
+                        closeButton: false,
+                        hideProgressBar: true,
+                        className: 'toast-custom',
+                        bodyClassName: 'toast-body',
+                        onClose: () => {
+                          if (newAudio) {
+                            newAudio.pause();
+                            newAudio.currentTime = 0;
+                            newAudio.loop = false; // Ensure loop is stopped
+                            setAudio(null); // Clear the audio object
+                          }
                         }
-                        
-                        // Owner-specific logic
-                        if (isOwner && data.type === 'newOrderReceived') {
-                            console.log('New order received');
-                            const audio = new Audio(notificationSound);
-                            audio.play();
-                        }
-                        
-                    } catch (error) {
-                        console.error('Error parsing WebSocket message:', error);
-                    }
-                };
+                      }
+                    );
     
-                ws.onerror = (event) => {
-                    console.error('WebSocket error:', event);
-                };
+                    setToastId(id as string); // Explicitly cast id to string
+                  }
+                }
     
-                ws.onclose = (event) => {
-                    console.log('WebSocket closed:', event);
-                };
-            }
+              } catch (error) {
+                console.error('Error parsing WebSocket message:', error);
+              }
+            };
+    
+            ws.onerror = (event) => {
+              console.error('WebSocket error:', event);
+            };
+    
+            ws.onclose = (event) => {
+              console.log('WebSocket closed:', event);
+            };
+          }
         };
-
+    
         checkUserLogin();
-    }, [ws]);
+      }, [ws, audio, ownerRestaurantName]);
 
     const fetchCart = async (customerId: string | null) => {
         try {
-            const response = await axios.get(`/get-cart/${customerId}`);
+            const response = await AxiosRequest.get(`/get-cart/${customerId}`);
             if (response.data && response.data.totalItemsCount !== undefined) {
                 setCartCount(response.data.totalItemsCount);
             } else {
@@ -209,7 +257,7 @@ const Navbar: React.FC = () => {
                         {isClient && (
                             <Link to="/cart" className='action-btn'>
                                 <div className="cart-icon-container">
-                                    <img src={cartIcon} alt="Cart" className="cart-icon" />
+                                    <img src={cartIcon} width={20} alt="Cart" className="cart-icon" />
                                     {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                                 </div>
                             </Link>
@@ -220,7 +268,7 @@ const Navbar: React.FC = () => {
 
                                 <Link to="/favorites" className='action-btn'>
                                     <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
-                                        {favoriteUpdate ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder style={{ color: 'black' }} />}
+                                        {favoriteUpdate ? <Favorite  style={{ color: 'red' }} /> : <FavoriteBorder style={{ color: 'black' }} />}
                                         Favorite
                                     </div>
                                 </Link>
@@ -273,7 +321,7 @@ const Navbar: React.FC = () => {
 
                                 <Link to="/favorites" className='action-btn'>
                                     <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
-                                        {favoriteUpdate ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder style={{ color: 'black' }} />}
+                                        {favoriteUpdate ? <Favorite style={{ color: 'red' , fontSize: 18 }} /> : <FavoriteBorder style={{ color: 'black' , fontSize: 18 }} />}
                                     </div>
                                 </Link>
 

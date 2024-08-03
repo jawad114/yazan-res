@@ -63,8 +63,7 @@ export default function OwnerDashboard() {
 
         const interval = setInterval(() => {
             fetchOrders();
-        }, 180000); // Fetch orders every 3 minutes
-
+        },180000 ); // Fetch orders every 3 minutes
         return () => clearInterval(interval);
 
     }, [resName]);
@@ -100,6 +99,8 @@ export default function OwnerDashboard() {
 
         // Filter orders based on search term (order ID)
         filtered = filtered.filter(order => order.orderId.includes(searchTerm.toLowerCase()));
+        filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+
 
         setFilteredOrders(filtered);
     }, [searchTerm, orders, statusFilter]);
