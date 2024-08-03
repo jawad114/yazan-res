@@ -638,7 +638,7 @@ const CategoryDetails = () => {
           ))}
         </Grid>
       )}
-      {(isAdmin && isOwner) &&(
+      {(isAdmin || isOwner) &&(
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
         Add Dish
       </Button>
