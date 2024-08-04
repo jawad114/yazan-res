@@ -1,11 +1,10 @@
-import React, { useEffect, useState,useRef } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Card from '../views/card/card';
 import styles from './Home.module.css';
 import { Button, Typography, TextField } from '@mui/material'; // Import TextField component
 import './Home.module.css';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ToastContainer,toast } from "react-toastify";
+import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../Components/AxiosRequest';
 

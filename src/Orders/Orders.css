@@ -1,5 +1,4 @@
 .orders-header {
-    margin-top: 20vh;
     margin-bottom: 4vh;
 }
 
@@ -10,12 +9,11 @@
 }
 
 .no-orders {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    display: flex;
     background-color: #f8f9fa;
     padding: 20px;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     /* Center the text horizontally */
 }
@@ -26,15 +24,13 @@
 
 .orders-list {
     display: flex;
-    width: 100vw;
-    max-width: 40vw;
+    width: 90vw;
     /* Limit the width of the orders list */
     padding: 6vh;
     border-radius: 5px;
     border: 1px solid #ced4da;
     margin-top: 6vh;
     /* Add margin from the heading */
-    height: 100vh;
     /* Set container height to full viewport height */
     overflow: auto;
     /* Add vertical scroll if content exceeds viewport height */

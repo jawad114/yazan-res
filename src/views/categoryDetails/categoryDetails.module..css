@@ -34,6 +34,10 @@
   background-color: rgb(25, 130, 179);
 }
 
+.btn{
+  @apply !text-white font-bold !bg-[#4EA2E3] py-2 w-full rounded;
+}
+
 .viewCartButton {
   background-color: rgb(41, 126, 230);
 }

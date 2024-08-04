@@ -35,6 +35,9 @@
   @apply w-1/2;
 }
 
+.btn{
+  @apply !text-white font-bold !bg-[#4EA2E3] py-2 w-full rounded;
+}
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .card {

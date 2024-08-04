@@ -50,6 +50,7 @@ export default function OwnerDashboard() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
+                console.log('ResName in fetchOrders',resName);
                 const response = await AxiosRequest.get(`/orders/${resName}`);
                 setOrders(response.data.orders);
             } catch (error) {

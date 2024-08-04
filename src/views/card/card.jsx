@@ -236,8 +236,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './card.css'
 import AxiosRequest from '../../Components/AxiosRequest';
 
 const Status = ({ status }) => {
@@ -389,10 +390,10 @@ export default function Card({ product }) {
           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mt-2">{restaurantName}</div>
           <p className="mt-2 font-bold text-gray-800">Location: {location}</p>
           <Status status={status} />
-          <div className="flex flex-wrap">
+          <div className="flex flex-wrap items-center justify-center">
             {isClient && (
               <button
-                className={`btn-global ${isAddingToFavorites || isRemovingFromFavorites ? 'opacity-50 cursor-not-allowed' : ''} mt-2`}
+                className={`btn ${isAddingToFavorites || isRemovingFromFavorites ? 'opacity-50 cursor-not-allowed' : ''} mt-2`}
                 onClick={isFavorite ? removeFromFavorites : addToFavorites}
                 disabled={isAddingToFavorites || isRemovingFromFavorites}
               >
@@ -401,24 +402,24 @@ export default function Card({ product }) {
                 )}
               </button>
             )}
-            <button className="btn-global mt-2" onClick={handleShowCategories}>Show Categories</button>
+            <button className="btn mt-2" onClick={handleShowCategories}>Show Categories</button>
             {isAdmin && (
               <>
-                <button className="btn-global mt-2" onClick={handleEdit}>Edit</button>
-                <button className="btn-global mt-2" onClick={handleDelete}>Delete</button>
+                <button className="btn mt-2" onClick={handleEdit}>Edit</button>
+                <button className="btn mt-2" onClick={handleDelete}>Delete</button>
                 <button className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
                 <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>Busy</button>
                 <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>Closed</button>
-                <button className="btn-global mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
+                <button className="btn mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
               </>
             )}
             {isOwner && (
               <>
-                <button className="btn-global mt-2" onClick={handleEdit}>Edit</button>
-                <button className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
+                <button className="btn mt-2" onClick={handleEdit}>Edit</button>
+                <button className="mt-2  bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
                 <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>Busy</button>
                 <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>Closed</button>
-                <button className="btn-global mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
+                <button className="btn mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
               </>
             )}
           </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import './Orders.css'
 import {
   CircularProgress,
   Box,
@@ -105,7 +104,7 @@ useEffect(() => {
   ).sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
 
   return (
-    <Box className='container flex flex-col items-center text-center mt-10'>
+    <Box className='flex flex-col items-center text-center mt-10'>
       <div className="orders-header mb-4">
         <h2 className="text-3xl font-bold">Your Orders</h2>
         <h4 className="text-lg"><span>Need Help? </span><Link to="/contact-us" className="text-blue-500">Contact Us</Link></h4>
@@ -123,8 +122,7 @@ useEffect(() => {
         variant="outlined"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        fullWidth
-        className="mb-4"
+        className="mb-4 w-[80vw]"
       />
       <div className="orders-content w-full overflow-auto max-h-[70vh]">
         {loading ? (

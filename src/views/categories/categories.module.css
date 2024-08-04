@@ -1,10 +1,13 @@
 .card {
 
-        width: 45%;
+        width: 100%;
         border: 1px solid #ccc;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         padding: 16px;
         margin-bottom: 20px;
 
+}
+.btn{
+        @apply !text-white font-bold !bg-[#4EA2E3] py-2 w-full rounded;
 }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { ToastContainer,toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../../Components/AxiosRequest';
 
@@ -120,12 +119,9 @@ export default function AddCategory() {
     console.log('Menu', menu);
     const hasMissingFields = menu.some((category) =>
     !category.categoryName || category.dishes.some((dish) =>
-      !dish.name || !dish.price || !dish.dishImage || !dish.description || dish.requiredExtras.some((extra) =>
-        !extra.name || !extra.price
-      )
-    )
+      !dish.name || !dish.price || !dish.dishImage || !dish.description )
   );
-
+console.log('hasMissingFields', hasMissingFields);
   if (hasMissingFields) {
     toast.error("Please fill in all required fields");
     setLoading(false);
@@ -148,11 +144,6 @@ export default function AddCategory() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const toastStyle = {
-    container: "max-w-sm mx-auto",
-    toast: "bg-red-500 text-white font-bold",
   };
 
   return (

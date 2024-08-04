@@ -67,7 +67,6 @@ const AdminDashboard = () => {
       restaurantName,
       picture,
       location,
-      menu,
     };
     try {
       const response = await AxiosRequest.post("/add-restaurant", body);
@@ -124,11 +123,11 @@ const AdminDashboard = () => {
   };
 
   return (
-    <Box className="container flex flex-col mt-4">
+    <Box className="flex flex-col items-center justify-center mt-4">
       <Typography variant="h4" component="h1" gutterBottom>
         Add Restaurant
       </Typography>
-      <form ref={formRef} className="form" onSubmit={handleSubmit}>
+      <form ref={formRef} className="form">
         <TextField
           className="form-field"
           placeholder="Restaurant Name:"
@@ -157,7 +156,7 @@ const AdminDashboard = () => {
           onChange={(e) => setLocation(e.target.value)}
           className="form-field"
         />
-        {menu && menu.map((category, index) => (
+        {/* {menu && menu.map((category, index) => (
           <div
             key={index}
             className="category-container"
@@ -221,7 +220,7 @@ const AdminDashboard = () => {
                   onChange={(e) => handleInputChange(index, dishIndex, null, null, e)}
                   className="form-field"
                 />
-                {/* {dish.requiredExtras.map((extra, extraIndex) => (
+               {dish.requiredExtras.map((extra, extraIndex) => (
                   <div key={extraIndex} className="extras-container">
                     <TextField
                       placeholder="Required Extra Name"
@@ -282,11 +281,11 @@ const AdminDashboard = () => {
                   }}
                 >
                   Add Optional Extra
-                </Button> */}
+                </Button> 
               </div>
             ))}
           </div>
-        ))}
+        ))} 
         <Button
           className="add-category-btn"
           variant="contained"
@@ -294,6 +293,7 @@ const AdminDashboard = () => {
         >
           Add Category
         </Button>
+        */}
 
         {generatedEmail && generatedPassword && (
           <div>
@@ -303,7 +303,7 @@ const AdminDashboard = () => {
           </div>
         )}
         <Button
-          className="mt-4 mb-4 submit-btn"
+          className="mt-4 mb-4 bg-[#007bff]"
           variant="contained"
           onClick={handleSubmit}
         >
