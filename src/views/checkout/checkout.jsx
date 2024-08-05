@@ -22,8 +22,6 @@ const RestaurantLocationModal = ({ open, onClose, location }) => {
   const [marker, setMarker] = useState(null);
   const { latitude, longitude } = location;
 
-  console.log('Latitude', latitude)
-  console.log('Location', longitude)
 
   useEffect(() => {
     const initializeMap = () => {
