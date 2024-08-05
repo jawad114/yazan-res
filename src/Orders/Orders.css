@@ -23,7 +23,6 @@
 }
 
 .orders-list {
-    display: flex;
     width: 90vw;
     /* Limit the width of the orders list */
     padding: 6vh;
@@ -41,10 +40,6 @@
     margin-bottom: 6vh;
 }
 
-.order-info {
-    display: flex;
-    justify-content: space-between;
-}
 
 .order-info>div {
     flex: 1 1 80vh;

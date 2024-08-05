@@ -7,7 +7,7 @@ import AxiosRequest from '../../../Components/AxiosRequest';
 export default function AddCategory() {
   const { resName } = useParams();
   const [menu, setMenu] = useState([
-    { categoryName: "", dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }] },
+    { categoryName: "", categoryImage: "", dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }] },
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -23,6 +23,7 @@ export default function AddCategory() {
   const handleAddCategory = () => {
     setMenu([...menu, {
       categoryName: "",
+      categoryImage: "",
       dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }]
     }]);
   };
@@ -54,7 +55,7 @@ export default function AddCategory() {
 
   const handleInputChange = (categoryIndex, dishIndex, field, value) => {
     const updatedMenu = [...menu];
-    if (field === 'categoryName') {
+    if (field === 'categoryName' || field === 'categoryImage') {
       updatedMenu[categoryIndex][field] = value;
     } else {
       updatedMenu[categoryIndex].dishes[dishIndex][field] = value;
@@ -91,44 +92,42 @@ export default function AddCategory() {
     });
   };
 
-  const handleImageUpload = async (categoryIndex, dishIndex, file) => {
+  const handleImageUpload = async (categoryIndex, dishIndex, type, file) => {
     try {
-      // Check if the file is a JPG or equivalent compressed image
       if (!['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(file.type)) {
-        toast.error('Invalid image format.Please upload a JPG/JPEG, PNG, WEBP compressed image');
+        toast.error('Invalid image format. Please upload a JPG/JPEG, PNG, WEBP compressed image');
         return;
       }
-  
-      // Resize the image if needed
-      const resizedImage = await resizeImage(file, 400, 400); // Resize image to 100x100 (adjust as needed)
-  
-      // Convert the resized image to base64
+
+      const resizedImage = await resizeImage(file, 400, 400);
       const base64String = await convertToBase64(resizedImage);
-  
-      // Update the dishImage state
-      handleInputChange(categoryIndex, dishIndex, 'dishImage', base64String);
+
+      if (type === 'dish') {
+        handleInputChange(categoryIndex, dishIndex, 'dishImage', base64String);
+      } else if (type === 'category') {
+        handleInputChange(categoryIndex, 0, 'categoryImage', base64String);
+      }
     } catch (error) {
       console.error('Error resizing image:', error);
       toast.error('Failed to upload image');
     }
   };
-  
 
   const handleSubmit = async () => {
     setLoading(true);
     console.log('Menu', menu);
     const hasMissingFields = menu.some((category) =>
-    !category.categoryName || category.dishes.some((dish) =>
-      !dish.name || !dish.price || !dish.dishImage || !dish.description )
-  );
-console.log('hasMissingFields', hasMissingFields);
-  if (hasMissingFields) {
-    toast.error("Please fill in all required fields");
-    setLoading(false);
-    return;
-  }
+      !category.categoryName || !category.categoryImage || category.dishes.some((dish) =>
+        !dish.name || !dish.price || !dish.dishImage || !dish.description)
+    );
+    console.log('hasMissingFields', hasMissingFields);
+    if (hasMissingFields) {
+      toast.error("Please fill in all required fields");
+      setLoading(false);
+      return;
+    }
     try {
-      const response = await AxiosRequest.post(`/add-menu-to-restaurant/${resName}`, {menu});
+      const response = await AxiosRequest.post(`/add-menu-to-restaurant/${resName}`, { menu });
       toast.success(response.data.message);
       window.location.replace(`/categories/${resName}`)
     } catch (error) {
@@ -154,7 +153,10 @@ console.log('hasMissingFields', hasMissingFields);
           <div key={categoryIndex} className="mt-6 p-4 border border-gray-200 rounded">
             <label className="block">Category Name:</label>
             <input className="mt-1 block w-full" type="text" value={category.categoryName} onChange={(e) => handleInputChange(categoryIndex, 0, 'categoryName', e.target.value)} />
-            {category.dishes.map((dish, dishIndex) => (
+            <label className="block">Category Image:</label>
+            <input className="mt-1 block w-full" type="file" onChange={(e) => handleImageUpload(categoryIndex, 0,'category', e.target.files[0])} />
+            {category.categoryImage && <img className="mt-2" src={category.categoryImage} alt="Category" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
+              {category.dishes.map((dish, dishIndex) => (
               <div key={dishIndex} className="mt-6 p-4 border border-gray-200 rounded">
                 <label className="block">Dish Name:</label>
                 <input className="mt-1 block w-full" type="text" value={dish.name} onChange={(e) => handleInputChange(categoryIndex, dishIndex, 'name', e.target.value)} />
@@ -178,7 +180,7 @@ console.log('hasMissingFields', hasMissingFields);
                 ))}
                 <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleRemoveDish(categoryIndex, dishIndex)}>Remove Dish</button>
                 <label className="block mt-2">Dish Image:</label>
-                <input className="mt-1 block w-full" type="file" onChange={(e) => handleImageUpload(categoryIndex, dishIndex, e.target.files[0])} />
+                <input className="mt-1 block w-full" type="file" onChange={(e) => handleImageUpload(categoryIndex, dishIndex,'dish', e.target.files[0])} />
                 {dish.dishImage && <img className="mt-2" src={dish.dishImage} alt="Dish" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
               </div>
             ))}

@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
-  const [categoryImage, setCategoryImage] = useState('');
+  const [restaurantImage, setRestaurantImage] = useState('');
   const [loading, setLoading] = useState(true);
   const isOwner = localStorage.getItem('isOwner') === 'true';
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -22,18 +22,19 @@ export default function Categories() {
     const fetchCategories = async () => {
       try {
         const response = await AxiosRequest.get(`/restaurant-categories/${resName}`);
-        if (response.data.status === "ok") {
+        if (response.data.status === "ok" ) {
           setCategories(response.data.categories);
-          setCategoryImage(response.data.categoryImage);
+          setRestaurantImage(response.data.restaurantImage);
           console.log('Categories Data', response.data.categories);
           console.log('Category Image', response.data.categoryImage);
         }
-      } catch (error) {
-        if (error.response && error.response.data.error === 'Category not found in the specified restaurant') {
+        else if (response.data.status === "notfound"){
+          setRestaurantImage(response.data.restaurantImage);
+          console.log('Restaurant Image', response.data.restaurantImage);
           console.log('Category Not Found');
-        } else {
-          console.log(error.message || "Internal Server Error");
         }
+      } catch (error) {
+          console.log(error.message || "Internal Server Error");
       } finally {
         setLoading(false);
       }
@@ -47,9 +48,11 @@ export default function Categories() {
   };
 
 
-const alt = `${categories[0]} Category's Image`
+const alt = `${resName}'s Image`
 
   return (
+    <>
+    <img src={restaurantImage} alt={alt} className="w-full h-[20vh] md:h-[64vh] object-cover mb-4" />
     <div className='flex flex-col w-full items-center text-center justify-center'>
     {loading ? (
       <div className='flex justify-center items-center h-screen'>
@@ -65,12 +68,12 @@ const alt = `${categories[0]} Category's Image`
             categories.map((category, index) => (
               <Container className={styles.card} key={index}>
                 <div className='flex flex-col items-center gap-[2vh] justify-center'>
-                  <img src={categoryImage} alt={alt} className='w-40 md:w-[16vw] object-cover' />
-                  <Typography className='fw-bold text-center'>Category: {category}</Typography>
+                <img src={category.categoryImage} alt={`${category.categoryName}'s Image`} className='w-40 md:w-[16vw] object-cover' />
+                  <Typography className='fw-bold text-center'>Category: {category.categoryName}</Typography>
                   <Button 
                     variant='contained'  
                     className={styles.btn} 
-                    onClick={() => { window.location.replace(`/categories/${resName}/${category}`) }}
+                    onClick={() => { window.location.replace(`/categories/${resName}/${category.categoryName}`) }}
                   >
                     Show Dishes in this Category
                   </Button>
@@ -87,5 +90,6 @@ const alt = `${categories[0]} Category's Image`
       </>
     )}
   </div>
+  </>
   );
 }

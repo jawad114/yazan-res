@@ -11,14 +11,15 @@ body {
 .container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     height: 80vh;
-    /* Increase the height to make the container bigger */
 }
 
 .form-container {
-    width: 400px;
-    height: 350px;
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    height: 60vh;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;

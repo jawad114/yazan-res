@@ -128,14 +128,14 @@ useEffect(() => {
         {loading ? (
           <CircularProgress className="loading-spinner mt-8" />
         ) : filteredOrders.length > 0 ? (
-          <Paper elevation={3} className="orders-list w-full max-w-3xl p-6 rounded-lg border border-gray-300 mt-8">
+          <Paper elevation={3} className="orders-list w-full flex max-w-3xl p-6 rounded-lg border border-gray-300 mt-8">
             <List>
               {filteredOrders.map((order) => (
                 <ListItem key={order._id} divider className="order-item">
                   <ListItemText
                     primary={`Order ID: ${order.orderId}`}
                     secondary={
-                      <div className="order-info flex justify-between">
+                      <div className="flex flex-col md:flex-row gap-4 md:justify-between justify-start">
                         {order.shippingInfo &&(
                         <div className="shipping-info">
                           <h4>Shipping Info</h4>

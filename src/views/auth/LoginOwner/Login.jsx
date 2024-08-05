@@ -54,37 +54,85 @@ const LoginOwner = () => {
   };
 
 
+  // return (
+  //   <div className={styles.container}>
+  //     <div className={styles.formContainer}>
+  //       <h3 className={styles.formTitle}>Login as Restaurant Owner..</h3>
+  //       <form onSubmit={handleSubmit}>
+  //         <div className={styles.formField}>
+  //           <input
+  //             className={styles.inputField}
+  //             type="email"
+  //             name="email"
+  //             value={state.email}
+  //             onChange={handleInputChange}
+  //             placeholder="Your Email"
+  //           />
+  //         </div>
+  //         <div className={styles.formField}>
+  //           <input
+  //             className={styles.inputField}
+  //             type="password"
+  //             name="password"
+  //             value={state.password}
+  //             onChange={handleInputChange}
+  //             placeholder="Your Password"
+  //           />
+  //         </div>
+  //         <button className={styles.submitButton} type="submit">Login</button>
+  //         <div className={styles.requestCredentials}>
+  //           <Typography>Haven't received your credentials yet?</Typography>
+  //           <Typography
+  //             className={styles.textBtn}
+  //             onClick={() => { window.location.replace('/request-credentials') }}
+  //           >
+  //             Request Credentials
+  //           </Typography>
+  //         </div>
+  //       </form>
+  //     </div>
+  //   </div>
+  // );
   return (
-    <div className={styles.container}>
-      <div className={styles.formContainer}>
-        <h3 className={styles.formTitle}>Login as Restaurant Owner..</h3>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formField}>
+    <div className="flex items-center justify-center h-screen w-full bg-gray-100">
+      <div className="flex flex-col bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+        <h3 className="text-2xl font-semibold text-center mb-6">Login as Restaurant Owner</h3>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="form-field flex flex-col">
+          <label className="mb-2 text-sm font-medium">Email:</label>
             <input
-              className={styles.inputField}
+              className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="email"
               name="email"
               value={state.email}
               onChange={handleInputChange}
               placeholder="Your Email"
+              required
             />
           </div>
-          <div className={styles.formField}>
+          <div className="form-field flex flex-col">
+          <label className="mb-2 text-sm font-medium">Password:</label>
             <input
-              className={styles.inputField}
+              className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="password"
               name="password"
               value={state.password}
               onChange={handleInputChange}
               placeholder="Your Password"
+              required
             />
           </div>
-          <button className={styles.submitButton} type="submit">Login</button>
-          <div className={styles.requestCredentials}>
-            <Typography>Haven't received your credentials yet?</Typography>
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
+          >
+            Login
+          </button>
+          <div className="text-center mt-4">
+            <Typography className="text-sm">Haven't received your credentials yet?</Typography>
             <Typography
-              className={styles.textBtn}
-              onClick={() => { window.location.replace('/request-credentials') }}
+              className="text-blue-500 cursor-pointer hover:underline mt-2"
+              onClick={() => window.location.replace('/request-credentials')}
             >
               Request Credentials
             </Typography>
@@ -93,6 +141,7 @@ const LoginOwner = () => {
       </div>
     </div>
   );
+  
 };
 
 export default LoginOwner;

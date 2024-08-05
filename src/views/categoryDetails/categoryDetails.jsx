@@ -51,6 +51,10 @@ const CategoryDetails = () => {
           });
           setQuantities(initialQuantities);
         }
+        else{
+          setRestaurantImage(response.data.restaurantImage);
+          setLoading(false);
+        }
       } catch (error) {
         if (error.response && error.response.data && error.response.data.error) {
           if (!toast.isActive("errorToast")) {
@@ -134,7 +138,7 @@ const CategoryDetails = () => {
     ];
     allExtras.forEach((extra) => {
       if (selectedExtras[extra._id]) {
-        total += extra.price || 0; // Check if extra.price is valid
+        total += extra.price * quantities[productId] || 0; // Check if extra.price is valid
       }
     });
     return total.toFixed(2); // Return the total price with 2 decimal places
@@ -243,9 +247,10 @@ const CategoryDetails = () => {
   const alt = `${resName}'s Image`
 
   return (
-    <div className="flex flex-col w-full items-center justify-center p-5">
+    <>
+        <img src={restaurantImage} alt={alt}  className="w-full h-[20vh] md:h-[64vh] object-cover mb-4" />
+    <div className="flex flex-col w-full p-5">
 <div className="flex flex-col gap-4 items-center justify-center mb-5">
-  <img src={restaurantImage} alt={alt} className="w-20 md:w-[10vw] object-cover" />
   <Typography
     className="fs-3 fw-bold"
     textAlign="center"
@@ -296,9 +301,11 @@ const CategoryDetails = () => {
         </Grid>
       )}
       {(isAdmin || isOwner) &&(
+        <div className="flex items-center justify-center">
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
         Add Dish
       </Button>
+      </div>
       )}
       <CustomModal
         open={selectedProduct !== null}
@@ -418,7 +425,7 @@ const CategoryDetails = () => {
                       </>
                       )}
                   {(isAdmin || isOwner) && (
-                    <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-0 w-[25vw] mt-4">
+                    <div className="flex flex-col md:flex-row justify-between space-x-[8vw] md:gap-0  mt-4">
                       <Button
                         variant="outlined"
                         color="primary"
@@ -440,6 +447,7 @@ const CategoryDetails = () => {
             </>
           )
         }
+        
       />
 
 <CustomModal
@@ -449,6 +457,7 @@ const CategoryDetails = () => {
         handleClose={() => setOpenM(false)} // No action needed on close
       />
           </div>
+          </>
   );
 };
 
