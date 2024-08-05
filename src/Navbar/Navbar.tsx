@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import axios from 'axios';
 import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
@@ -323,7 +322,7 @@ const Navbar: React.FC = () => {
                         </div>
                     </Link>
 
-                    <div className='user-actions'>
+                    <div className='user-actions gap-2'>
                         {isLoggedIn && (
                             <div className='flex space-x-4'>
 
@@ -345,7 +344,7 @@ const Navbar: React.FC = () => {
                         <IconButton className="menu-icon" onClick={toggleMenu}>
                             <MenuIcon />
                         </IconButton>
-                        <Drawer anchor="right" open={isMenuOpen} onClose={toggleMenu}>
+                        {/* <Drawer anchor="right" open={isMenuOpen} onClose={toggleMenu}>
                             <h3 id='SideTextNav'>Layla</h3>
 
 
@@ -396,8 +395,90 @@ const Navbar: React.FC = () => {
                                     </>
                                 )}
                             </div>
-                        </Drawer>
-
+                        </Drawer> */}
+ <Drawer
+      anchor="right"
+      open={isMenuOpen}
+      onClose={toggleMenu}
+      classes={{ paper: '!bg-gradient-to-r from-blue-500 to-blue-200' }} // Adds background color to the drawer
+    >
+      <div className="p-6 ">
+        <h3 id='SideTextNav' className="text-2xl font-bold mb-4 text-gray-800">Layla</h3>
+        <div className="space-y-2">
+          {/* Conditional rendering based on auth state */}
+          {!isLoggedIn && !isAdmin && (
+            <MenuItem
+              className="hover:bg-gray-200 text-white rounded-md p-2 transition-colors duration-200"
+              onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}
+            >
+              Admin
+            </MenuItem>
+          )}
+          {!isLoggedIn && !isClient && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={() => handleLoginRedirect('/login-client', 'isClient')}
+            >
+              Client
+            </MenuItem>
+          )}
+          {!isLoggedIn && !isOwner && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}
+            >
+              Res-Owner
+            </MenuItem>
+          )}
+          {isLoggedIn && (isAdmin || isOwner) && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={() => navigate('/finance')}
+            >
+              Finance
+            </MenuItem>
+          )}
+          {isOwner && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={() => navigate(`/owner/${'resName'}`)}
+            >
+              Orders
+            </MenuItem>
+          )}
+          {isOwner && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={() => navigate(`/`)}
+            >
+              Settings
+            </MenuItem>
+          )}
+          {isAdmin && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={() => navigate(`/`)}
+            >
+              Settings
+            </MenuItem>
+          )}
+          <MenuItem
+            className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+            onClick={() => navigate('/contact-us')}
+          >
+            Contact Us
+          </MenuItem>
+          {isLoggedIn && (
+            <MenuItem
+              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+              onClick={handleLogout}
+            >
+              Logout
+            </MenuItem>
+          )}
+        </div>
+      </div>
+    </Drawer>
                     </div>
                 </div>
             </nav>

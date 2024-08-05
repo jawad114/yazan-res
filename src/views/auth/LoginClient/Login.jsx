@@ -105,8 +105,8 @@ const LoginClient = () => {
 
   // );
   return (
-    <div className="flex items-center justify-center h-screen w-full bg-gray-100">
-      <div className="flex flex-col bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+    <div className="flex items-center justify-center h-full w-full">
+      <div className="flex flex-col  bg-white shadow-black shadow-md rounded-lg p-8 mt-[10vh] w-full max-w-md">
         <h3 className="text-2xl font-semibold text-center mb-6">Client Login</h3>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-field flex flex-col">
@@ -143,13 +143,15 @@ const LoginClient = () => {
           <div className="flex items-center justify-between mt-4">
             <Typography className="text-sm text-red-500">Don't have an account?</Typography>
             <Button
-            size="sm"
-            color="green"
-              className="text-white cursor-pointer hover:underline mt-2 flex items-center justify-center"
-              onClick={() => window.location.replace('/register-client')}
-            >
-              <PersonIcon className="mr-2" /> Create an account
-            </Button>
+  size="sm"
+  color="green"
+  className="text-white cursor-pointer hover:underline mt-2 flex items-center justify-center"
+  onClick={() => window.location.replace('/register-client')}
+>
+  <PersonIcon className="mr-2" />
+  <span className="whitespace-nowrap">Create an account</span>
+</Button>
+
           </div>
 
         </form>

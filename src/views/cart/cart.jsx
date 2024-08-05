@@ -86,7 +86,7 @@ const Cart = () => {
   };
 
   return (
-    <div className='p-5'>
+    <div className='p-2'>
 
       {!isClient ? (
         <div><p style={{ color: 'red' }}>Login as a Client First</p></div>
@@ -96,10 +96,20 @@ const Cart = () => {
         <div>Loading...</div>
       ) : (
         <>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Your Cart: {name ? name : ''}
-          </Typography>
-          <h1>Total Items in Cart : {itemsCount}</h1>
+        <div className='flex flex-col text-start mt-[2vh]'>
+ <Typography
+        variant="h5"
+        gutterBottom
+      >
+        Your Cart: {name ? name : ''}
+      </Typography>
+      <Typography
+        variant="h5"
+        gutterBottom
+      >
+        Total Items in Cart: {itemsCount}
+      </Typography>
+      </div>
           {cart && cart.products.length > 0 ? (
             <div>
               {cart.products.map((product) => (
