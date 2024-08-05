@@ -234,9 +234,9 @@ export default function OwnerDashboard() {
 
 
     const calculateRemainingPreparingTime = (order) => {
-        const preparingStartedAt = new Date(order.preparingStartedAt).toLocaleString();
+        const preparingStartedAt = new Date(order.preparingStartedAt).getTime();
         const currentTime = new Date().getTime();
-        const elapsedMilliseconds = currentTime - new Date(preparingStartedAt).getTime();
+        const elapsedMilliseconds = currentTime - preparingStartedAt;
         const elapsedMinutes = Math.floor(elapsedMilliseconds / (1000 * 60));
         let remainingPreparingTime = order.preparingTime - elapsedMinutes;
         if (remainingPreparingTime < 0) {
@@ -244,6 +244,7 @@ export default function OwnerDashboard() {
         }
         return remainingPreparingTime;
     };
+    
 
     const openGoogleMaps = (latitude, longitude) => {
         window.open(`https://www.google.com/maps/search/?api=1&query=${longitude},${latitude}`, '_blank');

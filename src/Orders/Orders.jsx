@@ -52,9 +52,9 @@ const Orders = () => {
 
 
   const calculateRemainingPreparingTime = (order) => {
-    const preparingStartedAt = new Date(order.preparingStartedAt).toLocaleString();
+    const preparingStartedAt = new Date(order.preparingStartedAt).getTime();
     const currentTime = new Date().getTime();
-    const elapsedMilliseconds = currentTime - new Date(preparingStartedAt).getTime();
+    const elapsedMilliseconds = currentTime - preparingStartedAt;
     const elapsedMinutes = Math.floor(elapsedMilliseconds / (1000 * 60));
     let remainingPreparingTime = order.preparingTime - elapsedMinutes;
     if (remainingPreparingTime < 0) {
@@ -62,6 +62,7 @@ const Orders = () => {
     }
     return remainingPreparingTime;
 };
+
 
 useEffect(() => {
   const interval = setInterval(() => {
