@@ -70,7 +70,7 @@ const HomeComponent = () => {
   }
 
   const handleOwnerOrder = () => {
-    window.location.replace(`/owner/${resName}`);
+    window.location.replace(`/owner`);
   }
 
   const filteredProducts = products && products.length > 0
