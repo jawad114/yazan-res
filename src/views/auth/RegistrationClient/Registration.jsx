@@ -41,7 +41,7 @@ const Registration = () => {
     }
 
     try {
-      const emailExistsResponse = await axios.post("https://yazan-4.onrender.com/check-email-exists", { email: formData.email });
+      const emailExistsResponse = await AxiosRequest.post("/check-email-exists", { email: formData.email });
       if (emailExistsResponse.data.exists) {
         alert("This email is already registered. Please use a different email.");
       } else {
