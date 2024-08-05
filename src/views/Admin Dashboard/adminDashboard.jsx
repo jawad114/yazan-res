@@ -1,21 +1,32 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import axios from "axios";
 import { Typography, Box, TextField, Button } from "@mui/material";
 import "./AdminDashboard.css"; // Import the CSS file
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from "../../Components/AxiosRequest";
+import { useNavigate } from 'react-router-dom';
+
 
 const AdminDashboard = () => {
   const [restaurantName, setRestaurantName] = useState("");
   const [picture, setPicture] = useState("");
   const [location, setLocation] = useState("");
+  const navigate = useNavigate();
   const [menu, setMenu] = useState([
     { categoryName: "", dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }] },
   ]);
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [generatedPassword, setGeneratedPassword] = useState("");
   const formRef = useRef(null);
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  useEffect(() => {
+    if (!isAdmin) {
+        navigate('/forbidden'); // Replace with your target route
+    }
+}, [isAdmin, navigate]);
 
   const handleAddCategory = () => {
     setMenu([

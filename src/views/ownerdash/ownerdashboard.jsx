@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
 import {
     Typography,
     Box,
@@ -14,9 +13,10 @@ import {
     TextField,
 } from '@mui/material';
 import { CheckCircle, Cancel, Delete, LocalShipping, Timelapse } from '@mui/icons-material';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../Components/AxiosRequest';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function OwnerDashboard() {
@@ -30,6 +30,9 @@ export default function OwnerDashboard() {
     const [approvedOrders, setApprovedOrders] = useState([]); // State to track approved orders
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All orders');
+    const navigate = useNavigate();
+
+
     // const [totalOrders, setTotalOrders] = useState({
     //     'All orders': 0,
     //     'New orders': 0,
@@ -43,9 +46,13 @@ export default function OwnerDashboard() {
         setStatusFilter(filter);
     };
 
-    const resName = localStorage.getItem('resName');
+    const resName = localStorage.getItem('resName'); 
 
-
+    useEffect(() => {
+        if (!resName) {
+            navigate('/forbidden'); // Replace with your target route
+        }
+    }, [resName, navigate]);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -226,10 +233,6 @@ export default function OwnerDashboard() {
         }
     };
 
-    const toastStyle = {
-        container: "max-w-sm mx-auto",
-        toast: "bg-red-500 text-white font-bold",
-    };
 
 
 
@@ -273,18 +276,6 @@ export default function OwnerDashboard() {
 
     return (
         <Box className='min-w-screen flex flex-col items-center justify-center text-center'>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                style={toastStyle}
-            />
             <Typography className='mt-4' variant="h4" component="h1" gutterBottom>
                 Orders for {resName}
             </Typography>

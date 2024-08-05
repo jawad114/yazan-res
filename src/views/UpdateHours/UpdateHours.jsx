@@ -126,12 +126,11 @@
 // export default UpdateHours;
 
 
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState,useEffect } from 'react';
 import { Button } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AxiosRequest from '../../Components/AxiosRequest';
 
 const UpdateHours = () => {
@@ -141,11 +140,19 @@ const UpdateHours = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const isOwner = localStorage.getItem('isOwner') === 'true';
+  const navigate = useNavigate();
   const resName = localStorage.getItem('resName');
   const { restaurantName } = useParams();
 
   const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+  useEffect(() => {
+    if (!isAdmin && !isOwner) {
+        navigate('/forbidden'); // Replace with your target route
+    }
+}, [isAdmin, isOwner, navigate]);
 
   const handleDayClick = (selectedDay) => {
     setDay(selectedDay);

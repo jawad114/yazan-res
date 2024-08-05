@@ -5,6 +5,7 @@ import styles from './categories.module.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useLocation,useNavigate } from 'react-router-dom';
 
 
 export default function Categories() {
@@ -13,10 +14,18 @@ export default function Categories() {
   const [loading, setLoading] = useState(true);
   const isOwner = localStorage.getItem('isOwner') === 'true';
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
-  
-  const { resName } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const {resName} = useParams(); // Access the resName from state
 
   localStorage.setItem('resName', resName);
+
+    useEffect(() => {
+        if (!resName) {
+            navigate('/forbidden'); // Replace with your target route
+        }
+    }, [resName, navigate]);
 
   useEffect(() => {
     const fetchCategories = async () => {

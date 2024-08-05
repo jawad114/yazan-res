@@ -146,9 +146,8 @@
 // export default AddDish;
 
 
-import React, { useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import React, { useState,useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, TextField, Typography } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -194,6 +193,15 @@ const AddDish = () => {
   const [description, setDescription] = useState("");
   const [requiredExtras, setRequiredExtras] = useState([{ name: "", price: "" }]);
   const [optionalExtras, setOptionalExtras] = useState([{ name: "", price: "" }]);
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const isOwner = localStorage.getItem('isOwner') === 'true';
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAdmin && !isOwner) {
+        navigate('/forbidden'); // Replace with your target route
+    }
+}, [isAdmin, isOwner, navigate]);
 
   const handleAddDish = async () => {
     if (!name || !price || !dishImage || !description ) {

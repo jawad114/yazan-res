@@ -240,6 +240,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './card.css'
 import AxiosRequest from '../../Components/AxiosRequest';
+import { useNavigate } from 'react-router-dom';
 
 const Status = ({ status }) => {
   let backgroundColor;
@@ -285,6 +286,7 @@ export default function Card({ product }) {
   const [isAddingToFavorites, setIsAddingToFavorites] = useState(false);
   const [isRemovingFromFavorites, setIsRemovingFromFavorites] = useState(false);
   const id = localStorage.getItem('id');
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -333,15 +335,15 @@ export default function Card({ product }) {
   };
 
   const handleShowCategories = () => {
-    window.location.replace(`/categories/${restaurantName}`);
+    navigate(`/categories/${restaurantName}`, { state: { resName: restaurantName } });
   };
 
   const handleUpdateHours = () => {
-    window.location.replace(`/update-opening-hours/${restaurantName}`);
+    navigate(`/update-opening-hours/${restaurantName}`, { state: { resName: restaurantName } });
   };
 
   const handleEdit = () => {
-    window.location.replace(`/edit/${restaurantName}`);
+    navigate(`/edit/${restaurantName}`, { state: { resName: restaurantName } });
   };
 
   const handleDelete = async () => {
@@ -351,7 +353,7 @@ export default function Card({ product }) {
       try {
         await AxiosRequest.delete(`/delete-restaurant/${restaurantName}`);
         toast.success('Restaurant deleted successfully');
-        window.location.replace('/');
+        navigate('/');
       } catch (error) {
         console.error('Error deleting restaurant:', error);
         toast.error('Failed to delete restaurant');

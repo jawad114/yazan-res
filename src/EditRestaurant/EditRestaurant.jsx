@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AxiosRequest from '../Components/AxiosRequest';
 
 export default function EditRestaurant() {
@@ -11,6 +11,15 @@ export default function EditRestaurant() {
   const [updatedLocation, setUpdatedLocation] = useState('');
   const token = localStorage.getItem('token');
   console.log(token);
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const isOwner = localStorage.getItem('isOwner') === 'true';
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAdmin && !isOwner) {
+        navigate('/forbidden'); // Replace with your target route
+    }
+}, [isAdmin, isOwner, navigate]);
 
 
   useEffect(() => {

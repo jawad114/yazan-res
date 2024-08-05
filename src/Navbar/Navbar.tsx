@@ -43,12 +43,13 @@ const Navbar: React.FC = () => {
         };
     }, []);
 
+    const customerId = localStorage.getItem('id');
+    const loggedIn = localStorage.getItem('token') !== null;
+    const restaurantName = localStorage.getItem('resName') ?? '';
+
     useEffect(() => {
         const checkUserLogin = () => {
-          const customerId = localStorage.getItem('id');
-          const loggedIn = localStorage.getItem('token') !== null;
-          const restaurantName = localStorage.getItem('resName') ?? '';
-    
+
           if (isAdmin) {
             setIsLoggedIn(true);
             setUserRole('isAdmin');
@@ -153,7 +154,7 @@ const Navbar: React.FC = () => {
           };
       
           checkUserLogin();
-        }, [ws, audio, ownerRestaurantName]);
+        }, [ws, audio, ownerRestaurantName,customerId,loggedIn,restaurantName]);
 
     const fetchCart = async (customerId: string | null) => {
         try {
@@ -176,6 +177,7 @@ const Navbar: React.FC = () => {
         localStorage.removeItem('isAdmin');
         localStorage.removeItem('isOwner');
         localStorage.removeItem('isClient');
+        localStorage.removeItem('resName');
         localStorage.removeItem('name');
         alert('You have been successfully logged out.');
         setIsLoggedIn(false);
@@ -243,11 +245,12 @@ const Navbar: React.FC = () => {
 
                         {/* Conditionally render the button based on the logged-in restaurant name */}
                         {isOwner && (
-                            <Link to={`/owner/${'resName'}`} className="action-btn">
-                                <ListAlt />Orders                            </Link>
+                            <Link to={`/owner`} className="action-btn">
+                                <ListAlt />Orders                            
+                                </Link>
                         )}
                         {isAdmin && (
-                            <Link to={`/owner/${'resName'}`} className="action-btn">
+                            <Link to={`/all-orders`} className="action-btn">
                                 <ListAlt />Orders
                             </Link>
                         )}
@@ -296,11 +299,9 @@ const Navbar: React.FC = () => {
                                     </Link>
                                 )}
 
-
                                 <button className='action-btn' onClick={handleLogout}>
                                     <ExitToApp style={{ marginRight: '0.5rem' }} /> Logout
                                 </button>
-
                             </>
                         )}
                     </div>

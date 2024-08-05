@@ -5,13 +5,14 @@ import styles from "./Login.module.css";
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from "../../../Components/AxiosRequest";
-
+import { useNavigate } from "react-router-dom";
 
 const LoginOwner = () => {
   const [state, setState] = useState({
     password: "",
     email: "",
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +39,7 @@ const LoginOwner = () => {
         localStorage.setItem('isOwner', 'true');
         localStorage.removeItem('isClient');
         localStorage.removeItem('isAdmin');
-        window.location.replace(`/owner/${response.data.resName}`);
+        navigate(`/owner`);
       }
     } catch (error) {
       if (!toast.isActive("errorToast")) {

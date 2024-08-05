@@ -38,6 +38,8 @@ import AddCategory from './views/categories/AddCategory/AddCategory';
 import AddDish from './views/AddDish/AddDish';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import InvalidAccessPage from './views/InvalidAccessPage/InvalidAccessPage';
+import AdminOrder from './views/AdminOrder/AdminOrder';
 
 
 const theme = createTheme();
@@ -85,8 +87,10 @@ const App = () => {
               <Route path='/favorites' element={<Favorites />} />
               <Route path='/request-credentials' element={<Ownerform />} />
               <Route path='/edit/:resName' element={<EditRestaurant />} />
-              <Route path='/owner/:resName' element={<Ownerdashboard />} />
+              <Route path='/owner' element={<Ownerdashboard />} />
+              <Route path='/forbidden' element={<InvalidAccessPage />} />
               <Route path='/orders' element={<Orders />} />
+              <Route path='/all-orders' element={<AdminOrder />} />
               <Route path='/checkout' element={<Checkout />} />
               <Route path='/favorite' element={<FavoritePage />} />
               <Route path='/finance' element={<Finance />} />

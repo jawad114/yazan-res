@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState,useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../../Components/AxiosRequest';
 
 export default function AddCategory() {
   const { resName } = useParams();
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const isOwner = localStorage.getItem('isOwner') === 'true';
+  const navigate = useNavigate();
   const [menu, setMenu] = useState([
     { categoryName: "", categoryImage: "", dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }] },
   ]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isAdmin && !isOwner) {
+        navigate('/forbidden'); // Replace with your target route
+    }
+}, [isAdmin, isOwner, navigate]);
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
