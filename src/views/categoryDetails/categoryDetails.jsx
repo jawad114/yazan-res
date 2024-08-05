@@ -425,7 +425,7 @@ const CategoryDetails = () => {
                       </>
                       )}
                   {(isAdmin || isOwner) && (
-                    <div className="flex flex-col md:flex-row justify-between space-x-[8vw] md:gap-0  mt-4">
+                    <div className="flex flex-col justify-center md:flex-row md:justify-between md:space-x-[8vw] gap-4 md:gap-0  mt-4">
                       <Button
                         variant="outlined"
                         color="primary"
