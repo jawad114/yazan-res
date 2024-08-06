@@ -11,10 +11,11 @@ import {
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from '@mui/material/CircularProgress';
 import AxiosRequest from "../../Components/AxiosRequest";
+import { useNavigate } from 'react-router-dom';
 import "./categoryDetails.module..css"
 
 const CategoryDetails = () => {
@@ -25,6 +26,7 @@ const CategoryDetails = () => {
   const { resName, categoryName } = useParams();
   const [openM, setOpenM] = useState(false);
   const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState(0); // State to keep track of total price
   const [selectedExtras, setSelectedExtras] = useState({}); // State to keep track of selected extras
   const [restaurantImage, setRestaurantImage] = useState('');
@@ -78,18 +80,18 @@ const CategoryDetails = () => {
     }
   }, [quantities, selectedExtras, selectedProduct]);
 
-  useEffect(() => {
-    let timer;
-    if (openM) {
-      timer = setTimeout(() => {
-        setOpenM(false);
-        handleCloseModal();
-      }, 2000); // Change the duration as needed
-    }
+  // useEffect(() => {
+  //   let timer;
+  //   if (openM) {
+  //     timer = setTimeout(() => {
+  //       setOpenM(false);
+  //       handleCloseModal();
+  //     }, 2000); // Change the duration as needed
+  //   }
 
-    // Cleanup timer on component unmount or when `openM` changes
-    return () => clearTimeout(timer);
-  }, [openM]);
+  //   // Cleanup timer on component unmount or when `openM` changes
+  //   return () => clearTimeout(timer);
+  // }, [openM]);
 
   useEffect(() => {
     if (selectedProduct && selectedProduct.extras && Array.isArray(selectedProduct.extras.requiredExtras) && selectedProduct.extras.requiredExtras.length > 0) {
@@ -145,7 +147,7 @@ const CategoryDetails = () => {
   };
 
   const handleAddDish = () => {
-    window.location.replace(`/add-dish/${resName}/${categoryName}`);
+    navigate(`/add-dish/${resName}/${categoryName}`);
   };
 
   const handleAddToCart = async (productId, price, name, description) => {
@@ -172,7 +174,7 @@ const CategoryDetails = () => {
         orderFrom: resName,
         coordinates
       });
-      setOpenM(true);
+      toast.success('Item added successfully');
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
         if (!toast.isActive("errorToast")) {
@@ -189,7 +191,7 @@ const CategoryDetails = () => {
   const handleEdit = (product) => {
     // Navigate to the edit screen if user is admin or owner
     if (isAdmin || isOwner) {
-      window.location.replace(`/edit/${resName}/${categoryName}/${product._id}`);
+      navigate(`/edit/${resName}/${categoryName}/${product._id}`);
     }
   };
 
@@ -256,7 +258,7 @@ const CategoryDetails = () => {
     textAlign="center"
     variant="h4"
   >
-    {categoryName} Dishes
+    {categoryName}
   </Typography>
 </div>
       {loading ? (
@@ -303,7 +305,7 @@ const CategoryDetails = () => {
       {(isAdmin || isOwner) &&(
         <div className="flex items-center justify-center">
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
-        Add Dish
+        Add Items
       </Button>
       </div>
       )}
@@ -418,7 +420,7 @@ const CategoryDetails = () => {
                   <Button
                         className="btn"
                         variant="contained"
-                        onClick={() => window.location.replace('/cart')}
+                        onClick={() => navigate('/cart')}
                       >
                         View Cart
                       </Button>
@@ -450,12 +452,12 @@ const CategoryDetails = () => {
         
       />
 
-<CustomModal
+{/* <CustomModal
         body={"Item added successfully!"}
         title={""}
         open={openM}
         handleClose={() => setOpenM(false)} // No action needed on close
-      />
+      /> */}
           </div>
           </>
   );

@@ -10,7 +10,9 @@ export default function AddCategory() {
   const isOwner = localStorage.getItem('isOwner') === 'true';
   const navigate = useNavigate();
   const [menu, setMenu] = useState([
-    { categoryName: "", categoryImage: "", dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }] },
+    { categoryName: "", categoryImage: "",
+    //  dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }] 
+    },
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +35,7 @@ export default function AddCategory() {
     setMenu([...menu, {
       categoryName: "",
       categoryImage: "",
-      dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }]
+      // dishes: [{ name: "", price: "", dishImage: "", description: "", requiredExtras: [{ name: "", price: "" }], optionalExtras: [{ name: "", price: "" }] }]
     }]);
   };
 
@@ -43,24 +45,24 @@ export default function AddCategory() {
     setMenu(updatedMenu);
   };
 
-  const handleAddDish = (categoryIndex) => {
-    const updatedMenu = [...menu];
-    updatedMenu[categoryIndex].dishes.push({
-      name: '',
-      price: '',
-      dishImage: '',
-      description: '',
-      requiredExtras: [{ name: '', price: '' }],
-      optionalExtras: [{ name: '', price: '' }]
-    });
-    setMenu(updatedMenu);
-  };
+  // const handleAddDish = (categoryIndex) => {
+  //   const updatedMenu = [...menu];
+  //   updatedMenu[categoryIndex].dishes.push({
+  //     name: '',
+  //     price: '',
+  //     dishImage: '',
+  //     description: '',
+  //     requiredExtras: [{ name: '', price: '' }],
+  //     optionalExtras: [{ name: '', price: '' }]
+  //   });
+  //   setMenu(updatedMenu);
+  // };
 
-  const handleRemoveDish = (categoryIndex, dishIndex) => {
-    const updatedMenu = [...menu];
-    updatedMenu[categoryIndex].dishes.splice(dishIndex, 1);
-    setMenu(updatedMenu);
-  };
+  // const handleRemoveDish = (categoryIndex, dishIndex) => {
+  //   const updatedMenu = [...menu];
+  //   updatedMenu[categoryIndex].dishes.splice(dishIndex, 1);
+  //   setMenu(updatedMenu);
+  // };
 
   const handleInputChange = (categoryIndex, dishIndex, field, value) => {
     const updatedMenu = [...menu];
@@ -72,11 +74,11 @@ export default function AddCategory() {
     setMenu(updatedMenu);
   };
 
-  const handleExtrasChange = (categoryIndex, dishIndex, extrasType, extraIndex, field, value) => {
-    const updatedMenu = [...menu];
-    updatedMenu[categoryIndex].dishes[dishIndex][extrasType][extraIndex][field] = value;
-    setMenu(updatedMenu);
-  };
+  // const handleExtrasChange = (categoryIndex, dishIndex, extrasType, extraIndex, field, value) => {
+  //   const updatedMenu = [...menu];
+  //   updatedMenu[categoryIndex].dishes[dishIndex][extrasType][extraIndex][field] = value;
+  //   setMenu(updatedMenu);
+  // };
 
   const resizeImage = (file, maxWidth, maxHeight) => {
     return new Promise((resolve, reject) => {
@@ -101,7 +103,7 @@ export default function AddCategory() {
     });
   };
 
-  const handleImageUpload = async (categoryIndex, dishIndex, type, file) => {
+  const handleImageUpload = async (categoryIndex, file) => {
     try {
       if (!['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(file.type)) {
         toast.error('Invalid image format. Please upload a JPG/JPEG, PNG, WEBP compressed image');
@@ -111,11 +113,7 @@ export default function AddCategory() {
       const resizedImage = await resizeImage(file, 400, 400);
       const base64String = await convertToBase64(resizedImage);
 
-      if (type === 'dish') {
-        handleInputChange(categoryIndex, dishIndex, 'dishImage', base64String);
-      } else if (type === 'category') {
         handleInputChange(categoryIndex, 0, 'categoryImage', base64String);
-      }
     } catch (error) {
       console.error('Error resizing image:', error);
       toast.error('Failed to upload image');
@@ -126,8 +124,10 @@ export default function AddCategory() {
     setLoading(true);
     console.log('Menu', menu);
     const hasMissingFields = menu.some((category) =>
-      !category.categoryName || !category.categoryImage || category.dishes.some((dish) =>
-        !dish.name || !dish.price || !dish.dishImage || !dish.description)
+      !category.categoryName || !category.categoryImage 
+  //   || category.dishes.some((dish) =>
+  //       !dish.name || !dish.price || !dish.dishImage || !dish.description
+  // )
     );
     console.log('hasMissingFields', hasMissingFields);
     if (hasMissingFields) {
@@ -163,9 +163,9 @@ export default function AddCategory() {
             <label className="block">Category Name:</label>
             <input className="mt-1 block w-full" type="text" value={category.categoryName} onChange={(e) => handleInputChange(categoryIndex, 0, 'categoryName', e.target.value)} />
             <label className="block">Category Image:</label>
-            <input className="mt-1 block w-full" type="file" onChange={(e) => handleImageUpload(categoryIndex, 0,'category', e.target.files[0])} />
+            <input className="mt-1 block w-full" type="file" onChange={(e) => handleImageUpload(categoryIndex, e.target.files[0])} />
             {category.categoryImage && <img className="mt-2" src={category.categoryImage} alt="Category" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
-              {category.dishes.map((dish, dishIndex) => (
+              {/* {category.dishes.map((dish, dishIndex) => (
               <div key={dishIndex} className="mt-6 p-4 border border-gray-200 rounded">
                 <label className="block">Dish Name:</label>
                 <input className="mt-1 block w-full" type="text" value={dish.name} onChange={(e) => handleInputChange(categoryIndex, dishIndex, 'name', e.target.value)} />
@@ -192,9 +192,9 @@ export default function AddCategory() {
                 <input className="mt-1 block w-full" type="file" onChange={(e) => handleImageUpload(categoryIndex, dishIndex,'dish', e.target.files[0])} />
                 {dish.dishImage && <img className="mt-2" src={dish.dishImage} alt="Dish" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
               </div>
-            ))}
+            ))} */}
             <div className='flex flex-col items-center justify-center'>
-            <button className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleAddDish(categoryIndex)}>Add Dish</button>
+            {/* <button className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleAddDish(categoryIndex)}>Add Dish</button> */}
             <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleRemoveCategory(categoryIndex)}>Remove Category</button>
             </div>
           </div>

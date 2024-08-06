@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
     Typography,
+    CircularProgress,
     Box,
     Paper,
     Button,
@@ -9,19 +10,22 @@ import {
     Grid,
     FormControl,
     Select,
+    Menu,
     MenuItem,
     TextField,
 } from '@mui/material';
 import { CheckCircle, Cancel, Delete, LocalShipping, Timelapse } from '@mui/icons-material';
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 
 
 export default function AdminOrder() {
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [showPreparingSelect, setShowPreparingSelect] = useState(false);
@@ -32,6 +36,9 @@ export default function AdminOrder() {
     const [statusFilter, setStatusFilter] = useState('All orders');
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
     const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
 
 
     // const [totalOrders, setTotalOrders] = useState({
@@ -42,11 +49,18 @@ export default function AdminOrder() {
     //     'Declined': 0,
     //     'Completed': 0,
     // });
-
     const handleStatusFilterChange = (filter) => {
         setStatusFilter(filter);
-    };
-
+        setAnchorEl(null); // Close the dropdown after selecting a filter
+      };
+    
+      const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+      const handleClose = () => {
+        setAnchorEl(null);
+      };
 
     useEffect(() => {
         if (!isAdmin) {
@@ -59,9 +73,11 @@ export default function AdminOrder() {
             try {
                 const response = await AxiosRequest.get(`/orders`);
                 setOrders(response.data.orders);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching orders:', error);
                 setError('Failed to fetch orders. Please try again later.');
+                setLoading(false);
             }
         };
 
@@ -357,62 +373,35 @@ export default function AdminOrder() {
                         </Grid>
                     </Grid> */}
 
-                    <Grid container classes={{ root: 'grid grid-cols-1 md:grid-rows-1' }} className='mb-4' spacing={2} justifyContent="center">
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('All orders')}
-                            >
-                                All Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('New orders')}
-                            >
-                                New Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Preparing')}
-                            >
-                                Preparing
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Delivered')}
-                            >
-                                Delivered Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Completed')}
-                            >
-                                Completed Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Declined')}
-                            >
-                                Declined Orders
-                            </Button>
-                        </Grid>
-                    </Grid>
+<Grid container justifyContent="center" className='mb-4'>
+        <Button
+          variant="contained"
+          onClick={handleClick}
+          endIcon={<ArrowDropDownIcon />}
+        >
+          {statusFilter}
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>All Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>New Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>Preparing</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>Completed Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>Declined Orders</MenuItem>
+        </Menu>
+      </Grid>
                     <Typography variant="h6" align="center">
                         Current Status Filter: {statusFilter}
                     </Typography>
                 </div>
 
-                {filteredOrders.length > 0 ? (
+                {loading ? (
+          <CircularProgress className="loading-spinner mt-8" />
+        ) :filteredOrders.length > 0 ? (
                     <Paper elevation={3} className="md:w-full  p-6 border border-gray-300 rounded-lg">
                         {filteredOrders.map(order => (
                             <Card key={order._id} className="md:min-w-screen mb-4">
@@ -571,7 +560,7 @@ export default function AdminOrder() {
                             </Card>
                         ))}
                     </Paper>
-                ) : (
+                ) : !loading && (
                     <Typography textAlign="center" mt={5} fontWeight="bold">
                         No orders found
                     </Typography>

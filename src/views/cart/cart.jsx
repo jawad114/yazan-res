@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Typography } from '@mui/material'; // Import Typography component
 import AxiosRequest from '../../Components/AxiosRequest';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -11,6 +12,7 @@ const Cart = () => {
   const customerId = localStorage.getItem('id');
   const isClient = localStorage.getItem('isClient') === 'true';
   const name = localStorage.getItem('name');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -140,7 +142,7 @@ const Cart = () => {
               ))}
               <h1>Total Price: {calculateTotalPrice()} ₪</h1>
               <Button onClick={clearCart} variant="contained" color="secondary" className='my-3'>Clear Cart</Button>
-              <Button onClick={() => { window.location.replace(`/checkout`) }} variant="contained" color="primary" className='w-full my-3'>Checkout</Button>
+              <Button onClick={() => { navigate(`/checkout`) }} variant="contained" color="primary" className='w-full my-3'>Checkout</Button>
             </div>
           ) : (
             <p>Cart is empty</p>

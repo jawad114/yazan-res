@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
     Typography,
+    CircularProgress,
     Box,
     Paper,
     Button,
@@ -9,6 +10,7 @@ import {
     Grid,
     FormControl,
     Select,
+    Menu,
     MenuItem,
     TextField,
 } from '@mui/material';
@@ -17,20 +19,25 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
 export default function OwnerDashboard() {
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
     const [successMessage, setSuccessMessage] = useState('');
     const [showPreparingSelect, setShowPreparingSelect] = useState(false);
     const [preparingTime, setPreparingTime] = useState('');
+    const [currentStatus, setCurrentStatus] = useState('');
     const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [approvedOrders, setApprovedOrders] = useState([]); // State to track approved orders
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All orders');
     const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
 
     // const [totalOrders, setTotalOrders] = useState({
@@ -44,8 +51,16 @@ export default function OwnerDashboard() {
 
     const handleStatusFilterChange = (filter) => {
         setStatusFilter(filter);
-    };
-
+        setAnchorEl(null); // Close the dropdown after selecting a filter
+      };
+    
+      const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+      const handleClose = () => {
+        setAnchorEl(null);
+      };
     const resName = localStorage.getItem('resName'); 
 
     useEffect(() => {
@@ -60,9 +75,11 @@ export default function OwnerDashboard() {
                 console.log('ResName in fetchOrders',resName);
                 const response = await AxiosRequest.get(`/orders/${resName}`);
                 setOrders(response.data.orders);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching orders:', error);
                 setError('Failed to fetch orders. Please try again later.');
+                setLoading(false);
             }
         };
 
@@ -76,42 +93,59 @@ export default function OwnerDashboard() {
 
     }, [resName]);
 
-
     useEffect(() => {
-        let filtered = orders;
-
-        // Filter orders based on statusFilter and include orders with no status, Approved status, and Preparing status
-        filtered = filtered.filter(order => {
-            if (statusFilter === 'All orders') {
-                return order.status === '' || order.status === 'No Status Yet' || order.status === 'Approved' || order.status === 'Not Approved' || order.status === 'Preparing' || order.status === 'Completed' || order.status === 'Delivered';
-            }
-            else if (statusFilter === 'New orders') {
-                // Filter orders with status 'Approved', 'Preparing', empty status, or 'no status' within the last hour
-                return (order.status === 'Approved' || order.status === 'Preparing' || order.status === '') && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000);
-            }
-            else if (statusFilter === 'Delivered') {
-                return order.status === 'Delivered' && order.status !== 'Not Approved';
-            }
-            else if (statusFilter === 'Preparing') {
-                return order.status === 'Preparing';
-            }
-            else if (statusFilter === 'Declined') {
-                return order.status === 'Not Approved';
-            }
-            else if (statusFilter === 'Completed') {
-                return order.status === 'Completed';
-            }
-            return true; // Show all orders if no filter is applied
-
-        });
-
-        // Filter orders based on search term (order ID)
-        filtered = filtered.filter(order => order.orderId.includes(searchTerm.toLowerCase()));
-        filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+        // Fetch opening hours when component mounts
+        const fetchCurrentStatus = async () => {
+            setLoading(true);
+          try {
+            const response = await AxiosRequest.get(`/restaurant-status/${resName}`);
+            setCurrentStatus(response.data.status);
+            setLoading(false);
+          } catch (err) {
+            setError(err.response.data.error || 'An error occurred');
+            setLoading(false);
+          }
+        };
+    
+        fetchCurrentStatus();
+      }, [resName]);
 
 
-        setFilteredOrders(filtered);
-    }, [searchTerm, orders, statusFilter]);
+useEffect(() => {
+    let filtered = orders;
+
+    // Filter orders based on statusFilter
+    filtered = filtered.filter(order => {
+        // Handle empty status or invalid status values
+        const status = order.status || '';
+
+        switch(statusFilter) {
+            case 'All orders':
+                return ['No Status Yet', 'Approved', 'Not Approved', 'Preparing', 'Completed', 'Delivered'].includes(status) || status === '';
+            case 'New orders':
+                return (['Approved', 'Preparing', ''].includes(status)) && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000);
+            case 'Delivered':
+                return status === 'Delivered';
+            case 'Preparing':
+                return status === 'Preparing';
+            case 'Declined':
+                return status === 'Not Approved';
+            case 'Completed':
+                return status === 'Completed';
+            default:
+                return true; // Show all orders if no filter is applied
+        }
+    });
+
+    // Filter orders based on search term (order ID)
+    filtered = filtered.filter(order => order.orderId.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    // Sort orders by orderTime in descending order
+    filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+
+    setFilteredOrders(filtered);
+}, [searchTerm, orders, statusFilter]);
+
 
 
     // const calculateTotalOrders = useMemo(() => {
@@ -289,8 +323,32 @@ export default function OwnerDashboard() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className='w-[50vw] mb-4'
                 />
+                {!loading?(
+                    <Typography
+    variant="h6"
+    gutterBottom
+    sx={{
+        color: 'black',
+        fontWeight: 'bold',
+    }}
+>
+    Current Restaurant Status: 
+    <span
+        style={{
+            color: currentStatus === 'open' ? 'green' :
+                   currentStatus === 'closed' ? 'red' :
+                   currentStatus === 'busy' ? 'darkorange' :
+                   'black' // default color if no match
+        }}
+    >
+        {` ${currentStatus.toUpperCase()}`}
+    </span>
+</Typography>
+
+           
+                ):null
+            }
                 <Typography variant="h6"
-                    component="h1"
                     gutterBottom
                     sx={{
                         color: 'black',
@@ -357,62 +415,35 @@ export default function OwnerDashboard() {
                         </Grid>
                     </Grid>
 
-                    <Grid container classes={{ root: 'grid grid-cols-1 md:grid-rows-1' }} className='mb-4' spacing={2} justifyContent="center">
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('All orders')}
-                            >
-                                All Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('New orders')}
-                            >
-                                New Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Preparing')}
-                            >
-                                Preparing
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Delivered')}
-                            >
-                                Delivered Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Completed')}
-                            >
-                                Completed Orders
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={() => handleStatusFilterChange('Declined')}
-                            >
-                                Declined Orders
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Grid container justifyContent="center" className='mb-4'>
+        <Button
+          variant="contained"
+          onClick={handleClick}
+          endIcon={<ArrowDropDownIcon />}
+        >
+          {statusFilter}
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>All Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>New Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>Preparing</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>Completed Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>Declined Orders</MenuItem>
+        </Menu>
+      </Grid>
                     <Typography variant="h6" align="center">
                         Current Status Filter: {statusFilter}
                     </Typography>
                 </div>
 
-                {filteredOrders.length > 0 ? (
+                {loading ? (
+          <CircularProgress className="loading-spinner mt-8" />
+        ) :filteredOrders.length > 0 ? (
                     <Paper elevation={3} className="md:w-full  p-6 border border-gray-300 rounded-lg">
                         {filteredOrders.map(order => (
                             <Card key={order._id} className="md:min-w-screen mb-4">
@@ -571,7 +602,7 @@ export default function OwnerDashboard() {
                             </Card>
                         ))}
                     </Paper>
-                ) : (
+                ) : !loading &&(
                     <Typography textAlign="center" mt={5} fontWeight="bold">
                         No orders found
                     </Typography>

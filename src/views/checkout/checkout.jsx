@@ -4,6 +4,9 @@ import axios from 'axios';
 import CustomModal from '../modal/modal';
 import MapModal from './Map/MapModal';
 import AxiosRequest from '../../Components/AxiosRequest';
+import { useNavigate } from 'react-router-dom';
+import {  toast } from "react-toastify";
+
 
 
 const mapContainerStyle = {
@@ -21,6 +24,7 @@ const RestaurantLocationModal = ({ open, onClose, location }) => {
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
   const { latitude, longitude } = location;
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -68,7 +72,7 @@ const RestaurantLocationModal = ({ open, onClose, location }) => {
         <div className='flex flex-col justify-center items-center'>
           <Button onClick={handleShowOnGoogleMaps} className='mt-4' variant="contained">Show on Google Maps</Button>
           <Button onClick={handleShowOnWaze} className='mt-4' variant="contained">Show on Waze</Button>
-          <Button onClick={onClose} className='mt-4' variant="contained">Close</Button>
+          <Button onClick={() => navigate('/')} className='mt-4' variant="contained">Close</Button>
         </div>
       </div>
     </Modal>
@@ -87,7 +91,6 @@ const Checkout = () => {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [status, setStatus] = useState('');
   const [resName, setResName] = useState('');
   const customerId = localStorage.getItem('id');
   const [shippingOption, setShippingOption] = useState('');
@@ -163,15 +166,16 @@ const Checkout = () => {
 
   };
 
-  const handleCreateOrderButtonClick = () => {
+  const handleCreateOrderButtonClick = async () => {
     if (selectedOption === 'delivery') {
       setShowMap(true);
-    }
-    else if (selectedOption === 'self-pickup') {
+    } else if (selectedOption === 'self-pickup') {
       setShowRestaurantLocationModal(true);
-      handleCreateOrder()
+      // Ensure this call is separate and only triggers after showing the modal
+      await handleCreateOrder();
     }
-  }
+  };
+  
 
   const handleConfirmLocation = (newLocation) => {
     setLocation(newLocation);
@@ -244,35 +248,35 @@ const Checkout = () => {
 
   const handleCreateOrder = async () => {
     if (!shippingInfo.name || !shippingInfo.email || !shippingInfo.phoneNumber1) {
-      alert('Please fill all the fields')
+      alert('Please fill all the fields');
       setShowRestaurantLocationModal(false);
       return;
     }
     if (!location) {
-      alert('Please select your location')
-      return
+      alert('Please select your location');
+      return;
     }
     try {
+      const resStatus = await AxiosRequest.get(`/restaurant-status/${resName}`);
+      const { status } = resStatus.data;
+      if (status === 'closed' || status === 'busy') {
+        toast.error(`Cannot Order Items. Restaurant is ${status}.`);
+        setShowRestaurantLocationModal(false);
+        return;
+      }
       const orderData = {
         products: products,
-        status: status,
         shippingInfo: shippingInfo,
         shippingOption: shippingOption,
         resName: resName,
         userLocation: location
       };
-      console.log('Order Data', orderData)
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
-      console.log('Order created successfully:', response.data.order);
-      console.log('Order created successfully');
-      setOpen(true);
-
-      // Optionally, you can reset the form fields here
+      toast.success('Order created successfully');
     } catch (error) {
-      console.error('Error creating order:', error.message);
+      toast.error(`Error creating order: ${error.message}`);
     }
   };
-
 
 
 
@@ -410,18 +414,24 @@ const Checkout = () => {
 
 
           <Grid item xs={12}>
-            <Button className='btn-global' variant="contained" color="primary" onClick={handleCreateOrderButtonClick}>
-              Create Order
-            </Button>
-            <CustomModal handleClose={handleCloseModal} open={open} body={<div>
+          <Button
+  className='btn-global'
+  variant="contained"
+  color="primary"
+  onClick={handleCreateOrderButtonClick}
+>
+  Create Order
+</Button>
+            {/* <CustomModal handleClose={handleCloseModal} open={open} body={<div>
               <Typography className='text-center fs-4'>Order created successfully</Typography> <p>In This Time We Accept Cash Only</p>
               <div className='flex flex-col justify-center items-center'>
                 <Button onClick={() => { window.location.replace('/'); }} className='mt-4' variant="contained">Continue Shopping </Button>
                 <Button onClick={handleCloseModal} className='mt-4' variant="contained">Close</Button>
               </div>
-            </div>} />
+            </div>} /> */}
           </Grid>
-        </Grid></>
+        </Grid>
+        </>
     );
   }
 };

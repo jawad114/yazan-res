@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import AxiosRequest from '../Components/AxiosRequest';
+import { toast } from 'react-toastify';
 
 export default function EditRestaurant() {
   const { resName,categoryName, dishId } = useParams();
@@ -42,27 +43,64 @@ export default function EditRestaurant() {
     fetchDish();
   }, [resName, dishId]);
 
+  // const handleUpdate = async () => {
+  //   try {
+  //     const base64Image = await convertToBase64(imageFile);
+  //     let headers = {};
+  //     if (token) {
+  //       headers.Authorization = `Bearer ${token}`;
+  //     }
+  //    const res= await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, {
+  //       name: updatedDishName,
+  //       price: updatedPrice,
+  //       description: updatedDescription,
+  //       dishImage: base64Image
+  //     }, { headers });
+  //     console.log(res.data)
+  //     // Redirect back to the home screen after updating
+  //     window.location.replace('/');
+  //   } catch (error) {
+  //     console.error('Error updating dish:', error);
+  //     alert('Failed to update dish');
+  //   }
+  // };
+
+
   const handleUpdate = async () => {
     try {
-      const base64Image = await convertToBase64(imageFile);
+      const base64Image = imageFile ? await convertToBase64(imageFile) : dish.dishImage; // Use the existing image if no new file is selected
       let headers = {};
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
-     const res= await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, {
+  
+      const res = await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, {
         name: updatedDishName,
         price: updatedPrice,
         description: updatedDescription,
         dishImage: base64Image
       }, { headers });
-      console.log(res.data)
-      // Redirect back to the home screen after updating
-      window.location.replace('/');
+  
+      console.log(res.data);
+  
+      // Update the local state to reflect the changes
+      setDish({
+        ...dish,
+        name: updatedDishName,
+        price: updatedPrice,
+        description: updatedDescription,
+        dishImage: base64Image
+      });
+  
+      // Optional: Show a success message
+      toast.success('Dish updated successfully');
+      navigate(-1);
     } catch (error) {
       console.error('Error updating dish:', error);
-      alert('Failed to update dish');
+      toast.error('Failed to update dish');
     }
   };
+  
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {

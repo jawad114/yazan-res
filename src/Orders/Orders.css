@@ -22,19 +22,7 @@
     margin-top: 20vh;
 }
 
-.orders-list {
-    width: 90vw;
-    /* Limit the width of the orders list */
-    padding: 6vh;
-    border-radius: 5px;
-    border: 1px solid #ced4da;
-    margin-top: 6vh;
-    /* Add margin from the heading */
-    /* Set container height to full viewport height */
-    overflow: auto;
-    /* Add vertical scroll if content exceeds viewport height */
 
-}
 
 .order-item {
     margin-bottom: 6vh;
