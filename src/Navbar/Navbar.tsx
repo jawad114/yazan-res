@@ -442,7 +442,7 @@ const Navbar: React.FC = () => {
           {isOwner && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
-              onClick={() => navigate(`/owner/${'resName'}`)}
+              onClick={() => navigate(`/owner`)}
             >
               Orders
             </MenuItem>
