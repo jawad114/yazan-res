@@ -205,7 +205,7 @@ const CategoryDetails = () => {
         try {
           // Send delete request to server
           await AxiosRequest.delete(`/delete-dish/${resName}/${categoryName}/${productId}`);
-
+          window.alert('Item deleted successfully');
           // Reload the page to reflect changes
           window.location.reload();
         } catch (error) {

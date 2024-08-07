@@ -353,7 +353,7 @@ export default function Card({ product }) {
       try {
         await AxiosRequest.delete(`/delete-restaurant/${restaurantName}`);
         toast.success('Restaurant deleted successfully');
-        navigate('/');
+        window.location.reload();
       } catch (error) {
         console.error('Error deleting restaurant:', error);
         toast.error('Failed to delete restaurant');
