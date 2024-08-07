@@ -268,8 +268,14 @@ const openWaze = (latitude, longitude) => {
           </Box>
         </Box>
       )}
+      {selectedOrder.shippingOption !== 'dine-in' && (
       <Typography variant="body1" gutterBottom>
         Phone: {selectedOrder.shippingInfo.phoneNumber1}<br />
+        </Typography>
+
+)}
+
+      <Typography variant="body1" gutterBottom>
         Order Type: {selectedOrder.shippingOption}
       </Typography>
       {selectedOrder.shippingOption === 'dine-in' && (

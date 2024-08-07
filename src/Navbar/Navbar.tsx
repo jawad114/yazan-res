@@ -82,144 +82,62 @@ const Navbar: React.FC = () => {
                   setFavoritesUpdated(true);
                 }
     
-                // if (isOwner && data.type === 'newOrderReceived') {
-                //   if (data.restaurantName === ownerRestaurantName) {
-                //     console.log('New order received for your restaurant');
+                if (isOwner && data.type === 'newOrderReceived') {
+                  if (data.restaurantName === ownerRestaurantName) {
+                    console.log('New order received for your restaurant');
     
-                //     if (audio) {
-                //         audio.pause();
-                //         audio.currentTime = 0;
-                //         audio.loop = false; // Ensure the loop is stopped
-                //         setAudio(null); // Clear the audio object
-                //       }
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                        audio.loop = false; // Ensure the loop is stopped
+                        setAudio(null); // Clear the audio object
+                      }
       
-                //       // Create a new audio instance and set it to loop
-                //       const newAudio = new Audio(notificationSound);
-                //       newAudio.loop = true; // Set loop to true initially
-                //       newAudio.play();
-                //       setAudio(newAudio); // Store the new audio instance
+                      // Create a new audio instance and set it to loop
+                      const newAudio = new Audio(notificationSound);
+                      newAudio.loop = true; // Set loop to true initially
+                      newAudio.play();
+                      setAudio(newAudio); // Store the new audio instance
       
-                //       // Show toast with 'Got it' button
-                //       const id = toast.success(
-                //         <div className="toast-custom">
-                //           <div>New Order Received for {ownerRestaurantName}</div>
-                //           <button
-                //             onClick={() => {
-                //               toast.dismiss(id); // Dismiss the toast
-                //               if (newAudio) {
-                //                 newAudio.pause();
-                //                 newAudio.currentTime = 0;
-                //                 newAudio.loop = false; // Stop the loop
-                //                 setAudio(null); // Clear the audio object
-                //               }
-                //               window.location.reload();
-                //             }}
-                //           >
-                //             Got it
-                //           </button>
-                //         </div>,
-                //         {
-                //           autoClose: false, // Prevent auto-close
-                //           closeButton: false,
-                //           hideProgressBar: true,
-                //           className: 'toast-custom',
-                //           bodyClassName: 'toast-body',
-                //           onClose: () => {
-                //             if (newAudio) {
-                //               newAudio.pause();
-                //               newAudio.currentTime = 0;
-                //               newAudio.loop = false; // Ensure loop is stopped
-                //               setAudio(null); // Clear the audio object
-                //             }
-                //           }
-                //         }
-                //       );
-      
-                //       setToastId(id as string); // Explicitly cast id to string
-                //     }
-                //   }
-
-                if (isOwner && data.type === 'newOrderReceived' && data.restaurantName === ownerRestaurantName) {
-                  console.log('New order received for your restaurant');
-            
-                  // Show initial toast
-                  const id = toast.info(
-                    <div className="toast-custom">
-                      <div>New Order Received for {ownerRestaurantName}</div>
-                      <button
-                        onClick={async () => {
-                          toast.dismiss(id); // Dismiss the initial toast
-            
-                          // Create and play the audio
-                          if (audio) {
-                            audio.pause();
-                            audio.currentTime = 0;
-                            audio.loop = false;
-                            setAudio(null);
-                          }
-            
-                          const newAudio = new Audio(notificationSound);
-                          newAudio.loop = true;
-            
-                          try {
-                            await newAudio.play();
-                            setAudio(newAudio);
-                            setNotificationSoundPlaying(true);
-            
-                            // Show the "Got It" toast after the audio starts playing
-                            const gotItToastId = toast.success(
-                              <div className="toast-custom">
-                                <div>Notification sound is playing</div>
-                                <button
-                                  onClick={() => {
-                                    toast.dismiss(gotItToastId); // Dismiss the "Got It" toast
-                                    if (newAudio) {
-                                      newAudio.pause();
-                                      newAudio.currentTime = 0;
-                                      newAudio.loop = false;
-                                      setAudio(null);
-                                    }
-                                    window.location.reload(); // Reload the page
-                                  }}
-                                >
-                                  Got it
-                                </button>
-                              </div>,
-                              {
-                                autoClose: false,
-                                closeButton: false,
-                                hideProgressBar: true,
-                                className: 'toast-custom',
-                                bodyClassName: 'toast-body',
-                                onClose: () => {
-                                  if (newAudio) {
-                                    newAudio.pause();
-                                    newAudio.currentTime = 0;
-                                    newAudio.loop = false;
-                                    setAudio(null);
-                                  }
-                                }
+                      // Show toast with 'Got it' button
+                      const id = toast.success(
+                        <div className="toast-custom">
+                          <div>New Order Received for {ownerRestaurantName}</div>
+                          <button
+                            onClick={() => {
+                              toast.dismiss(id); // Dismiss the toast
+                              if (newAudio) {
+                                newAudio.pause();
+                                newAudio.currentTime = 0;
+                                newAudio.loop = false; // Stop the loop
+                                setAudio(null); // Clear the audio object
                               }
-                            );
-                          } catch (error) {
-                            console.error('Failed to play audio:', error);
+                              window.location.reload();
+                            }}
+                          >
+                            Got it
+                          </button>
+                        </div>,
+                        {
+                          autoClose: false, // Prevent auto-close
+                          closeButton: false,
+                          hideProgressBar: true,
+                          className: 'toast-custom',
+                          bodyClassName: 'toast-body',
+                          onClose: () => {
+                            if (newAudio) {
+                              newAudio.pause();
+                              newAudio.currentTime = 0;
+                              newAudio.loop = false; // Ensure loop is stopped
+                              setAudio(null); // Clear the audio object
+                            }
                           }
-                        }}
-                      >
-                        Play Notification Sound
-                      </button>
-                    </div>,
-                    {
-                      autoClose: false,
-                      closeButton: false,
-                      hideProgressBar: true,
-                      className: 'toast-custom',
-                      bodyClassName: 'toast-body',
+                        }
+                      );
+      
+                      setToastId(id as string); // Explicitly cast id to string
                     }
-                  );
-            
-                  setToastId(id as string);
-                }
+                  }
       
                 } catch (error) {
                   console.error('Error parsing WebSocket message:', error);

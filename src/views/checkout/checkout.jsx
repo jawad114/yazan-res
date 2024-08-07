@@ -248,11 +248,15 @@ const Checkout = () => {
 
 
   const handleCreateOrder = async () => {
-    if (!shippingInfo.name || !shippingInfo.email || !shippingInfo.phoneNumber1) {
+    if (
+      !shippingInfo.name || 
+      (shippingOption !== 'dine-in' && (!shippingInfo.email || !shippingInfo.phoneNumber1))
+    ) {
       alert('Please fill all the fields');
       setShowRestaurantLocationModal(false);
       return;
     }
+    
     if (!location) {
       alert('Please select your location');
       return;
@@ -370,6 +374,8 @@ const Checkout = () => {
               required />
 
           </Grid>
+          {shippingOption !== 'dine-in' && (
+            <>
           <Grid item xs={12}>
             <TextField
               label="Email"
@@ -412,6 +418,8 @@ const Checkout = () => {
                 }
               }} />
           </Grid>
+          </>
+          )}
           {selectedOption === 'delivery' && showMap && (
             <>
               <div>

@@ -475,13 +475,17 @@ useEffect(() => {
                                                     <div className="p-4 bg-gray-100 rounded-lg">
                                                         <Typography variant="body2">
                                                             Customer Name: {order.shippingInfo.name}<br />
-                                                            Email: {order.shippingInfo.email}<br />
-                                                            {order.shippingOption === 'delivery' && (
+                                                            {order.shippingOption !=='dine-in' && (
+                                                        <Typography variant="body2">
+                                                        Phone: {order.shippingInfo.phoneNumber1}<br />
+                                                        Email: {order.shippingInfo.email}<br />
+                                                        </Typography>
+                                                        )}
+                                                        {order.shippingOption === 'delivery' && (
                                                               <Typography variant="body2">
                                                             Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
                                                             </Typography>
                                                         )}
-                                                            Phone: {order.shippingInfo.phoneNumber1}<br />
                                                             Order Type: {order.shippingOption}
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
@@ -538,13 +542,17 @@ useEffect(() => {
                                                 <div className="p-4 bg-gray-100 rounded-lg">
                                                     <Typography variant="body2">
                                                         Customer Name: {order.shippingInfo.name}<br />
+                                                        {order.shippingOption !=='dine-in' &&(
+                                                        <Typography variant="body2">
+                                                        Phone: {order.shippingInfo.phoneNumber1}<br />
                                                         Email: {order.shippingInfo.email}<br />
+                                                        </Typography>
+                                                        )}
                                                         {order.shippingOption === 'delivery' && (
                                                               <Typography variant="body2">
                                                             Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
                                                             </Typography>
                                                         )}
-                                                            Phone: {order.shippingInfo.phoneNumber1}<br />
                                                             Order Type: {order.shippingOption}
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
