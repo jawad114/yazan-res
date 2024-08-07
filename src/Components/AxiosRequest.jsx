@@ -6,8 +6,7 @@ const AxiosRequest = axios.create({
   baseURL: 'https://yazan-layla-yydy.onrender.com'
 });
 
-// https://layla-res.com
-// https://yazan-layla.onrender.com
+// https://layla-res.com 
 
  
 export default AxiosRequest;

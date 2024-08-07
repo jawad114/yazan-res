@@ -10,7 +10,6 @@ export const WebSocketProvider = ({ children }) => {
     const socket = new WebSocket('wss://yazan-layla-yydy.onrender.com');
     
     // wss://layla-res.com
-    // wss://yazan-layla.onrender.com
     setWs(socket);
     socket.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);

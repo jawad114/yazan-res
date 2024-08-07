@@ -434,9 +434,18 @@ export default function AdminOrder() {
                                                         <Typography variant="body2">
                                                             Customer Name: {order.shippingInfo.name}<br />
                                                             Email: {order.shippingInfo.email}<br />
-                                                            Address: {order.shippingOption === 'delivery' ? order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1] : ''}<br />
+                                                            {order.shippingOption === 'delivery' && (
+                                                              <Typography variant="body2">
+                                                            Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
+                                                            </Typography>
+                                                        )}
                                                             Phone: {order.shippingInfo.phoneNumber1}<br />
                                                             Order Type: {order.shippingOption}
+                                                            {order.shippingOption === 'dine-in' &&(
+                                                                <Typography variant="body2">
+                                                                Table Number: {order.tableNumber}
+                                                                </Typography>
+                                                            )}
                                                         </Typography>
                                                     </div>
                                                 </div>
@@ -488,8 +497,18 @@ export default function AdminOrder() {
                                                     <Typography variant="body2">
                                                         Customer Name: {order.shippingInfo.name}<br />
                                                         Email: {order.shippingInfo.email}<br />
-                                                        Address: {order.shippingInfo.address}<br />
-                                                        Phone: {order.shippingInfo.phoneNumber1}
+                                                        {order.shippingOption === 'delivery' && (
+                                                              <Typography variant="body2">
+                                                            Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
+                                                            </Typography>
+                                                        )}
+                                                            Phone: {order.shippingInfo.phoneNumber1}<br />
+                                                            Order Type: {order.shippingOption}
+                                                            {order.shippingOption === 'dine-in' &&(
+                                                                <Typography variant="body2">
+                                                                Table Number: {order.tableNumber}
+                                                                </Typography>
+                                                            )}
                                                     </Typography>
                                                 </div>
                                             </div>

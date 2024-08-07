@@ -90,6 +90,7 @@ const Checkout = () => {
   const [orderId, setOrderId] = useState('');
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState([]);
+  const [tableNumber, setTableNumber] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
   const [resName, setResName] = useState('');
   const customerId = localStorage.getItem('id');
@@ -100,6 +101,7 @@ const Checkout = () => {
   const [showMap, setShowMap] = useState(false);
   const [showRestaurantLocationModal, setShowRestaurantLocationModal] = useState(false);
   const [resLocation, setResLocation] = useState(null);
+  const navigate = useNavigate();
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
     email: '',
@@ -169,8 +171,7 @@ const Checkout = () => {
   const handleCreateOrderButtonClick = async () => {
     if (selectedOption === 'delivery') {
       setShowMap(true);
-    } else if (selectedOption === 'self-pickup') {
-      setShowRestaurantLocationModal(true);
+    } else if (selectedOption === 'self-pickup' || selectedOption === 'dine-in') {
       // Ensure this call is separate and only triggers after showing the modal
       await handleCreateOrder();
     }
@@ -240,9 +241,9 @@ const Checkout = () => {
 
 
   const handleCloseModal = () => {
-    setOpen(false);
+    setShowRestaurantLocationModal(false); // Close the modal
+    navigate('/'); // Navigate to the desired route
   };
-
 
 
 
@@ -269,12 +270,20 @@ const Checkout = () => {
         shippingInfo: shippingInfo,
         shippingOption: shippingOption,
         resName: resName,
-        userLocation: location
+        userLocation: location,
+        ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }) // Conditionally add tableNumber
       };
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
       toast.success('Order created successfully');
+      if (selectedOption === 'self-pickup' || selectedOption === 'dine-in') {
+        setShowRestaurantLocationModal(true);
+      }
     } catch (error) {
+      if(error.response.status === 400){
+       toast.error('Table Already Reserved, Please Choose Another');
+      }else{
       toast.error(`Error creating order: ${error.message}`);
+      }
     }
   };
 
@@ -324,6 +333,21 @@ const Checkout = () => {
                   }}
                 >
                   Self-Pickup
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShippingOption('dine-in')
+                    setSelectedOption('dine-in')
+                  }}
+                  sx={{
+                    backgroundColor: selectedOption === 'dine-in' ? '#4caf50' : 'transparent',
+                    color: selectedOption === 'dine-in' ? '#fff' : '#000',
+                    '&:hover': {
+                      backgroundColor: selectedOption === 'dine-in' ? '#4caf50' : '#f1f1f1',
+                    },
+                  }}
+                >
+                  Dine In
                 </Button>
               </Grid>
             </div>
@@ -404,14 +428,26 @@ const Checkout = () => {
               </div>
             </>
           )}
-          {selectedOption === 'self-pickup' && showRestaurantLocationModal && (
+          {(selectedOption === 'self-pickup' || selectedOption === 'dine-in') && showRestaurantLocationModal && (
             <RestaurantLocationModal
               open={showRestaurantLocationModal}
-              onClose={() => setShowRestaurantLocationModal(false)}
+              onClose={handleCloseModal}
               location={resLocation}
             />
           )}
-
+{selectedOption === 'dine-in' && (
+          <Grid item xs={12}>
+            <TextField
+              label="Table Number"
+              type="number"
+              variant="outlined"
+              fullWidth
+              value={tableNumber}
+              onChange={(e) => setTableNumber(e.target.value)}
+              required
+            />
+          </Grid>
+        )}
 
           <Grid item xs={12}>
           <Button
