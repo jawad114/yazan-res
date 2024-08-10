@@ -206,19 +206,24 @@ const openWaze = (latitude, longitude) => {
         ) : filteredOrders.length > 0 ? (
           <Paper elevation={3} className="w-full md:w-[80vw] flex rounded-lg border overflow-y-auto border-gray-300 mt-2">
             <List>
-              {filteredOrders.map((order) => (
-                <ListItemButton key={order._id} divider className="order-item" onClick={() => handleOrderClick(order)}>
-                  <ListItemText
-                    primary={`Restaurant: ${order.resName}`}
-                    secondary={
-                      <div className="flex flex-row space-x-[40vw] md:space-x-[60vw] justify-between">
-                        <Typography component="span" variant="body2">{formatDate(order.orderTime)}</Typography><br />
-                        <Typography component="span" variant="body2">{calculateTotalPrice(order)}</Typography><br />
-                      </div>
-                    }
-                  />
-                </ListItemButton>
-              ))}
+              {filteredOrders.map((order) => {
+                // Extract orderFrom from the first product or a relevant logic
+                const orderFrom = order.products.length > 0 ? order.products[0].orderFrom : 'Unknown';
+        
+                return (
+                  <ListItemButton key={order._id} divider className="order-item" onClick={() => handleOrderClick(order)}>
+                    <ListItemText
+                      primary={`Restaurant: ${orderFrom}`}
+                      secondary={
+                        <div className="flex flex-row space-x-[40vw] md:space-x-[60vw] justify-between">
+                          <Typography component="span" variant="body2">{formatDate(order.orderTime)}</Typography><br />
+                          <Typography component="span" variant="body2">{calculateTotalPrice(order)}</Typography><br />
+                        </div>
+                      }
+                    />
+                  </ListItemButton>
+                );
+              })}
             </List>
           </Paper>
         ) : (
@@ -239,8 +244,7 @@ const openWaze = (latitude, longitude) => {
           </DialogTitle>
           <DialogContent dividers>
             <Typography variant="body1">Order ID: {selectedOrder.orderId}</Typography>
-            <Typography variant="body1">Restaurant: {selectedOrder.resName}</Typography>
-            {(selectedOrder.shippingOption === 'self-pickup' || selectedOrder.shippingOption === 'dine-in') && (
+            {selectedOrder.shippingOption === 'self-pickup' && (
         <Box mb={2}>
           <Typography variant="body1" className='text-center' gutterBottom>
             Restaurant Address:
@@ -286,11 +290,29 @@ const openWaze = (latitude, longitude) => {
             <Typography variant="body1">Ordered At: {formatDate(selectedOrder.orderTime)}</Typography>
             {selectedOrder.products.map((product) => (
               <div key={product._id} className='mt-[4vh]'>
+                <Typography variant="body1">Restaurant: {product.orderFrom}</Typography>
                 <Typography component="span" variant="body2">Name: {product.name}</Typography><br />
                 <Typography component="span" variant="body2">Quantity: {product.quantity}</Typography><br />
                 <Typography component="span" variant="body2">Price: {product.price}</Typography><br />
-                <Typography component="span" variant="body2">Extras: {product.extras ? product.extras.map(extra => extra.name).join(', ') : 'None'}</Typography><br />
-                <Typography component="span" variant="body2">Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}</Typography><br />
+                {/* <Typography component="span" variant="body2">Extras: {product.extras ? product.extras.map(extra => extra.name).join(', ') : 'None'}</Typography><br />
+                <Typography component="span" variant="body2">Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}</Typography><br /> */}
+                {product.extras && product.extras.length > 0 ? (
+  <>
+    <Typography component="span" variant="body2">
+      Extras: {product.extras.map(extra => extra.name).join(', ')}
+    </Typography><br />
+
+    <Typography component="span" variant="body2">
+      Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}
+    </Typography><br />
+  </>
+):(
+  <>
+  <Typography component="span" variant="body2">
+  No Extras
+</Typography><br />
+</>
+)}
                                      <div className="status-info mt-[2vh] mb-[2vh]">
                           <Typography variant="body1">Status Info</Typography>
                           {selectedOrder.status === 'Approved' && (
@@ -355,13 +377,14 @@ const openWaze = (latitude, longitude) => {
     let totalPrice = 0;
     order.products.forEach(product => {
       let productTotal = product.price * product.quantity;
+      totalPrice += productTotal;
       if (product.extras) {
         product.extras.forEach(extra => {
-          productTotal += extra.price * product.quantity;
+          totalPrice += extra.price * product.quantity;
         });
       }
-      totalPrice += productTotal;
     });
+
     return totalPrice.toFixed(2);
   }
 };

@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../Components/AxiosRequest';
+import Carousels from './Carousels/Carousels';
 
 
 const HomeComponent = () => {
@@ -88,8 +89,9 @@ const HomeComponent = () => {
 
 
   return (
-    <div>
-      <img src="https://beyondtype1.org/wp-content/uploads/2023/01/FAST-FOOD-CHAIN-NUTRITION-GUIDE-HEADER.jpg" alt="Header" className={styles.headerImage} />
+    <div className='bg-white'>
+      {/* <img src="https://beyondtype1.org/wp-content/uploads/2023/01/FAST-FOOD-CHAIN-NUTRITION-GUIDE-HEADER.jpg" alt="Header" className={styles.headerImage} /> */}
+      <Carousels/>
       <div className={`${styles.p4}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h2>Restaurant Area</h2>
         {(localStorage.getItem('isClient') === 'true' || localStorage.getItem('isAdmin') === 'true') && (

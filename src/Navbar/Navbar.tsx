@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -14,148 +14,314 @@ import { toast } from 'react-toastify';
 import AxiosRequest from '../Components/AxiosRequest';
 
 
+// const Navbar: React.FC = () => {
+//     const [scrolling, setScrolling] = useState(false);
+//     const [cartCount, setCartCount] = useState(0);
+//     const [isLoggedIn, setIsLoggedIn] = useState(false);
+//     const [userRole, setUserRole] = useState('');
+//     const [favoriteUpdate, setFavoritesUpdated] = useState(false);
+//     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+//     const [isMenuOpen, setIsMenuOpen] = useState(false);
+//     const navigate = useNavigate();
+//     const isAdmin = localStorage.getItem('isAdmin') === 'true';
+//     const isOwner = localStorage.getItem('isOwner') === 'true';
+//     const isClient = localStorage.getItem('isClient') === 'true';
+//     const ws = useWebSocket() as WebSocket | null;
+//     const [ownerRestaurantName, setOwnerRestaurantName] = useState('');
+//     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+//     const [notificationSoundPlaying, setNotificationSoundPlaying] = useState(false);
+//     const [toastId, setToastId] = useState<string | null>(null);
+
+//     useEffect(() => {
+//         const handleScroll = () => {
+//             setScrolling(window.scrollY > 50);
+//         };
+
+//         window.addEventListener('scroll', handleScroll);
+
+//         return () => {
+//             window.removeEventListener('scroll', handleScroll);
+//         };
+//     }, []);
+
+//     const customerId = localStorage.getItem('id');
+//     const loggedIn = localStorage.getItem('token') !== null;
+//     const restaurantName = localStorage.getItem('resName') ?? '';
+
+//     useEffect(() => {
+//         const checkUserLogin = () => {
+
+//           if (isAdmin) {
+//             setIsLoggedIn(true);
+//             setUserRole('isAdmin');
+//           } else if (isOwner) {
+//             setIsLoggedIn(true);
+//             setUserRole('isOwner');
+//             setOwnerRestaurantName(restaurantName); // Store the restaurant name
+//           } else if (isClient) {
+//             setIsLoggedIn(true);
+//             setUserRole('isClient');
+//             if (customerId) fetchCartDebounced(customerId);
+//           } else {
+//             setIsLoggedIn(loggedIn);
+//           }
+    
+//           if (loggedIn && ws) {
+//             ws.onopen = () => {
+//               console.log('WebSocket connection opened');
+//             };
+    
+//             ws.onmessage = (event: MessageEvent) => {
+//               console.log('WebSocket message received:', event.data);
+//               try {
+//                 const data = JSON.parse(event.data);
+    
+//                 if (isClient && data.type === 'cartUpdated') {
+//                   if (customerId) fetchCartDebounced(customerId);
+//                 } else if (isClient && data.type === 'favoritesUpdated') {
+//                   setFavoritesUpdated(true);
+//                 }
+    
+//                 if (isOwner && data.type === 'newOrderReceived') {
+//                   if (data.restaurantName === ownerRestaurantName) {
+//                     console.log('New order received for your restaurant');
+    
+//                     if (audio) {
+//                         audio.pause();
+//                         audio.currentTime = 0;
+//                         audio.loop = false; // Ensure the loop is stopped
+//                         setAudio(null); // Clear the audio object
+//                       }
+      
+//                       // Create a new audio instance and set it to loop
+//                       const newAudio = new Audio(notificationSound);
+//                       newAudio.loop = true; // Set loop to true initially
+//                       newAudio.play();
+//                       setAudio(newAudio); // Store the new audio instance
+      
+//                       // Show toast with 'Got it' button
+//                       const id = toast.success(
+//                         <div className="toast-custom">
+//                           <div>New Order Received for {ownerRestaurantName}</div>
+//                           <button
+//                             onClick={() => {
+//                               toast.dismiss(id); // Dismiss the toast
+//                               if (newAudio) {
+//                                 newAudio.pause();
+//                                 newAudio.currentTime = 0;
+//                                 newAudio.loop = false; // Stop the loop
+//                                 setAudio(null); // Clear the audio object
+//                               }
+//                               window.location.reload();
+//                             }}
+//                           >
+//                             Got it
+//                           </button>
+//                         </div>,
+//                         {
+//                           autoClose: false, // Prevent auto-close
+//                           closeButton: false,
+//                           hideProgressBar: true,
+//                           className: 'toast-custom',
+//                           bodyClassName: 'toast-body',
+//                           onClose: () => {
+//                             if (newAudio) {
+//                               newAudio.pause();
+//                               newAudio.currentTime = 0;
+//                               newAudio.loop = false; // Ensure loop is stopped
+//                               setAudio(null); // Clear the audio object
+//                             }
+//                           }
+//                         }
+//                       );
+      
+//                       setToastId(id as string); // Explicitly cast id to string
+//                     }
+//                   }
+      
+//                 } catch (error) {
+//                   console.error('Error parsing WebSocket message:', error);
+//                 }
+//               };
+      
+//               ws.onerror = (event) => {
+//                 console.error('WebSocket error:', event);
+//               };
+      
+//               ws.onclose = (event) => {
+//                 console.log('WebSocket closed:', event);
+//               };
+//             }
+//           };
+      
+//           checkUserLogin();
+//         }, [ws, notificationSound, audio, ownerRestaurantName,customerId,loggedIn,restaurantName]);
+
 const Navbar: React.FC = () => {
-    const [scrolling, setScrolling] = useState(false);
-    const [cartCount, setCartCount] = useState(0);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userRole, setUserRole] = useState('');
-    const [favoriteUpdate, setFavoritesUpdated] = useState(false);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
-    const isAdmin = localStorage.getItem('isAdmin') === 'true';
-    const isOwner = localStorage.getItem('isOwner') === 'true';
-    const isClient = localStorage.getItem('isClient') === 'true';
-    const ws = useWebSocket() as WebSocket | null;
-    const [ownerRestaurantName, setOwnerRestaurantName] = useState('');
-    const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-    const [notificationSoundPlaying, setNotificationSoundPlaying] = useState(false);
-    const [toastId, setToastId] = useState<string | null>(null);
+  const [scrolling, setScrolling] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState('');
+  const [favoriteUpdate, setFavoritesUpdated] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const isOwner = localStorage.getItem('isOwner') === 'true';
+  const isClient = localStorage.getItem('isClient') === 'true';
+  const ws = useWebSocket() as WebSocket | null;
+  const [ownerRestaurantName, setOwnerRestaurantName] = useState('');
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [notificationSoundPlaying, setNotificationSoundPlaying] = useState(false);
+  const [toastId, setToastId] = useState<string | null>(null);
+  const [lastInteractionTime, setLastInteractionTime] = useState<number>(Date.now());
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolling(window.scrollY > 50);
-        };
+  const INTERACTION_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
 
-        window.addEventListener('scroll', handleScroll);
+  useEffect(() => {
+      const handleScroll = () => {
+          setScrolling(window.scrollY > 50);
+      };
 
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+      window.addEventListener('scroll', handleScroll);
 
-    const customerId = localStorage.getItem('id');
-    const loggedIn = localStorage.getItem('token') !== null;
-    const restaurantName = localStorage.getItem('resName') ?? '';
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
+  }, []);
 
-    useEffect(() => {
-        const checkUserLogin = () => {
+  useEffect(() => {
+      const handleUserInteraction = () => {
+          setLastInteractionTime(Date.now());
+      };
+
+      document.addEventListener('click', handleUserInteraction);
+      document.addEventListener('touchstart', handleUserInteraction);
+
+      return () => {
+          document.removeEventListener('click', handleUserInteraction);
+          document.removeEventListener('touchstart', handleUserInteraction);
+      };
+  }, []);
+
+  const customerId = localStorage.getItem('id');
+  const loggedIn = localStorage.getItem('token') !== null;
+  const restaurantName = localStorage.getItem('resName') ?? '';
+
+  useEffect(() => {
+      const checkUserLogin = () => {
 
           if (isAdmin) {
-            setIsLoggedIn(true);
-            setUserRole('isAdmin');
+              setIsLoggedIn(true);
+              setUserRole('isAdmin');
           } else if (isOwner) {
-            setIsLoggedIn(true);
-            setUserRole('isOwner');
-            setOwnerRestaurantName(restaurantName); // Store the restaurant name
+              setIsLoggedIn(true);
+              setUserRole('isOwner');
+              setOwnerRestaurantName(restaurantName); // Store the restaurant name
           } else if (isClient) {
-            setIsLoggedIn(true);
-            setUserRole('isClient');
-            if (customerId) fetchCartDebounced(customerId);
+              setIsLoggedIn(true);
+              setUserRole('isClient');
+              if (customerId) fetchCartDebounced(customerId);
           } else {
-            setIsLoggedIn(loggedIn);
+              setIsLoggedIn(loggedIn);
           }
-    
+
           if (loggedIn && ws) {
-            ws.onopen = () => {
-              console.log('WebSocket connection opened');
-            };
-    
-            ws.onmessage = (event: MessageEvent) => {
-              console.log('WebSocket message received:', event.data);
-              try {
-                const data = JSON.parse(event.data);
-    
-                if (isClient && data.type === 'cartUpdated') {
-                  if (customerId) fetchCartDebounced(customerId);
-                } else if (isClient && data.type === 'favoritesUpdated') {
-                  setFavoritesUpdated(true);
-                }
-    
-                if (isOwner && data.type === 'newOrderReceived') {
-                  if (data.restaurantName === ownerRestaurantName) {
-                    console.log('New order received for your restaurant');
-    
-                    if (audio) {
-                        audio.pause();
-                        audio.currentTime = 0;
-                        audio.loop = false; // Ensure the loop is stopped
-                        setAudio(null); // Clear the audio object
+              ws.onopen = () => {
+                  console.log('WebSocket connection opened');
+              };
+
+              ws.onmessage = (event: MessageEvent) => {
+                  console.log('WebSocket message received:', event.data);
+                  try {
+                      const data = JSON.parse(event.data);
+
+                      if (isClient && data.type === 'cartUpdated') {
+                          if (customerId) fetchCartDebounced(customerId);
+                      } else if (isClient && data.type === 'favoritesUpdated') {
+                          setFavoritesUpdated(true);
                       }
-      
-                      // Create a new audio instance and set it to loop
-                      const newAudio = new Audio(notificationSound);
-                      newAudio.loop = true; // Set loop to true initially
-                      newAudio.play();
-                      setAudio(newAudio); // Store the new audio instance
-      
-                      // Show toast with 'Got it' button
-                      const id = toast.success(
-                        <div className="toast-custom">
-                          <div>New Order Received for {ownerRestaurantName}</div>
-                          <button
-                            onClick={() => {
-                              toast.dismiss(id); // Dismiss the toast
-                              if (newAudio) {
-                                newAudio.pause();
-                                newAudio.currentTime = 0;
-                                newAudio.loop = false; // Stop the loop
-                                setAudio(null); // Clear the audio object
+
+                      if (isOwner && data.type === 'newOrderReceived') {
+                          if (data.restaurantName === ownerRestaurantName) {
+                              console.log('New order received for your restaurant');
+
+                              const currentTime = Date.now();
+                              if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
+                                  alert('Please interact with the page to enable audio notifications.');
+                                  return;
                               }
-                              window.location.reload();
-                            }}
-                          >
-                            Got it
-                          </button>
-                        </div>,
-                        {
-                          autoClose: false, // Prevent auto-close
-                          closeButton: false,
-                          hideProgressBar: true,
-                          className: 'toast-custom',
-                          bodyClassName: 'toast-body',
-                          onClose: () => {
-                            if (newAudio) {
-                              newAudio.pause();
-                              newAudio.currentTime = 0;
-                              newAudio.loop = false; // Ensure loop is stopped
-                              setAudio(null); // Clear the audio object
-                            }
+
+                              if (audio) {
+                                  audio.pause();
+                                  audio.currentTime = 0;
+                                  audio.loop = false; // Ensure the loop is stopped
+                                  setAudio(null); // Clear the audio object
+                              }
+
+                              // Create a new audio instance and set it to loop
+                              const newAudio = new Audio(notificationSound);
+                              newAudio.loop = true; // Set loop to true initially
+                              newAudio.play();
+                              setAudio(newAudio); // Store the new audio instance
+
+                              // Show toast with 'Got it' button
+                              const id = toast.success(
+                                  <div className="toast-custom">
+                                      <div>New Order Received for {ownerRestaurantName}</div>
+                                      <button
+                                          onClick={() => {
+                                              toast.dismiss(id); // Dismiss the toast
+                                              if (newAudio) {
+                                                  newAudio.pause();
+                                                  newAudio.currentTime = 0;
+                                                  newAudio.loop = false; // Stop the loop
+                                                  setAudio(null); // Clear the audio object
+                                              }
+                                              window.location.reload();
+                                          }}
+                                      >
+                                          Got it
+                                      </button>
+                                  </div>,
+                                  {
+                                      autoClose: false, // Prevent auto-close
+                                      closeButton: false,
+                                      hideProgressBar: true,
+                                      className: 'toast-custom',
+                                      bodyClassName: 'toast-body',
+                                      onClose: () => {
+                                          if (newAudio) {
+                                              newAudio.pause();
+                                              newAudio.currentTime = 0;
+                                              newAudio.loop = false; // Ensure loop is stopped
+                                              setAudio(null); // Clear the audio object
+                                          }
+                                      }
+                                  }
+                              );
+
+                              setToastId(id as string); // Explicitly cast id to string
                           }
-                        }
-                      );
-      
-                      setToastId(id as string); // Explicitly cast id to string
-                    }
+                      }
+
+                  } catch (error) {
+                      console.error('Error parsing WebSocket message:', error);
                   }
-      
-                } catch (error) {
-                  console.error('Error parsing WebSocket message:', error);
-                }
               };
-      
+
               ws.onerror = (event) => {
-                console.error('WebSocket error:', event);
+                  console.error('WebSocket error:', event);
               };
-      
+
               ws.onclose = (event) => {
-                console.log('WebSocket closed:', event);
+                  console.log('WebSocket closed:', event);
               };
-            }
           };
-      
-          checkUserLogin();
-        }, [ws, notificationSound, audio, ownerRestaurantName,customerId,loggedIn,restaurantName]);
+      };
+
+      checkUserLogin();
+  }, [ws, notificationSound, audio, ownerRestaurantName, customerId, loggedIn, restaurantName]);
 
     const fetchCart = async (customerId: string | null) => {
         try {
@@ -240,30 +406,33 @@ const Navbar: React.FC = () => {
                                 <MenuItem onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>Admin</MenuItem>
                             )}
                         </Menu>
-                        <button className='action-btn' onClick={() => navigate('/contact-us')}>
-                            <Phone style={{ marginRight: '0.5rem' }} /> Contact Us
-                        </button>
+                        {!isAdmin &&(
+                        <Link to={`/contact-us`} className="action-btn">
+                        <Phone style={{ marginRight: '0.5rem' }} /> Contact Us
+                        </Link>
+                          )}
+                          {isAdmin &&(
+                           <Link to={`/slider-image-list`} className="action-btn">
+                            <Image style={{ marginRight: '0.5rem' }} /> Carousel
+                            </Link>
+                          )}
 
                         {/* Conditionally render the button based on the logged-in restaurant name */}
                         {isOwner && (
                             <Link to={`/owner`} className="action-btn">
-                                <ListAlt />Orders                            
+                                <ListAlt style={{ marginRight: '0.5rem' }}/>Orders                            
                                 </Link>
                         )}
                         {isAdmin && (
                             <Link to={`/all-orders`} className="action-btn">
-                                <ListAlt />Orders
+                                <ListAlt style={{ marginRight: '0.5rem' }}/>Orders
                             </Link>
                         )}
 
-                        {isOwner && (
+                        {(isOwner || isAdmin) && (
                             <Link to={`/`} className="action-btn">
-                                <SettingsIcon />Settings                            </Link>
-                        )}
-                        {isAdmin && (
-                            <Link to={`/`} className="action-btn">
-                                <SettingsIcon />Settings
-                            </Link>
+                                <SettingsIcon style={{ marginRight: '0.5rem' }}/>Settings                            
+                                </Link>
                         )}
                         {isClient && (
                             <Link to="/cart" className='action-btn'>
@@ -279,22 +448,22 @@ const Navbar: React.FC = () => {
 
                                 <Link to="/favorites" className='action-btn'>
                                     <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
-                                        {favoriteUpdate ? <Favorite  style={{ color: 'red' }} /> : <FavoriteBorder style={{ color: 'black' }} />}
+                                        {favoriteUpdate ? <Favorite  style={{ color: 'red',marginRight: '0.5rem' }} /> : <FavoriteBorder style={{ color: 'black',marginRight: '0.5rem' }} />}
                                         Favorite
                                     </div>
                                 </Link>
 
                                 {isLoggedIn && (isAdmin || isOwner) && (
                                     <Link to="/finance" className='action-btn'>
-                                        <div className={`cart-icon-container}`}>
-                                            <Money />Finance
+                                        <div className='cart-icon-container'>
+                                            <Money style={{ marginRight: '0.5rem' }}/>Finance
                                         </div>
                                     </Link>
                                 )}
                                 {isLoggedIn && isAdmin && (
                                     <Link to="/admin-dashboard" className='action-btn'>
-                                        <div className={`cart-icon-container}`}>
-                                            <Dashboard className="w-6 h-6" />
+                                        <div className='cart-icon-container'>
+                                            <Dashboard style={{ marginRight: '0.5rem' }} />
                                             Dashboard
                                         </div>
                                     </Link>
@@ -346,58 +515,6 @@ const Navbar: React.FC = () => {
                         <IconButton className="menu-icon" onClick={toggleMenu}>
                             <MenuIcon />
                         </IconButton>
-                        {/* <Drawer anchor="right" open={isMenuOpen} onClose={toggleMenu}>
-                            <h3 id='SideTextNav'>Layla</h3>
-
-
-                            <div className="mobile-menu mt-4 bg-white p-4">
-                                {!isLoggedIn && !isAdmin && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>
-                                        Admin
-                                    </MenuItem>
-                                )}
-                                {!isLoggedIn && !isClient && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => handleLoginRedirect('/login-client', 'isClient')}>
-                                        Client
-                                    </MenuItem>
-                                )}
-                                {!isLoggedIn && !isOwner && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>
-                                        Res-Owner
-                                    </MenuItem>
-                                )}
-                                {isLoggedIn && (isAdmin || isOwner) && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate('/finance')}>
-                                        Finance
-                                    </MenuItem>
-                                )}
-                                {isOwner && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate(`/owner/${'resName'}`)}>
-                                        Orders
-                                    </MenuItem>
-                                )}
-                                {isOwner && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate(`/`)}>
-                                        Settings
-                                    </MenuItem>
-                                )}
-                                {isAdmin && (
-                                    <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate(`/`)}>
-                                        Settings
-                                    </MenuItem>
-                                )}
-                                <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={() => navigate('/contact-us')}>
-                                    Contact Us
-                                </MenuItem>
-                                {isLoggedIn && (
-                                    <>
-                                        <MenuItem className="py-2 px-4 hover:bg-gray-200" onClick={handleLogout}>
-                                            Logout
-                                        </MenuItem>
-                                    </>
-                                )}
-                            </div>
-                        </Drawer> */}
  <Drawer
       anchor="right"
       open={isMenuOpen}
@@ -413,7 +530,7 @@ const Navbar: React.FC = () => {
               className="hover:bg-gray-200 text-white rounded-md p-2 transition-colors duration-200"
               onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}
             >
-              Admin
+              <Person style={{ marginRight: '0.2rem' }}/>Admin
             </MenuItem>
           )}
           {!isLoggedIn && !isClient && (
@@ -421,7 +538,7 @@ const Navbar: React.FC = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => handleLoginRedirect('/login-client', 'isClient')}
             >
-              Client
+              <Person style={{ marginRight: '0.2rem' }}/>Client
             </MenuItem>
           )}
           {!isLoggedIn && !isOwner && (
@@ -429,7 +546,7 @@ const Navbar: React.FC = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}
             >
-              Res-Owner
+              <Person style={{ marginRight: '0.2rem' }}/>Res-Owner
             </MenuItem>
           )}
           {isLoggedIn && (isAdmin || isOwner) && (
@@ -437,7 +554,7 @@ const Navbar: React.FC = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate('/finance')}
             >
-              Finance
+              <Money style={{ marginRight: '0.2rem' }} />Finance
             </MenuItem>
           )}
           {isOwner && (
@@ -445,37 +562,36 @@ const Navbar: React.FC = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate(`/owner`)}
             >
-              Orders
+              <ListAlt style={{ marginRight: '0.2rem' }}/>Orders
             </MenuItem>
           )}
-          {isOwner && (
+          {(isOwner || isAdmin) && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate(`/`)}
             >
-              Settings
+             <SettingsIcon style={{ marginRight: '0.2rem' }}/> Settings
             </MenuItem>
           )}
-          {isAdmin && (
-            <MenuItem
-              className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
-              onClick={() => navigate(`/`)}
-            >
-              Settings
-            </MenuItem>
-          )}
+                          {isAdmin &&(
+                           <MenuItem onClick={() => navigate('/slider-image-list')} className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200">
+                            <Image style={{ marginRight: '0.2rem' }} /> Carousel
+                            </MenuItem>
+                          )}
+        {!isAdmin &&(                  
           <MenuItem
             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
             onClick={() => navigate('/contact-us')}
           >
-            Contact Us
+           <Phone style={{ marginRight: '0.2rem' }}/> Contact Us
           </MenuItem>
+        )}
           {isLoggedIn && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={handleLogout}
             >
-              Logout
+              <ExitToApp style={{ marginRight: '0.2rem' }}/>Logout
             </MenuItem>
           )}
         </div>

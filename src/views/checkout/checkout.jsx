@@ -4,7 +4,7 @@ import axios from 'axios';
 import CustomModal from '../modal/modal';
 import MapModal from './Map/MapModal';
 import AxiosRequest from '../../Components/AxiosRequest';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {  toast } from "react-toastify";
 
 
@@ -99,6 +99,8 @@ const Checkout = () => {
   const token = localStorage.getItem('token');
   const [selectedOption, setSelectedOption] = useState('');
   const [showMap, setShowMap] = useState(false);
+  const locationData = useLocation();
+  const cartReceived = locationData.state?.cart;
   const [showRestaurantLocationModal, setShowRestaurantLocationModal] = useState(false);
   const [resLocation, setResLocation] = useState(null);
   const navigate = useNavigate();
@@ -108,49 +110,66 @@ const Checkout = () => {
     phoneNumber1: '',
     phoneNumber2: ''
   });
+console.log('Cart Data received',cartReceived);
 
+useEffect(() => {
+  const fetchCart = async () => {
+    try {
+      // Assuming cartReceived is provided as a prop or from some context
+      console.log('Cart Data received', cartReceived);
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await AxiosRequest.get(`/get-cart/${customerId}`);
-        setCart(response.data.cart);
-        setResName(response.data.cart.orderFrom);
-        setResLocation(response.data.cart.coordinates);
-        setProducts(response.data.cart.products);
+      // Set the cart
+      setCart(cartReceived);
+
+      // If cartReceived is an array and you need to extract location and products
+      if (Array.isArray(cartReceived)) {
+        // Map through the array to get the unique restaurant names and products
+        const productsByRestaurant = cartReceived.reduce((acc, item) => {
+          const resName = item.orderFrom;
+          if (!acc[resName]) {
+            acc[resName] = [];
+          }
+          acc[resName].push(item);
+          return acc;
+        }, {});
+
+        // Extract a location from the first item or as per your logic
+        const firstItem = cartReceived[0];
+        const location = firstItem ? firstItem.coordinates : null;
+
+        // Update state
+        setResLocation(location);
+        setProducts(productsByRestaurant);
+      } else {
+        console.error('cartReceived is not an array');
       }
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+    }
+  };
+
+  fetchCart();
+}, [customerId, token, cartReceived]);
 
 
-      catch (error) {
-        // Inside the catch block of your fetchCart function
-        console.error('Error fetching cart:', error);
-        setError(error.response ? error.response.data : error.message);
-        setLoading(false); // Set loading to false in case of error
 
-      }
-    };
+  // useEffect(() => {
+  //   const fetchDishDetails = async () => {
+  //     if (cart) {
+  //       try {
+  //         const productsWithDetails = await Promise.all(cart.products.map(async (product) => {
+  //           const response = await AxiosRequest.get(`/dishes/${product.productId}`);
+  //           return { ...product, dishDetails: response.data.data };
+  //         }));
+  //         setCart(prevCart => ({ ...prevCart, products: productsWithDetails }));
+  //       } catch (error) {
+  //         setError(error);
+  //       }
+  //     }
+  //   };
 
-    fetchCart();
-  }, [customerId, token]);
-
-
-  useEffect(() => {
-    const fetchDishDetails = async () => {
-      if (cart) {
-        try {
-          const productsWithDetails = await Promise.all(cart.products.map(async (product) => {
-            const response = await AxiosRequest.get(`/dishes/${product.productId}`);
-            return { ...product, dishDetails: response.data.data };
-          }));
-          setCart(prevCart => ({ ...prevCart, products: productsWithDetails }));
-        } catch (error) {
-          setError(error);
-        }
-      }
-    };
-
-    fetchDishDetails();
-  }, [cart]);
+  //   fetchDishDetails();
+  // }, [cart]);
 
   if (error) {
     return <div><p style={{ color: 'red' }}>Error: {JSON.stringify(error.error)}</p></div>;
@@ -262,31 +281,57 @@ const Checkout = () => {
       return;
     }
     try {
-      const resStatus = await AxiosRequest.get(`/restaurant-status/${resName}`);
-      const { status } = resStatus.data;
-      if (status === 'closed' || status === 'busy') {
-        toast.error(`Cannot Order Items. Restaurant is ${status}.`);
-        setShowRestaurantLocationModal(false);
-        return;
-      }
       const orderData = {
         products: products,
         shippingInfo: shippingInfo,
         shippingOption: shippingOption,
-        resName: resName,
         userLocation: location,
         ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }) // Conditionally add tableNumber
       };
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
       toast.success('Order created successfully');
-      if (selectedOption === 'self-pickup' || selectedOption === 'dine-in') {
+      if (selectedOption === 'self-pickup' ) {
         setShowRestaurantLocationModal(true);
+      }else if (selectedOption === 'dine-in') {
+        navigate('/');
       }
     } catch (error) {
-      if(error.response.status === 400){
-       toast.error('Table Already Reserved, Please Choose Another');
-      }else{
-      toast.error(`Error creating order: ${error.message}`);
+      console.log(error);
+  
+      const errorMessage = error.response?.data?.error || "An unexpected error occurred";
+  
+      switch (errorMessage) {
+        case "Products array is empty or not provided":
+          toast.error("Please provide the products for your order.");
+          break;
+        case "No valid restaurants found in products":
+          toast.error("Restaurant name is missing in the products.");
+          break;
+        case "Table is not available for order":
+          toast.error(`Table is not available for order at ${error.response.data.resName}.`);
+          break;
+        case "Restaurant is closed":
+          toast.error(`The restaurant ${error.response.data.resName} is closed.`);
+          break;
+        case "User location is required for delivery option":
+          toast.error("User location is required for the delivery option.");
+          break;
+        case "Invalid shipping option":
+          toast.error("Invalid shipping option selected.");
+          break;
+        default:
+          const details = error.response?.data?.details;
+
+if (Array.isArray(details) && details.length > 0) {
+  details.forEach(detail => {
+    toast.error(`Error creating order for ${detail.resName}: ${detail.error}`);
+    console.log(`Error creating order for ${detail.resName}: ${detail.error}`);
+  });
+} else {
+  toast.error('An error occurred while creating the order.');
+  console.log('Error:', error);
+}
+          break;
       }
     }
   };
@@ -436,7 +481,7 @@ const Checkout = () => {
               </div>
             </>
           )}
-          {(selectedOption === 'self-pickup' || selectedOption === 'dine-in') && showRestaurantLocationModal && (
+          {selectedOption === 'self-pickup' && showRestaurantLocationModal && (
             <RestaurantLocationModal
               open={showRestaurantLocationModal}
               onClose={handleCloseModal}

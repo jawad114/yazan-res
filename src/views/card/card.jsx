@@ -1,14 +1,16 @@
 // import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
 // import { FavoriteBorder, Favorite } from '@mui/icons-material';
-// import { ToastContainer, toast } from "react-toastify";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+// import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
+// import './card.css'
 // import AxiosRequest from '../../Components/AxiosRequest';
+// import { useNavigate } from 'react-router-dom';
 
 // const Status = ({ status }) => {
 //   let backgroundColor;
 //   let statusText;
-
 
 //   switch (status) {
 //     case 'open':
@@ -50,6 +52,7 @@
 //   const [isAddingToFavorites, setIsAddingToFavorites] = useState(false);
 //   const [isRemovingFromFavorites, setIsRemovingFromFavorites] = useState(false);
 //   const id = localStorage.getItem('id');
+//   const navigate = useNavigate()
 
 //   useEffect(() => {
 //     const fetchFavorites = async () => {
@@ -63,14 +66,16 @@
 //     };
 
 //     fetchFavorites();
-//   }, [restaurantName]);
+//   }, [restaurantName, id]);
 
 //   const addToFavorites = async () => {
 //     try {
 //       setIsAddingToFavorites(true);
-//       await AxiosRequest.post(`/add-to-favorites/${id}`, { restaurantName });
+//       const response = await AxiosRequest.post(`/add-to-favorites/${id}`, { restaurantName });
 //       setIsFavorite(true);
+//       if(response.status === 201){
 //       toast.success('Restaurant added to favorites successfully');
+//       }
 //     } catch (error) {
 //       console.error('Error adding restaurant to favorites:', error);
 //       toast.error('Failed to add restaurant to favorites');
@@ -82,9 +87,11 @@
 //   const removeFromFavorites = async () => {
 //     try {
 //       setIsRemovingFromFavorites(true);
-//       await AxiosRequest.delete(`/remove-from-favorites/${id}`, { data: { restaurantName } });
+//       const response = await AxiosRequest.delete(`/remove-from-favorites/${id}`, { data: { restaurantName } });
 //       setIsFavorite(false);
-//       toast.success('Restaurant removed from favorites successfully', { autoClose: 2000 });
+//       if(response.status === 201){
+//       toast.success('Restaurant removed from favorites successfully');
+//       }
 //     } catch (error) {
 //       console.error('Error removing restaurant from favorites:', error);
 //       toast.error('Failed to remove restaurant from favorites');
@@ -94,94 +101,54 @@
 //   };
 
 //   const handleShowCategories = () => {
-//     window.location.replace(`/categories/${restaurantName}`);
+//     navigate(`/categories/${restaurantName}`, { state: { resName: restaurantName } });
 //   };
 
 //   const handleUpdateHours = () => {
-//     window.location.replace(`/update-opening-hours/${restaurantName}`);
+//     navigate(`/update-opening-hours/${restaurantName}`, { state: { resName: restaurantName } });
 //   };
 
 //   const handleEdit = () => {
-//     window.location.replace(`/edit/${restaurantName}`);
+//     navigate(`/edit/${restaurantName}`, { state: { resName: restaurantName } });
 //   };
 
 //   const handleDelete = async () => {
-//     // Ask for confirmation before deleting
 //     const confirmed = window.confirm('Are you sure you want to delete this restaurant?');
 
 //     if (confirmed) {
 //       try {
-//         // Send delete request to server
 //         await AxiosRequest.delete(`/delete-restaurant/${restaurantName}`);
-
-//         // Show success message
-//         toast.success('Restaurant deleted successfully', { autoClose: 2000 });
-
-//         // Redirect to home page
-//         window.location.replace('/');
+//         toast.success('Restaurant deleted successfully');
+//         window.location.reload();
 //       } catch (error) {
-//         // Log error to console
 //         console.error('Error deleting restaurant:', error);
-
-//         // Show error message
 //         toast.error('Failed to delete restaurant');
 //       }
 //     } else {
-//       // If user cancels deletion
 //       console.log('Deletion canceled.');
 //     }
 //   };
 
-
-//   // const handleStatus = async (newStatus) => {
-//   //   try {
-//   //     const response = await axios.put(`https://yazan-4.onrender.com/change-restaurant-status/${restaurantName}/${newStatus}`);
-//   //     toast.success(`Status Set To ${newStatus} Successfully`, { autoClose: 3000 });
-//   //     window.location.reload();
-//   //   } catch (err) {
-//   //     console.error(`Error Setting Status To ${newStatus} `, err);
-//   //   }
-
-//   // };
-
 //   const handleStatus = async (newStatus) => {
 //     try {
-//       toast.info(`Setting Status To ${newStatus}`, { autoClose: 2000 }); // Show info toast for 5 seconds
-//       setTimeout(async () => { // Delay execution of the rest of the function
-//         const response = await AxiosRequest.put(`/change-restaurant-status/${restaurantName}/${newStatus}`);
+//       toast.info(`Setting Status To ${newStatus}`);
+//       setTimeout(async () => {
+//         await AxiosRequest.put(`/change-restaurant-status/${restaurantName}/${newStatus}`);
 //         toast.success(`Status Set To ${newStatus} Successfully`);
 //         window.location.reload();
 //       }, 2000);
 //     } catch (err) {
 //       console.error(`Error Setting Status To ${newStatus} `, err);
+//       toast.error(`Failed to set status to ${newStatus}`);
 //     }
 //   };
-
 
 //   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 //   const isOwner = localStorage.getItem('isOwner') === 'true';
 //   const isClient = localStorage.getItem('isClient') === 'true';
 
-//   const toastStyle = {
-//     container: "max-w-sm mx-auto",
-//     toast: "bg-red-500 text-white font-bold",
-//   };
-
-
 //   return (
 //     <div className="flex bg-white rounded-xl items-center justify-center shadow-lg mt-4">
-//       <ToastContainer
-//         position="top-right"
-//         autoClose={5000}
-//         hideProgressBar={false}
-//         newestOnTop={false}
-//         closeOnClick
-//         rtl={false}
-//         pauseOnFocusLoss
-//         draggable
-//         pauseOnHover
-//         style={toastStyle}
-//       />
 //       <div className="max-w-md">
 //         <div className='grid'>
 //           <img className='object-cover w-full md:h-40 h-30' src={picture} alt={restaurantName} />
@@ -189,14 +156,15 @@
 
 //         <div className="flex flex-col justify-start items-center p-4">
 //           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mt-2">{restaurantName}</div>
-//           <p className="mt-2 font-bold text-gray-800">Location: {location}</p>
+//           <div className="mt-2 mb-2 flex items-center text-sm font-bold text-gray-800">
+//       <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1" />
+//       <span>{location}</span>
+//     </div>
 //           <Status status={status} />
-//           {/* <p className="mt-2 font-bold text-gray-800">Status: {!status ? '' : status}</p> */}
-//           <div className="flex flex-wrap">
-
+//           <div className="flex flex-wrap items-center justify-center">
 //             {isClient && (
 //               <button
-//                 className={`btn-global ${isAddingToFavorites || isRemovingFromFavorites ? 'opacity-50 cursor-not-allowed' : ''} mt-2`}
+//                 className={`btn ${isAddingToFavorites || isRemovingFromFavorites ? 'opacity-50 cursor-not-allowed' : ''} mt-2`}
 //                 onClick={isFavorite ? removeFromFavorites : addToFavorites}
 //                 disabled={isAddingToFavorites || isRemovingFromFavorites}
 //               >
@@ -205,25 +173,24 @@
 //                 )}
 //               </button>
 //             )}
-//             <button className="btn-global mt-2" onClick={handleShowCategories}>Show Categories</button>
+//             <button className="btn mt-2" onClick={handleShowCategories}>Show Categories</button>
 //             {isAdmin && (
 //               <>
-//                 <button className="btn-global mt-2" onClick={handleEdit}>Edit</button>
-//                 <button className="btn-global mt-2" onClick={handleDelete}>Delete</button>
+//                 <button className="btn mt-2" onClick={handleEdit}>Edit</button>
+//                 <button className="btn mt-2" onClick={handleDelete}>Delete</button>
 //                 <button className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
 //                 <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>Busy</button>
 //                 <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>Closed</button>
-//                 <button className="btn-global mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
+//                 <button className="btn mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
 //               </>
 //             )}
 //             {isOwner && (
 //               <>
-//                 <button className="btn-global mt-2" onClick={handleEdit}>Edit</button>
-//                 <button className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
+//                 <button className="btn mt-2" onClick={handleEdit}>Edit</button>
+//                 <button className="mt-2  bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
 //                 <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>Busy</button>
 //                 <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>Closed</button>
-
-//                 <button className="btn-global mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
+//                 <button className="btn mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
 //               </>
 //             )}
 //           </div>
@@ -236,9 +203,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './card.css'
+import './card.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
 
@@ -286,7 +255,7 @@ export default function Card({ product }) {
   const [isAddingToFavorites, setIsAddingToFavorites] = useState(false);
   const [isRemovingFromFavorites, setIsRemovingFromFavorites] = useState(false);
   const id = localStorage.getItem('id');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -307,8 +276,8 @@ export default function Card({ product }) {
       setIsAddingToFavorites(true);
       const response = await AxiosRequest.post(`/add-to-favorites/${id}`, { restaurantName });
       setIsFavorite(true);
-      if(response.status === 201){
-      toast.success('Restaurant added to favorites successfully');
+      if (response.status === 201) {
+        toast.success('Restaurant added to favorites successfully');
       }
     } catch (error) {
       console.error('Error adding restaurant to favorites:', error);
@@ -323,8 +292,8 @@ export default function Card({ product }) {
       setIsRemovingFromFavorites(true);
       const response = await AxiosRequest.delete(`/remove-from-favorites/${id}`, { data: { restaurantName } });
       setIsFavorite(false);
-      if(response.status === 201){
-      toast.success('Restaurant removed from favorites successfully');
+      if (response.status === 201) {
+        toast.success('Restaurant removed from favorites successfully');
       }
     } catch (error) {
       console.error('Error removing restaurant from favorites:', error);
@@ -382,28 +351,27 @@ export default function Card({ product }) {
   const isClient = localStorage.getItem('isClient') === 'true';
 
   return (
-    <div className="flex bg-white rounded-xl items-center justify-center shadow-lg mt-4">
+    <div className="relative flex bg-white rounded-xl items-center justify-center shadow-lg mt-4">
       <div className="max-w-md">
-        <div className='grid'>
-          <img className='object-cover w-full md:h-40 h-30' src={picture} alt={restaurantName} />
+        <div className="grid">
+          <img className="object-cover w-screen md:h-40 h-30" src={picture} alt={restaurantName} />
+          {isClient && (
+            <div className="absolute top-2 right-2">
+              <span onClick={isFavorite ? removeFromFavorites : addToFavorites} className="cursor-pointer">
+                {isFavorite ? <Favorite className="text-red-500" /> : <FavoriteBorder className="text-gray-500" />}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col justify-start items-center p-4">
           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mt-2">{restaurantName}</div>
-          <p className="mt-2 font-bold text-gray-800">Location: {location}</p>
+          <div className="mt-2 mb-2 flex items-center text-sm font-bold text-gray-800">
+            <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1" />
+            <span>{location}</span>
+          </div>
           <Status status={status} />
           <div className="flex flex-wrap items-center justify-center">
-            {isClient && (
-              <button
-                className={`btn ${isAddingToFavorites || isRemovingFromFavorites ? 'opacity-50 cursor-not-allowed' : ''} mt-2`}
-                onClick={isFavorite ? removeFromFavorites : addToFavorites}
-                disabled={isAddingToFavorites || isRemovingFromFavorites}
-              >
-                {isAddingToFavorites ? 'Adding to Favorites...' : isRemovingFromFavorites ? 'Removing from Favorites...' : (
-                  isFavorite ? <Favorite className="text-red-500" /> : <FavoriteBorder className="text-white-500" />
-                )}
-              </button>
-            )}
             <button className="btn mt-2" onClick={handleShowCategories}>Show Categories</button>
             {isAdmin && (
               <>

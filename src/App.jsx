@@ -40,6 +40,11 @@ import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import InvalidAccessPage from './views/InvalidAccessPage/InvalidAccessPage';
 import AdminOrder from './views/AdminOrder/AdminOrder';
+import UpdateEmail from './views/auth/LoginOwner/UpdateEmail/UpdateEmail';
+import ForgotOwner from './views/auth/LoginOwner/ForgotOwner/ForgotOwner';
+import ResetOwner from './views/auth/LoginOwner/ResetOwner/ResetOwner';
+import SliderImageList from './views/SliderImageList/SliderImageList';
+import AddImagePage from './views/AddImagePage/AddImagePage';
 
 
 const theme = createTheme();
@@ -84,6 +89,7 @@ const App = () => {
               <Route path='/categories/:resName/:categoryName' element={<CategoryDetails />} />
               <Route path='/edit/:resName/:categoryName/:dishId' element={<EditDish />} />
               <Route path='/cart' element={<Cart />} />
+              <Route path='/owner-email-update' element={<UpdateEmail />} />
               <Route path='/favorites' element={<Favorites />} />
               <Route path='/request-credentials' element={<Ownerform />} />
               <Route path='/edit/:resName' element={<EditRestaurant />} />
@@ -96,6 +102,10 @@ const App = () => {
               <Route path='/finance' element={<Finance />} />
               <Route path='/forgot-password' element={<Forgot />} />
               <Route path='/reset-password' element={<Reset />} />
+              <Route path='/slider-image-list' element={<SliderImageList />} />
+              <Route path='/add-slider-image' element={<AddImagePage />} />
+              <Route path='/forgot-password-owner' element={<ForgotOwner />} />
+              <Route path='/reset-password-owner' element={<ResetOwner />} />
               <Route path='/verify' element={<Verify />} />
               <Route path='/update-opening-hours/:restaurantName' element={<UpdateHours />} />
               <Route path='/add-category/:resName' element={<AddCategory />} />

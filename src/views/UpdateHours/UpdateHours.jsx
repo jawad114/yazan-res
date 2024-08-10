@@ -188,9 +188,11 @@ const UpdateHours = () => {
     setLoading(true);
   
     try {
-      const openHours = open ? `${new Date(open).getHours()}:${('0' + new Date(open).getMinutes()).slice(-2)}` : '';
-      const closeHours = close ? `${new Date(close).getHours()}:${('0' + new Date(close).getMinutes()).slice(-2)}` : '';
-  
+      console.log('Open',open);
+      console.log('Close',close);
+      const openHours = open ? `${String(new Date(open).getHours()).padStart(2, '0')}:${String(new Date(open).getMinutes()).padStart(2, '0')}` : '';
+      const closeHours = close ? `${String(new Date(close).getHours()).padStart(2, '0')}:${String(new Date(close).getMinutes()).padStart(2, '0')}` : '';
+      
       const response = await AxiosRequest.put(`/update-opening-hours/${isOwner ? resName : restaurantName}/${day}`, {
         open: openHours,
         close: closeHours

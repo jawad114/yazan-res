@@ -26,11 +26,7 @@ const LoginOwner = () => {
     e.preventDefault();
     try {
       const response = await AxiosRequest.post("/login-owner", state);
-      if (response.data.error === "Invalid password") {
-        toast.error("Invalid credentials");
-      } else if (response.data.error === "User not found") {
-        toast.error("Owner Not Found");
-      } else if (response.data.status === "ok") {
+        if (response.data.status === "ok") {
         localStorage.setItem("resName", response.data.resName);
         localStorage.setItem("resId", response.data.restaurantId);
         localStorage.setItem("token", response.data.token);
@@ -42,7 +38,15 @@ const LoginOwner = () => {
         navigate(`/owner`);
       }
     } catch (error) {
-      if (!toast.isActive("errorToast")) {
+      if (error.response.data.error === "Invalid password") {
+        toast.error("Invalid credentials");
+      } else if (error.response.data.error === "User not found") {
+        toast.error("Owner Not Found");
+      }else if(error.response.data.error === "Please set your personal email first."){
+        toast.error("Please set your personal email first.");
+        navigate('/owner-email-update', { state: { email:state.email } });
+      }
+      else {
         toast.error(error.response.data.error, { toastId: "errorToast" });
       }
 
@@ -55,48 +59,10 @@ const LoginOwner = () => {
   };
 
 
-  // return (
-  //   <div className={styles.container}>
-  //     <div className={styles.formContainer}>
-  //       <h3 className={styles.formTitle}>Login as Restaurant Owner..</h3>
-  //       <form onSubmit={handleSubmit}>
-  //         <div className={styles.formField}>
-  //           <input
-  //             className={styles.inputField}
-  //             type="email"
-  //             name="email"
-  //             value={state.email}
-  //             onChange={handleInputChange}
-  //             placeholder="Your Email"
-  //           />
-  //         </div>
-  //         <div className={styles.formField}>
-  //           <input
-  //             className={styles.inputField}
-  //             type="password"
-  //             name="password"
-  //             value={state.password}
-  //             onChange={handleInputChange}
-  //             placeholder="Your Password"
-  //           />
-  //         </div>
-  //         <button className={styles.submitButton} type="submit">Login</button>
-  //         <div className={styles.requestCredentials}>
-  //           <Typography>Haven't received your credentials yet?</Typography>
-  //           <Typography
-  //             className={styles.textBtn}
-  //             onClick={() => { window.location.replace('/request-credentials') }}
-  //           >
-  //             Request Credentials
-  //           </Typography>
-  //         </div>
-  //       </form>
-  //     </div>
-  //   </div>
-  // );
+
   return (
     <div className="flex items-center justify-center h-full w-full">
-      <div className="flex flex-col  bg-white shadow-black shadow-md rounded-lg p-8 mt-[10vh] w-full max-w-md">
+      <div className="flex flex-col  bg-white shadow-black shadow-md rounded-lg p-8 mt-[10vh] mb-4 w-full max-w-md">
         <h3 className="text-2xl font-semibold text-center mb-6">Login as Restaurant Owner</h3>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-field flex flex-col">
@@ -129,10 +95,13 @@ const LoginOwner = () => {
           >
             Login
           </button>
-          <div className="text-center mt-4">
+          <div className="text-end">
+            <a href="/forgot-password-owner" className="text-blue-500 hover:underline">Forgot Password?</a>
+          </div>
+          <div className="text-center gap-2">
             <Typography className="text-sm">Haven't received your credentials yet?</Typography>
             <Typography
-              className="text-blue-500 cursor-pointer hover:underline mt-2"
+              className="text-blue-500 cursor-pointer hover:underline"
               onClick={() => window.location.replace('/request-credentials')}
             >
               Request Credentials

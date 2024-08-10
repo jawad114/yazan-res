@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Typography,
-  List,
   ListItem,
   ListItemText,
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle,
   Button,
   Grid,
 } from "@mui/material";
@@ -26,6 +29,7 @@ const CategoryDetails = () => {
   const { resName, categoryName } = useParams();
   const [openM, setOpenM] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [imageLoading, setImageLoading] = useState(true);
   const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState(0); // State to keep track of total price
   const [selectedExtras, setSelectedExtras] = useState({}); // State to keep track of selected extras
@@ -35,6 +39,8 @@ const CategoryDetails = () => {
   const isOwner = localStorage.getItem('isOwner') === 'true';
   const isClient = localStorage.getItem('isClient') === 'true';
   const customerId = localStorage.getItem('id');
+  const [showFullDescription, setShowFullDescription] = useState(false);
+const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,6 +53,7 @@ const CategoryDetails = () => {
           setProducts(response.data.products);
           setRestaurantImage(response.data.restaurantImage);
           setLoading(false);
+          setImageLoading(false);
           const initialQuantities = {};
           response.data.products.forEach((product) => {
             initialQuantities[product._id] = 1;
@@ -56,6 +63,7 @@ const CategoryDetails = () => {
         else{
           setRestaurantImage(response.data.restaurantImage);
           setLoading(false);
+          setImageLoading(false);
         }
       } catch (error) {
         if (error.response && error.response.data && error.response.data.error) {
@@ -68,6 +76,7 @@ const CategoryDetails = () => {
           }
         }
         setLoading(false);
+        setImageLoading(false);
       }
     };
 
@@ -79,19 +88,6 @@ const CategoryDetails = () => {
       setTotalPrice(calculateTotalPrice(selectedProduct._id));
     }
   }, [quantities, selectedExtras, selectedProduct]);
-
-  // useEffect(() => {
-  //   let timer;
-  //   if (openM) {
-  //     timer = setTimeout(() => {
-  //       setOpenM(false);
-  //       handleCloseModal();
-  //     }, 2000); // Change the duration as needed
-  //   }
-
-  //   // Cleanup timer on component unmount or when `openM` changes
-  //   return () => clearTimeout(timer);
-  // }, [openM]);
 
   useEffect(() => {
     if (selectedProduct && selectedProduct.extras && Array.isArray(selectedProduct.extras.requiredExtras) && selectedProduct.extras.requiredExtras.length > 0) {
@@ -110,6 +106,14 @@ const CategoryDetails = () => {
     }));
   };
 
+  const handleReadMoreClick = () => {
+    setOpenDialog(true);
+  };
+  
+  // Add this function to handle closing the dialog
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   const handleRequiredExtraChange = (extraId) => {
     setSelectedExtras((prevSelectedExtras) => {
@@ -150,7 +154,7 @@ const CategoryDetails = () => {
     navigate(`/add-dish/${resName}/${categoryName}`);
   };
 
-  const handleAddToCart = async (productId, price, name, description) => {
+  const handleAddToCart = async (productId, price,dishImage, name, description) => {
     try {
       const resStatus = await AxiosRequest.get(`/restaurant-status/${resName}`);
       const { status, coordinates } = resStatus.data;
@@ -170,11 +174,13 @@ const CategoryDetails = () => {
         price,
         productId,
         quantity,
+        dishImage,
         extras,
         orderFrom: resName,
         coordinates
       });
       toast.success('Item added successfully');
+      handleCloseModal();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
         if (!toast.isActive("errorToast")) {
@@ -241,6 +247,10 @@ const CategoryDetails = () => {
     setTotalPrice(0); // Reset total price when modal is closed
     setSelectedExtras({});
   };
+  const getTextDirection = (text) => {
+    const rtlCharRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB1D-\uFB4F\uFE70-\uFEFF]/;
+    return rtlCharRegex.test(text) ? 'rtl' : 'ltr';
+  }
 
   const toastStyle = {
     container: "max-w-sm mx-auto",
@@ -249,9 +259,20 @@ const CategoryDetails = () => {
   const alt = `${resName}'s Image`
 
   return (
-    <>
-        <img src={restaurantImage} alt={alt}  className="w-full h-[20vh] md:h-[64vh] object-cover mb-4" />
-    <div className="flex flex-col w-full p-5">
+    <div className='bg-white'>
+{imageLoading ? (
+  <div className='flex justify-center items-center h-[20vh] md:h-[64vh] mb-4'>
+    <CircularProgress />
+  </div>
+) : (
+  <img
+    src={restaurantImage}
+    alt={alt}
+    className="w-full h-[20vh] md:h-[64vh] object-cover mb-4"
+    loading="lazy"
+  />
+)}  
+ <div className="flex flex-col w-full p-5">
 <div className="flex flex-col gap-4 items-center justify-center mb-5">
   <Typography
     className="fs-3 fw-bold"
@@ -273,11 +294,10 @@ const CategoryDetails = () => {
           {products.map((product, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
               <ListItem
-                className="mt-5 mb-5 p-4 bg-light rounded-5  shadow-lg d-flex flex-column hover:cursor-pointer"
-                onClick={() => handleOpenModal(product)}
+                className="mt-5 mb-5 p-0 bg-light rounded-5  shadow-lg d-flex flex-column"
               >
-                <img width={100} className="d-block align-items-start" src={product.dishImage} />
-                <ListItemText
+<img className="object-cover w-full h-40  hover:cursor-pointer" onClick={() => handleOpenModal(product)} src={product.dishImage} />
+<ListItemText
                    primary={
                     <div className="text-center">
                       {product.name}
@@ -285,10 +305,45 @@ const CategoryDetails = () => {
                   }
                   secondary={
                     <>
-              <div className="flex flex-col items-center justify-center text-center">
-                  <Typography variant="body2" color="textPrimary">
-                        {product.description}
-                      </Typography>
+              <div className="flex flex-col p-2 items-center justify-center text-center">
+              <Typography variant="body2" color="textPrimary">
+  {product.description.length > 20 ? (
+    <>
+      {showFullDescription
+        ? product.description
+        : getTextDirection(product.description) === 'ltr'
+        ? product.description.substring(0, 20) + '...'
+        : '...' + product.description.substring(0, 20)
+      }
+      <div>
+      <Typography
+        component="span"
+        color="primary"
+        onClick={handleReadMoreClick}
+        style={{
+          cursor: 'pointer',
+        }}
+      >
+        Read More
+      </Typography>
+      </div>
+    </>
+  ) : (
+    product.description
+  )}
+</Typography>
+
+        <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+        <DialogTitle className="text-center">Description</DialogTitle>
+        <DialogContent>
+          <Typography className={`${getTextDirection(product.description) === 'ltr' ? 'text-start' :'text-end'}`}>{product.description}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
                       <Typography variant="body2" color="textPrimary">
                         Price: {parseFloat(product.price).toFixed(2)} ₪
                       </Typography>
@@ -409,7 +464,8 @@ const CategoryDetails = () => {
                     onClick={() =>
                       handleAddToCart(
                         selectedProduct._id,
-                        totalPrice,
+                        selectedProduct.price,
+                        selectedProduct.dishImage,
                         selectedProduct.name,
                         selectedProduct.description
                       )
@@ -451,15 +507,8 @@ const CategoryDetails = () => {
         }
         
       />
-
-{/* <CustomModal
-        body={"Item added successfully!"}
-        title={""}
-        open={openM}
-        handleClose={() => setOpenM(false)} // No action needed on close
-      /> */}
           </div>
-          </>
+          </div>
   );
 };
 
