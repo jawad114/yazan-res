@@ -27,6 +27,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AxiosRequest from '../Components/AxiosRequest';
+import Carousels from '../Home/Carousels/Carousels';
 
 const Orders = () => {
   const [loading, setLoading] = useState(true);
@@ -152,6 +153,8 @@ const openWaze = (latitude, longitude) => {
   };
 
   return (
+    <div className='bg-white'>
+      <Carousels/>
     <Box className='flex flex-col items-center text-center mt-10'>
       <div className="orders-header mb-4">
         <h2 className="text-3xl font-bold">Your Orders</h2>
@@ -217,7 +220,7 @@ const openWaze = (latitude, longitude) => {
                       secondary={
                         <div className="flex flex-row space-x-[40vw] md:space-x-[60vw] justify-between">
                           <Typography component="span" variant="body2">{formatDate(order.orderTime)}</Typography><br />
-                          <Typography component="span" variant="body2">{calculateTotalPrice(order)}</Typography><br />
+                          <Typography component="span" variant="body2">{calculateTotalPrice(order)} ₪</Typography><br />
                         </div>
                       }
                     />
@@ -293,7 +296,7 @@ const openWaze = (latitude, longitude) => {
                 <Typography variant="body1">Restaurant: {product.orderFrom}</Typography>
                 <Typography component="span" variant="body2">Name: {product.name}</Typography><br />
                 <Typography component="span" variant="body2">Quantity: {product.quantity}</Typography><br />
-                <Typography component="span" variant="body2">Price: {product.price}</Typography><br />
+                <Typography component="span" variant="body2">Price: {product.price} ₪</Typography><br />
                 {/* <Typography component="span" variant="body2">Extras: {product.extras ? product.extras.map(extra => extra.name).join(', ') : 'None'}</Typography><br />
                 <Typography component="span" variant="body2">Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}</Typography><br /> */}
                 {product.extras && product.extras.length > 0 ? (
@@ -303,7 +306,7 @@ const openWaze = (latitude, longitude) => {
     </Typography><br />
 
     <Typography component="span" variant="body2">
-      Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}
+      Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0} ₪
     </Typography><br />
   </>
 ):(
@@ -366,11 +369,12 @@ const openWaze = (latitude, longitude) => {
                         </div>
               </div>
             ))}
-            <Typography variant="h6" className='text-center'>Total Price: {calculateTotalPrice(selectedOrder)}</Typography>
+            <Typography variant="h6" className='text-center'>Total Price: {calculateTotalPrice(selectedOrder)} ₪</Typography>
           </DialogContent>
         </Dialog>
       )}
     </Box>
+    </div>
   );
 
   function calculateTotalPrice(order) {

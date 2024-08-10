@@ -13,6 +13,7 @@ const SliderImageList = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // Changed to null
   const [newTitle, setNewTitle] = useState('');
+  const [newUrl, setNewUrl] = useState('');
   const [newImage, setNewImage] = useState(null);
   const navigate = useNavigate();
 
@@ -34,6 +35,7 @@ const SliderImageList = () => {
   const handleEdit = (image) => {
     setSelectedImage(image);
     setNewTitle(image.title);
+    setNewUrl(image.url);
     setOpenEditDialog(true);
   };
 
@@ -59,6 +61,7 @@ const SliderImageList = () => {
   const handleEditSubmit = async () => {
     const formData = new FormData();
     formData.append('title', newTitle);
+    formData.append('url', newUrl);
     if (newImage) {
       formData.append('carouselImage', newImage);
     }
@@ -107,11 +110,13 @@ const SliderImageList = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sliderImages.map((image) => (
               <Card key={image._id} className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                <a href={image.url} target="_blank" rel="noopener noreferrer">
                 <img
                   src={image.imageUrl}
                   alt='Image'
                   className="h-48 w-full object-cover"
                 />
+                </a>
                 <CardBody className="p-4">
                   <h3 className="text-xl font-semibold text-center mb-2">{image.title}</h3>
                 </CardBody>
@@ -153,6 +158,15 @@ const SliderImageList = () => {
             label="Title"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
+            size={'medium'}
+            className="border-2 mt-2 border-black rounded"
+          />
+            <label htmlFor="url" className="block mt-4 text-center">Carousel Url</label>
+          <input
+            type="text"
+            label="Url"
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
             size={'medium'}
             className="border-2 mt-2 border-black rounded"
           />

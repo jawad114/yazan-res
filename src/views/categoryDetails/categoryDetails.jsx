@@ -10,7 +10,9 @@ import {
   DialogTitle,
   Button,
   Grid,
+  Box
 } from "@mui/material";
+import { Avatar } from "@material-tailwind/react";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -20,6 +22,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AxiosRequest from "../../Components/AxiosRequest";
 import { useNavigate } from 'react-router-dom';
 import "./categoryDetails.module..css"
+import Carousels from "../../Home/Carousels/Carousels";
 
 const CategoryDetails = () => {
   const [products, setProducts] = useState([]);
@@ -34,6 +37,9 @@ const CategoryDetails = () => {
   const [totalPrice, setTotalPrice] = useState(0); // State to keep track of total price
   const [selectedExtras, setSelectedExtras] = useState({}); // State to keep track of selected extras
   const [restaurantImage, setRestaurantImage] = useState('');
+  const [categoryImage, setCategoryImage] = useState('');
+  const [openingHours, setOpeningHours] = useState(null);
+  const [restaurantStatus, setRestaurantStatus] = useState('');
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const isOwner = localStorage.getItem('isOwner') === 'true';
@@ -52,6 +58,7 @@ const [openDialog, setOpenDialog] = useState(false);
         if (response && response.data && response.data.products) {
           setProducts(response.data.products);
           setRestaurantImage(response.data.restaurantImage);
+          setCategoryImage(response.data.categoryImage);
           setLoading(false);
           setImageLoading(false);
           const initialQuantities = {};
@@ -79,8 +86,26 @@ const [openDialog, setOpenDialog] = useState(false);
         setImageLoading(false);
       }
     };
+    const fetchOpeningHoursAndStatus = async () => {
+      try {
+        const [hoursResponse, statusResponse] = await Promise.all([
+          AxiosRequest.get(`/opening-hours/${resName}`),
+          AxiosRequest.get(`/restaurant-status/${resName}`)
+        ]);
 
-    fetchProducts();
+        if (hoursResponse.status === 200) {
+          setOpeningHours(hoursResponse.data.openingHours);
+        }
+
+        if (statusResponse.status === 200) {
+          setRestaurantStatus(statusResponse.data.status);
+        }
+      } catch (error) {
+        console.error('Error fetching opening hours or status:', error);
+      }
+    };
+   fetchProducts();
+   fetchOpeningHoursAndStatus();
   }, [resName, categoryName]);
 
   useEffect(() => {
@@ -258,25 +283,71 @@ const [openDialog, setOpenDialog] = useState(false);
   };
   const alt = `${resName}'s Image`
 
+  const getDayName = () => {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = new Date().getDay();
+    return days[today];
+  };
+  
+
+  const dayName = getDayName();
+
   return (
     <div className='bg-white'>
-{imageLoading ? (
-  <div className='flex justify-center items-center h-[20vh] md:h-[64vh] mb-4'>
-    <CircularProgress />
-  </div>
-) : (
-  <img
-    src={restaurantImage}
-    alt={alt}
-    className="w-full h-[20vh] md:h-[64vh] object-cover mb-4"
-    loading="lazy"
-  />
-)}  
+<Carousels/>
+{openingHours && (
+  <Box 
+    className='flex justify-between w-full px-4 mb-4 p-4 rounded-lg shadow-lg'
+    sx={{ 
+      backgroundColor: restaurantStatus === 'open' ? '#d4edda' : restaurantStatus === 'busy' ? '#fff3cd' : '#f8d7da',
+      border: '1px solid',
+      borderColor: restaurantStatus === 'open' ? '#c3e6cb' : restaurantStatus === 'busy' ? '#ffeeba' : '#f5c6cb',
+    }}
+  >
+    <Box className='flex flex-col justify-center'>
+      <Typography
+        variant='h6'
+        sx={{ 
+          color: restaurantStatus === 'open' ? 'green' : restaurantStatus === 'busy' ? 'orange' : 'red', 
+          fontWeight: 'bold' 
+        }}
+      >
+        {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
+      </Typography>
+    </Box>
+    <Box className='flex flex-col justify-center'>
+      {restaurantStatus !== 'closed' ? (
+        <Typography 
+          variant='h6' 
+          sx={{ 
+            fontWeight: 'medium' 
+          }}
+        >
+          Open Until {openingHours[dayName]?.close || 'N/A'}
+        </Typography>
+      ) : (
+        <Typography 
+          variant='h6' 
+          sx={{ 
+            fontWeight: 'medium' 
+          }}
+        >
+          Closed
+        </Typography>
+      )}
+    </Box>
+  </Box>
+)}
  <div className="flex flex-col w-full p-5">
 <div className="flex flex-col gap-4 items-center justify-center mb-5">
+<Avatar
+      src={categoryImage} // Replace with dynamic category image if needed
+      size="xxl"
+      withBorder={true}
+      color="red"
+    />
   <Typography
-    className="fs-3 fw-bold"
-    textAlign="center"
+    className="fs-3 fw-bold text-center"
     variant="h4"
   >
     {categoryName}

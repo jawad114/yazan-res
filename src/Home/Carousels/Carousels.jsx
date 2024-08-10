@@ -30,7 +30,7 @@ const Carousels = () => {
   }
 
   return (
-    <div className="w-full h-[20vh] md:h-[60vh] mx-auto">
+    <div className="w-full h-[50vh] md:h-[70vh] mx-auto">
       <Carousel
         autoplay
         loop
@@ -49,12 +49,14 @@ const Carousels = () => {
         )}
       >
         {sliderImages.map((image, index) => (
+          <a href={image.url} target="_blank" rel="noopener noreferrer">
           <img
             key={index}
             src={image.imageUrl}
             alt={`image ${index + 1}`}
             className="h-full w-full object-cover"
           />
+          </a>
         ))}
       </Carousel>
     </div>

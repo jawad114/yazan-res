@@ -170,38 +170,38 @@ export default function AdminOrder() {
     };
 
     const calculateTotalPrice = product => {
-        let totalPrice = product.price;
+        let totalPrice = product.quantity * product.price;
         if (product.extras && product.extras.length > 0) {
-            totalPrice += product.extras.reduce((acc, extra) => acc + extra.price, 0);
+            totalPrice += product.quantity * product.extras.reduce((acc, extra) => acc + extra.price, 0);
         }
         return totalPrice.toFixed(2);
     };
 
-    const handleDelete = async (orderId) => {
-        try {
-            // Ask for confirmation before deleting
-            const confirmed = window.confirm(`Are you sure you want to delete order ${orderId}?`);
+    // const handleDelete = async (orderId) => {
+    //     try {
+    //         // Ask for confirmation before deleting
+    //         const confirmed = window.confirm(`Are you sure you want to delete order ${orderId}?`);
 
-            if (confirmed) {
-                // Send delete request to server
-                await AxiosRequest.delete(`/orders/${orderId}`);
+    //         if (confirmed) {
+    //             // Send delete request to server
+    //             await AxiosRequest.delete(`/orders/${orderId}`);
 
-                // Update state to remove the deleted order from the list
-                setOrders((prevOrders) =>
-                    prevOrders.filter((order) => order.orderId !== orderId)
-                );
+    //             // Update state to remove the deleted order from the list
+    //             setOrders((prevOrders) =>
+    //                 prevOrders.filter((order) => order.orderId !== orderId)
+    //             );
 
-                // Set success message
-                setSuccessMessage(`Order ${orderId} has been deleted.`);
-            } else {
-                // User canceled deletion
-                console.log('Deletion canceled.');
-            }
-        } catch (error) {
-            // Error handling
-            console.error('Error deleting order:', error);
-        }
-    };
+    //             // Set success message
+    //             setSuccessMessage(`Order ${orderId} has been deleted.`);
+    //         } else {
+    //             // User canceled deletion
+    //             console.log('Deletion canceled.');
+    //         }
+    //     } catch (error) {
+    //         // Error handling
+    //         console.error('Error deleting order:', error);
+    //     }
+    // };
 
 
     const handleGoToRestaurantArea = () => {
@@ -210,9 +210,9 @@ export default function AdminOrder() {
         window.location.replace(`/`);
     };
 
-    const handleDelivered = orderId => {
-        updateOrderStatus(orderId, 'Delivered');
-    };
+    // const handleDelivered = orderId => {
+    //     updateOrderStatus(orderId, 'Delivered');
+    // };
 
     const handleCompleted = orderId => {
         updateOrderStatus(orderId, 'Completed');
@@ -389,7 +389,7 @@ export default function AdminOrder() {
           <MenuItem onClick={() => handleStatusFilterChange('All orders')}>All Orders</MenuItem>
           <MenuItem onClick={() => handleStatusFilterChange('New orders')}>New Orders</MenuItem>
           <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>Preparing</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem>
+          {/* <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem> */}
           <MenuItem onClick={() => handleStatusFilterChange('Completed')}>Completed Orders</MenuItem>
           <MenuItem onClick={() => handleStatusFilterChange('Declined')}>Declined Orders</MenuItem>
         </Menu>
@@ -461,10 +461,10 @@ export default function AdminOrder() {
                                                         <Typography variant="body2">
                                                             Name: {product.name}<br />
                                                             Quantity: {product.quantity}<br />
-                                                            Price: {product.price}<br />
+                                                            Price: {product.price} ₪<br />
                                                             Extras: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
-                                                            Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(', ') : 'None'}<br />
-                                                            Total Price: {calculateTotalPrice(product)}<br />
+                                                            Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'}<br />
+                                                            Total Price: {calculateTotalPrice(product)} ₪<br />
                                                             Status: {order.status ? order.status : 'No Status Yet'}<br />
                                                             Ordered At: {formatDate(order.orderTime)}
                                                         </Typography>
@@ -527,10 +527,10 @@ export default function AdminOrder() {
                                                         <Typography variant="body2">
                                                             Name: {product.name}<br />
                                                             Quantity: {product.quantity}<br />
-                                                            Price: {product.price}<br />
+                                                            Price: {product.price} ₪<br />
                                                             Extras: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
-                                                            Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(', ') : 'None'}<br />
-                                                            Total Price: {calculateTotalPrice(product)}<br />
+                                                            Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'}<br />
+                                                            Total Price: {calculateTotalPrice(product)} ₪<br />
                                                             Status: {order.status ? order.status : 'No Status Yet'}<br />
                                                             Ordered At: {formatDate(order.orderTime)}
                                                         </Typography>
@@ -541,12 +541,12 @@ export default function AdminOrder() {
                                                 <Grid item>
                                                     <Button variant="contained" startIcon={<Timelapse />} onClick={() => handlePreparing(order.orderId)}>Preparing</Button>
                                                 </Grid>
-                                                <Grid item>
+                                                {/* <Grid item>
                                                     <Button variant="contained" startIcon={<Delete />} onClick={() => handleDelete(order.orderId)}>Delete</Button>
                                                 </Grid>
                                                 <Grid item>
                                                     <Button variant="contained" startIcon={<LocalShipping />} onClick={() => handleDelivered(order.orderId)}>Delivered</Button>
-                                                </Grid>
+                                                </Grid> */}
                                                 <Grid item>
                                                     <Button variant="contained" startIcon={<CheckCircle />} onClick={() => handleCompleted(order.orderId)}>Completed</Button>
                                                 </Grid>

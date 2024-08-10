@@ -46,9 +46,13 @@ const LoginClient = () => {
         }
       })
       .catch((error) => {
-       
-          if (!toast.isActive("errorToast")) {
-            toast.error(error.response.data.error, { toastId: "errorToast" });
+          if(error.response.data.error === "Verification code is not verified. Please verify your code first.")
+          {
+            toast.error("Verification code is not verified. Please verify your code first.");
+            window.location.replace('/verify');
+          }
+          else {
+            toast.error(error.response.data.error);
           }
   });
 }
@@ -58,52 +62,7 @@ const LoginClient = () => {
     toast: "bg-red-500 text-white font-bold",
   };
 
-  // return (
-  //   <div>
-  //     <div className="mt-40">
-  //       <div className="containerLo">
-  //         <div className="paperLo">
-  //           <h3 className="mb-3 w-100"> Client Login</h3>
-  //           <form onSubmit={handleSubmit}>
-  //             <div>
-  //               <input
-  //                 type="email"
-  //                 name="email"
-  //                 value={state.email}
-  //                 onChange={handleInputChange}
-  //                 placeholder="Your Email"
-  //               />
-  //             </div>
-  //             <div>
-  //               <input
-  //                 type="password"
-  //                 name="password"
-  //                 value={state.password}
-  //                 onChange={handleInputChange}
-  //                 placeholder="Your Password"
-  //               />
-  //             </div>
-  //             <button type="submit" className="btn-g">
-  //               Login
-  //             </button>
-  //             <div className="d-flex mt-5">
-  //               <div id="account-Register">
-  //                 Dont have an account?
-  //               </div>
-  //               <button className="btn-gs" onClick={() => { window.location.replace("/register-client") }}>
-  //                 <PersonIcon /> Create an account
-  //               </button>
-  //             </div>
-  //             <div className="d-flex mt-5">
-  //               <a href="/forgot-password">Forgot Password?</a>
-  //             </div>
-  //           </form>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
 
-  // );
   return (
     <div className="flex items-center justify-center h-full w-full">
       <div className="flex flex-col  bg-white shadow-black shadow-md rounded-lg p-8 mt-[10vh] w-full max-w-md">

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 const AddImagePage = () => {
   const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,18 +19,43 @@ const AddImagePage = () => {
     setTitle(event.target.value);
   };
 
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
-
+  
+    // Validate required fields
+    if (!title.trim()) {
+      setError('Title is required');
+      toast.error('Title is required');
+      setLoading(false);
+      return;
+    }
+  
+    if (!url.trim()) {
+      setError('URL is required');
+      toast.error('URL is required');
+      setLoading(false);
+      return;
+    }
+  
+    if (!file) {
+      setError('Carousel image is required');
+      toast.error('Carousel image is required');
+      setLoading(false);
+      return;
+    }
+  
     const formData = new FormData();
     formData.append('title', title);
-    if (file) {
-      formData.append('carouselImage', file);
-    }
-
+    formData.append('url', url);
+    formData.append('carouselImage', file);
+  
     try {
       const response = await AxiosRequest.post('/addImage', formData, {
         headers: {
@@ -39,6 +65,7 @@ const AddImagePage = () => {
       setSuccess('Image added successfully!');
       toast.success('Image added successfully!');
       setTitle('');
+      setUrl('');
       setFile(null);
     } catch (error) {
       setError('Error adding image');
@@ -48,6 +75,7 @@ const AddImagePage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -60,6 +88,17 @@ const AddImagePage = () => {
             placeholder="Carousel Title"
             value={title}
             onChange={handleTitleChange}
+          size={'medium'}
+          className="border-2 mt-2 border-black rounded"
+          />
+        </div>
+        <div className="mb-4">
+        <label htmlFor="url" className="block mt-4 text-center">Carousel Url</label>
+          <input
+            type="text"
+            placeholder="Carousel Url"
+            value={url}
+            onChange={handleUrlChange}
           size={'medium'}
           className="border-2 mt-2 border-black rounded"
           />

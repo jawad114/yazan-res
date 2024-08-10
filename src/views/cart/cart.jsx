@@ -202,6 +202,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
+import Carousels from '../../Home/Carousels/Carousels';
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
@@ -305,6 +306,8 @@ const Cart = () => {
   };
 
   return (
+    <div className='bg-white'>
+    <Carousels/>
     <div className='p-4 md:p-6 lg:p-8 bg-gray-100 min-h-screen'>
       {!isClient ? (
         <div><p style={{ color: 'red' }}>Login as a Client First</p></div>
@@ -396,6 +399,7 @@ const Cart = () => {
           )}
         </>
       )}
+    </div>
     </div>
   );
 };

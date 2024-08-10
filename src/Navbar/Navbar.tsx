@@ -231,92 +231,185 @@ const Navbar: React.FC = () => {
                   console.log('WebSocket connection opened');
               };
 
-              ws.onmessage = (event: MessageEvent) => {
-                  console.log('WebSocket message received:', event.data);
-                  try {
-                      const data = JSON.parse(event.data);
+            //   ws.onmessage = (event: MessageEvent) => {
+            //       try {
+            //           const data = JSON.parse(event.data);
+            //           console.log('WebSocket message received:', data);
 
-                      if (isClient && data.type === 'cartUpdated') {
-                          if (customerId) fetchCartDebounced(customerId);
-                      } else if (isClient && data.type === 'favoritesUpdated') {
-                          setFavoritesUpdated(true);
-                      }
+            //           if (isClient && data.type === 'cartUpdated') {
+            //               if (customerId) fetchCartDebounced(customerId);
+            //           } else if (isClient && data.type === 'favoritesUpdated') {
+            //               setFavoritesUpdated(true);
+            //           }
 
-                      if (isOwner && data.type === 'newOrderReceived') {
-                          if (data.restaurantName === ownerRestaurantName) {
-                              console.log('New order received for your restaurant');
+            //           if (isOwner && data.type === 'newOrderReceived') {
+            //               if (data.restaurantName === ownerRestaurantName) {
+            //                   console.log('New order received for your restaurant');
 
-                              const currentTime = Date.now();
-                              if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
-                                  alert('Please interact with the page to enable audio notifications.');
-                                  return;
-                              }
+            //                   const currentTime = Date.now();
+            //                   if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
+            //                       alert('Please interact with the page to enable audio notifications.');
+            //                       return;
+            //                   }
 
-                              if (audio) {
-                                  audio.pause();
-                                  audio.currentTime = 0;
-                                  audio.loop = false; // Ensure the loop is stopped
-                                  setAudio(null); // Clear the audio object
-                              }
+            //                   if (audio) {
+            //                       audio.pause();
+            //                       audio.currentTime = 0;
+            //                       audio.loop = false; // Ensure the loop is stopped
+            //                       setAudio(null); // Clear the audio object
+            //                   }
 
-                              // Create a new audio instance and set it to loop
-                              const newAudio = new Audio(notificationSound);
-                              newAudio.loop = true; // Set loop to true initially
-                              newAudio.play();
-                              setAudio(newAudio); // Store the new audio instance
+            //                   // Create a new audio instance and set it to loop
+            //                   const newAudio = new Audio(notificationSound);
+            //                   newAudio.loop = true; // Set loop to true initially
+            //                   newAudio.play();
+            //                   setAudio(newAudio); // Store the new audio instance
 
-                              // Show toast with 'Got it' button
-                              const id = toast.success(
-                                  <div className="toast-custom">
-                                      <div>New Order Received for {ownerRestaurantName}</div>
-                                      <button
-                                          onClick={() => {
-                                              toast.dismiss(id); // Dismiss the toast
-                                              if (newAudio) {
-                                                  newAudio.pause();
-                                                  newAudio.currentTime = 0;
-                                                  newAudio.loop = false; // Stop the loop
-                                                  setAudio(null); // Clear the audio object
-                                              }
-                                              window.location.reload();
-                                          }}
-                                      >
-                                          Got it
-                                      </button>
-                                  </div>,
-                                  {
-                                      autoClose: false, // Prevent auto-close
-                                      closeButton: false,
-                                      hideProgressBar: true,
-                                      className: 'toast-custom',
-                                      bodyClassName: 'toast-body',
-                                      onClose: () => {
-                                          if (newAudio) {
-                                              newAudio.pause();
-                                              newAudio.currentTime = 0;
-                                              newAudio.loop = false; // Ensure loop is stopped
-                                              setAudio(null); // Clear the audio object
-                                          }
-                                      }
-                                  }
-                              );
+            //                   // Show toast with 'Got it' button
+            //                   const id = toast.success(
+            //                       <div className="toast-custom">
+            //                           <div>New Order Received for {ownerRestaurantName}</div>
+            //                           <button
+            //                               onClick={() => {
+            //                                   toast.dismiss(id); // Dismiss the toast
+            //                                   if (newAudio) {
+            //                                       newAudio.pause();
+            //                                       newAudio.currentTime = 0;
+            //                                       newAudio.loop = false; // Stop the loop
+            //                                       setAudio(null); // Clear the audio object
+            //                                   }
+            //                                   window.location.reload();
+            //                               }}
+            //                           >
+            //                               Got it
+            //                           </button>
+            //                       </div>,
+            //                       {
+            //                           autoClose: false, // Prevent auto-close
+            //                           closeButton: false,
+            //                           hideProgressBar: true,
+            //                           className: 'toast-custom',
+            //                           bodyClassName: 'toast-body',
+            //                           onClose: () => {
+            //                               if (newAudio) {
+            //                                   newAudio.pause();
+            //                                   newAudio.currentTime = 0;
+            //                                   newAudio.loop = false; // Ensure loop is stopped
+            //                                   setAudio(null); // Clear the audio object
+            //                               }
+            //                           }
+            //                       }
+            //                   );
 
-                              setToastId(id as string); // Explicitly cast id to string
-                          }
-                      }
+            //                   setToastId(id as string); // Explicitly cast id to string
+            //               }
+            //           }
 
-                  } catch (error) {
-                      console.error('Error parsing WebSocket message:', error);
-                  }
-              };
+            //       } catch (error) {
+            //           console.error('Error parsing WebSocket message:', error);
+            //       }
+            //   };
 
-              ws.onerror = (event) => {
-                  console.error('WebSocket error:', event);
-              };
+            //   ws.onerror = (event) => {
+            //       console.error('WebSocket error:', event);
+            //   };
 
-              ws.onclose = (event) => {
-                  console.log('WebSocket closed:', event);
-              };
+            //   ws.onclose = (event) => {
+            //       console.log('WebSocket closed:', event);
+            //   };
+            ws.onmessage = (event: MessageEvent) => {
+                try {
+                    let data;
+
+                    // Attempt to parse the data only if it is a valid JSON string
+                    try {
+                        data = JSON.parse(event.data);
+                    } catch (error) {
+                        return; // Exit early if parsing fails
+                    }
+                    console.log('WebSocket message received:', data);
+            
+                    if (isClient) {
+                        if (data.type === 'cartUpdated') {
+                            if (customerId) fetchCartDebounced(customerId);
+                        } else if (data.type === 'favoritesUpdated') {
+                            setFavoritesUpdated(true);
+                        }
+                    }
+            
+                    if (isOwner && data.type === 'newOrderReceived') {
+                        if (data.restaurantName === ownerRestaurantName) {
+                            console.log('New order received for your restaurant');
+            
+                            const currentTime = Date.now();
+                            if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
+                                alert('Please interact with the page to enable audio notifications.');
+                                return;
+                            }
+            
+                            if (audio) {
+                                audio.pause();
+                                audio.currentTime = 0;
+                                audio.loop = false;
+                                setAudio(null);
+                            }
+            
+                            const newAudio = new Audio(notificationSound);
+                            newAudio.loop = true;
+                            newAudio.play();
+                            setAudio(newAudio);
+            
+                            const id = toast.success(
+                                <div className="toast-custom">
+                                    <div>New Order Received for {ownerRestaurantName}</div>
+                                    <button
+                                        onClick={() => {
+                                            toast.dismiss(id);
+                                            if (newAudio) {
+                                                newAudio.pause();
+                                                newAudio.currentTime = 0;
+                                                newAudio.loop = false;
+                                                setAudio(null);
+                                            }
+                                            window.location.reload();
+                                        }}
+                                    >
+                                        Got it
+                                    </button>
+                                </div>,
+                                {
+                                    autoClose: false,
+                                    closeButton: false,
+                                    hideProgressBar: true,
+                                    className: 'toast-custom',
+                                    bodyClassName: 'toast-body',
+                                    onClose: () => {
+                                        if (newAudio) {
+                                            newAudio.pause();
+                                            newAudio.currentTime = 0;
+                                            newAudio.loop = false;
+                                            setAudio(null);
+                                        }
+                                    }
+                                }
+                            );
+            
+                            setToastId(id as string);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
+                }
+            };
+            
+            ws.onerror = (event) => {
+                console.error('WebSocket error:', event);
+            };
+            
+            ws.onclose = (event) => {
+                console.log('WebSocket closed:', event);
+            };
+            
           };
       };
 

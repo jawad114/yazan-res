@@ -7,9 +7,10 @@ export const WebSocketProvider = ({ children }) => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const socket = new WebSocket('wss://yazan-layla-yydy.onrender.com');
+    const socket = new WebSocket('wss://yazan-layla.onrender.com');
     
     // wss://layla-res.com
+    
     
     setWs(socket);
     socket.onmessage = (event) => {

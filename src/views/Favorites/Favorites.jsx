@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { CircularProgress, Grid, Card, CardContent, Typography } from '@mui/material';
 import AxiosRequest from '../../Components/AxiosRequest';
+import Carousels from '../../Home/Carousels/Carousels';
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -26,7 +26,7 @@ const Favorites = () => {
     if (isClient) {
       fetchFavorites();
     }
-  }, [id, isClient]);
+  }, [id, isClient,token]);
 
   useEffect(() => {
     const fetchRestaurantDetails = async (restaurantName) => {
@@ -53,37 +53,56 @@ const Favorites = () => {
   }, [favorites, restaurantDetails]);
 
   return (
-    <div className='flex flex-col justify-center'>
+    <div className='bg-white'>
+      <Carousels/>
+    <div className="flex flex-col items-center p-4">
       {isClient ? (
         <>
-          <Typography variant="h2" className="mt-4 text-center">Favorite Restaurants</Typography>
-          {loading && <CircularProgress className="mt-8 mx-auto" />}
-          {!loading && favorites.length === 0 && <Typography variant="h6" className="text-center">No favorites added yet.</Typography>}
-          {!loading && favorites.length > 0 && (
-            <Grid container spacing={2} justifyContent="center"> 
-              {favorites.map((favorite) => (
-                <Grid item key={favorite._id} xs={6} sm={4} md={2}>
-                  {restaurantDetails[favorite.restaurantName] && (
-                    <Card>
-                      <CardContent>
-                        <img
-                          alt={favorite.restaurantName}
-                          src={restaurantDetails[favorite.restaurantName].picture}
-                          className="w-full h-50"
-                        />
-                        <Typography variant="body1" align="center" className="mt-4">Restaurant Name: {favorite.restaurantName}</Typography>
-                        <Typography variant="body2" align="center">Restaurant Location: {restaurantDetails[favorite.restaurantName].location}</Typography>
-                      </CardContent>
-                    </Card>
-                  )}
+          <Typography variant="h4" className="mt-4 text-center mb-4 font-semibold">
+            Favorite Restaurants
+          </Typography>
+          {loading ? (
+            <CircularProgress className="mt-8" />
+          ) : (
+            <>
+              {favorites.length === 0 ? (
+                <Typography variant="h6" className="mt-8 text-center">
+                  No favorites added yet.
+                </Typography>
+              ) : (
+                <Grid container spacing={4} className="mt-8 justify-start">
+                  {favorites.map((favorite) => (
+                    <Grid item key={favorite._id} xs={12} sm={6} md={4} lg={3}>
+                      {restaurantDetails[favorite.restaurantName] && (
+                        <Card className="shadow-lg rounded-lg overflow-hidden">
+                          <img
+                            alt={favorite.restaurantName}
+                            src={restaurantDetails[favorite.restaurantName].picture}
+                            className="w-full h-40 object-cover"
+                          />
+                          <CardContent>
+                            <Typography variant="h6" className="text-center text-gray-800">
+                              {favorite.restaurantName}
+                            </Typography>
+                            <Typography variant="body2" className="text-center text-gray-600">
+                              {restaurantDetails[favorite.restaurantName].location}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid> 
+              )}
+            </>
           )}
         </>
       ) : (
-        <Typography variant="h6" align="center" className="mt-20 text-red-500">Login as a Client First</Typography>
+        <Typography variant="h6" className="mt-20 text-center text-red-500">
+          Login as a Client First
+        </Typography>
       )}
+    </div>
     </div>
   );
 };

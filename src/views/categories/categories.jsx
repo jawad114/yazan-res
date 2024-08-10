@@ -5,6 +5,7 @@ import styles from './categories.module.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
+import Carousels from '../../Home/Carousels/Carousels';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -19,6 +20,8 @@ export default function Categories() {
   const [imageLoading, setImageLoading] = useState(true);
   const isClient = localStorage.getItem('isClient') === 'true';
   const [open, setOpen] = useState(false);  // State for handling login dialog
+  const [openingHours, setOpeningHours] = useState(null);
+  const [restaurantStatus, setRestaurantStatus] = useState('');
 
   const navigate = useNavigate();
 
@@ -66,8 +69,31 @@ export default function Categories() {
       }
     };
 
+    const fetchOpeningHoursAndStatus = async () => {
+      try {
+        const [hoursResponse, statusResponse] = await Promise.all([
+          AxiosRequest.get(`/opening-hours/${resName}`),
+          AxiosRequest.get(`/restaurant-status/${resName}`)
+        ]);
+
+        if (hoursResponse.status === 200) {
+          setOpeningHours(hoursResponse.data.openingHours);
+        }
+
+        if (statusResponse.status === 200) {
+          setRestaurantStatus(statusResponse.data.status);
+        }
+      } catch (error) {
+        console.error('Error fetching opening hours or status:', error);
+      }
+    };
+
     fetchCategories();
+    fetchOpeningHoursAndStatus();
   }, [resName]);
+
+
+  
 
   const handleAddCategory = () => {
     navigate(`/add-category/${resName}`);
@@ -139,20 +165,19 @@ export default function Categories() {
 
   const alt = `${resName}'s Image`;
 
+
+  const getDayName = () => {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = new Date().getDay();
+    return days[today];
+  };
+  
+
+  const dayName = getDayName();
+
   return (
     <div className='bg-white'>
-{imageLoading ? (
-  <div className='flex justify-center items-center h-[20vh] md:h-[64vh] mb-4'>
-    <CircularProgress />
-  </div>
-) : (
-  <img
-    src={restaurantImage}
-    alt={alt}
-    className="w-full h-[20vh] md:h-[64vh] object-cover mb-4"
-    loading="lazy"
-  />
-)}
+<Carousels/>
       <div className='flex flex-col w-full items-center text-center justify-center'>
         {loading ? (
           <div className='flex justify-center items-center h-screen'>
@@ -160,6 +185,49 @@ export default function Categories() {
           </div>
         ) : (
           <>
+                         {openingHours && (
+  <Box 
+    className='flex justify-between w-full px-4 mb-4 p-4 rounded-lg shadow-lg'
+    sx={{ 
+      backgroundColor: restaurantStatus === 'open' ? '#d4edda' : restaurantStatus === 'busy' ? '#fff3cd' : '#f8d7da',
+      border: '1px solid',
+      borderColor: restaurantStatus === 'open' ? '#c3e6cb' : restaurantStatus === 'busy' ? '#ffeeba' : '#f5c6cb',
+    }}
+  >
+    <Box className='flex flex-col justify-center'>
+      <Typography
+        variant='h6'
+        sx={{ 
+          color: restaurantStatus === 'open' ? 'green' : restaurantStatus === 'busy' ? 'orange' : 'red', 
+          fontWeight: 'bold' 
+        }}
+      >
+        {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
+      </Typography>
+    </Box>
+    <Box className='flex flex-col justify-center'>
+    {restaurantStatus !== 'closed' ? (
+      <Typography 
+        variant='h6' 
+        sx={{ 
+          fontWeight: 'medium' 
+        }}
+      >
+        Open Until {openingHours[dayName]?.close || 'N/A'}
+      </Typography>
+    ): (
+    <Typography 
+      variant='h6' 
+      sx={{ 
+        fontWeight: 'medium' 
+      }}
+    >
+      Closed
+    </Typography>
+  )}
+    </Box>
+  </Box>
+)}
             <h1 className='my-5'>Menu of : {resName}</h1>
             <div>
               {categories.length === 0 ? (
