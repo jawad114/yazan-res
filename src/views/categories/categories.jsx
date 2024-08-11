@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
 import { Avatar } from "@material-tailwind/react";
+import { ClockIcon } from '@heroicons/react/20/solid';
 
 
 export default function Categories() {
@@ -187,10 +188,10 @@ export default function Categories() {
           </div>
         ) : (
           <>
-                         {openingHours && (
+    {openingHours && (
   <Box 
-    className='flex justify-between w-full px-4 mb-4 p-4 rounded-lg shadow-lg'
-    sx={{ 
+    className='relative flex justify-between items-center w-full px-4 p-4 rounded-lg shadow-lg'
+    style={{ 
       backgroundColor: restaurantStatus === 'open' ? '#d4edda' : restaurantStatus === 'busy' ? '#fff3cd' : '#f8d7da',
       border: '1px solid',
       borderColor: restaurantStatus === 'open' ? '#c3e6cb' : restaurantStatus === 'busy' ? '#ffeeba' : '#f5c6cb',
@@ -199,44 +200,38 @@ export default function Categories() {
     <Box className='flex flex-col justify-center'>
       <Typography
         variant='h6'
-        sx={{ 
-          color: restaurantStatus === 'open' ? 'green' : restaurantStatus === 'busy' ? 'orange' : 'red', 
-          fontWeight: 'bold' 
-        }}
+        className={restaurantStatus === 'open' ? 'text-green-600 font-bold' : restaurantStatus === 'busy' ? 'text-orange-600 font-bold' : 'text-red-600 font-bold'}
       >
         {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
       </Typography>
     </Box>
+    <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
+      <Avatar
+        src={restaurantImage} // Replace with dynamic category image if needed
+        className="w-32 h-32 border-4 border-white"
+      />
+    </div>
     <Box className='flex flex-col justify-center'>
-    {restaurantStatus !== 'closed' ? (
-      <Typography 
+      {restaurantStatus !== 'closed' ? (
+        <Typography 
         variant='h6' 
-        sx={{ 
-          fontWeight: 'medium' 
-        }}
+        className='font-medium flex items-center'
       >
-        Open Until {openingHours[dayName]?.close || 'N/A'}
+        <ClockIcon className="h-6 w-6 text-black mr-2" /> {/* Clock Icon */}
+        {openingHours[dayName]?.close || 'N/A'}
       </Typography>
-    ): (
-    <Typography 
-      variant='h6' 
-      sx={{ 
-        fontWeight: 'medium' 
-      }}
-    >
-      Closed
-    </Typography>
-  )}
+      ) : (
+        <Typography 
+          variant='h6' 
+          className='font-medium'
+        >
+          Closed
+        </Typography>
+      )}
     </Box>
   </Box>
 )}
-<Avatar
-      src={restaurantImage} // Replace with dynamic category image if needed
-      size="xxl"
-      withBorder={true}
-      color="red"
-    />
-            <h1 className='my-3'>Menu of : {resName}</h1>
+            <h1 className='my-5'>Menu of : {resName}</h1>
             <div>
               {categories.length === 0 ? (
                 <p className='font-bold'>Category Not Found</p>

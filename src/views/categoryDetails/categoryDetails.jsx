@@ -13,6 +13,7 @@ import {
   Box
 } from "@mui/material";
 import { Avatar } from "@material-tailwind/react";
+import { ClockIcon } from "@heroicons/react/20/solid";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -294,11 +295,11 @@ const [openDialog, setOpenDialog] = useState(false);
 
   return (
     <div className='bg-white'>
-<Carousels/>
-{openingHours && (
+    <img src={categoryImage} alt={alt}  className="w-full h-[36vh] md:h-[70vh] object-cover" />
+    {openingHours && (
   <Box 
-    className='flex justify-between w-full px-4 mb-4 p-4 rounded-lg shadow-lg'
-    sx={{ 
+    className='relative flex justify-between items-center w-full px-4 p-4 rounded-lg shadow-lg'
+    style={{ 
       backgroundColor: restaurantStatus === 'open' ? '#d4edda' : restaurantStatus === 'busy' ? '#fff3cd' : '#f8d7da',
       border: '1px solid',
       borderColor: restaurantStatus === 'open' ? '#c3e6cb' : restaurantStatus === 'busy' ? '#ffeeba' : '#f5c6cb',
@@ -307,45 +308,40 @@ const [openDialog, setOpenDialog] = useState(false);
     <Box className='flex flex-col justify-center'>
       <Typography
         variant='h6'
-        sx={{ 
-          color: restaurantStatus === 'open' ? 'green' : restaurantStatus === 'busy' ? 'orange' : 'red', 
-          fontWeight: 'bold' 
-        }}
+        className={restaurantStatus === 'open' ? 'text-green-600 font-bold' : restaurantStatus === 'busy' ? 'text-orange-600 font-bold' : 'text-red-600 font-bold'}
       >
         {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
       </Typography>
     </Box>
+    <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
+      <Avatar
+        src={restaurantImage} // Replace with dynamic category image if needed
+        className="w-32 h-32 border-4 border-white"
+      />
+    </div>
     <Box className='flex flex-col justify-center'>
-      {restaurantStatus !== 'closed' ? (
+      {restaurantStatus === 'open' ? (
         <Typography 
-          variant='h6' 
-          sx={{ 
-            fontWeight: 'medium' 
-          }}
-        >
-          Open Until {openingHours[dayName]?.close || 'N/A'}
-        </Typography>
+        variant='h6' 
+        className='font-medium flex items-center'
+      >
+        <ClockIcon className="h-6 w-6 text-black mr-2" /> {/* Clock Icon */}
+        {openingHours[dayName]?.close || 'N/A'}
+      </Typography>
       ) : (
         <Typography 
           variant='h6' 
-          sx={{ 
-            fontWeight: 'medium' 
-          }}
+          className='font-medium'
         >
-          Closed
+          {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
         </Typography>
       )}
     </Box>
   </Box>
 )}
+
  <div className="flex flex-col w-full p-5">
-<div className="flex flex-col gap-4 items-center justify-center mb-5">
-<Avatar
-      src={categoryImage} // Replace with dynamic category image if needed
-      size="xxl"
-      withBorder={true}
-      color="red"
-    />
+<div className="flex flex-col gap-4 items-center justify-center mb-2">
   <Typography
     className="fs-3 fw-bold text-center"
     variant="h4"
@@ -459,12 +455,12 @@ const [openDialog, setOpenDialog] = useState(false);
                 </Typography>
 
                 <div >
-                  {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
-    selectedProduct.extras.requiredExtras.map((extra) => (
-      <>
-      <Typography variant="h6" className="text-start">Required Extras:</Typography>
-<div key={extra._id} className="flex items-center space-x-2">
-<input
+                {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
+  <>
+    <Typography variant="h6" className="text-start">Required Extras:</Typography>
+    {selectedProduct.extras.requiredExtras.map((extra) => (
+      <div key={extra._id} className="flex items-center space-x-2">
+        <input
           type="radio"
           id={extra._id}
           name="requiredExtra"
@@ -473,24 +469,24 @@ const [openDialog, setOpenDialog] = useState(false);
           onChange={() => handleRequiredExtraChange(extra._id)}
           className="ml-1 mr-2"
         />
-<label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
-    <span>{extra.name}</span>
-    <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
-  </label>
+        <label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
+          <span>{extra.name}</span>
+          <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
+        </label>
       </div>
-      </>
-    ))
-  ) : (
-    null
-  )}
+    ))}
+  </>
+) : null}
+
                 </div>
 
                 <div >
                   
                   {selectedProduct && selectedProduct.extras && selectedProduct.extras.optionalExtras && selectedProduct.extras.optionalExtras.length > 0 ? (
-      selectedProduct.extras.optionalExtras.map((extra) => (
-        <>
-                          <Typography variant="h6" className="text-start">Optional Extras:</Typography>
+                            <>
+                            <Typography variant="h6" className="text-start">Optional Extras:</Typography>
+  
+      {selectedProduct.extras.optionalExtras.map((extra) => (
 <div key={extra._id} className="flex items-center space-x-2">
 <input
             type="checkbox"
@@ -506,8 +502,9 @@ const [openDialog, setOpenDialog] = useState(false);
     <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
   </label>
         </div>
-        </>
-      ))
+        
+      ))}
+      </>
     ) : (
       null
     )}
