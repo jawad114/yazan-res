@@ -459,9 +459,10 @@ const [openDialog, setOpenDialog] = useState(false);
                 </Typography>
 
                 <div >
-                  <Typography variant="h6">Required Extras:</Typography>
                   {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
     selectedProduct.extras.requiredExtras.map((extra) => (
+      <>
+      <Typography variant="h6" className="text-start">Required Extras:</Typography>
 <div key={extra._id} className="flex items-center space-x-2">
 <input
           type="radio"
@@ -477,17 +478,19 @@ const [openDialog, setOpenDialog] = useState(false);
     <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
   </label>
       </div>
+      </>
     ))
   ) : (
-    <Typography variant="body2">No required extras available.</Typography>
+    null
   )}
                 </div>
 
                 <div >
-                  <Typography variant="h6">Optional Extras:</Typography>
                   
                   {selectedProduct && selectedProduct.extras && selectedProduct.extras.optionalExtras && selectedProduct.extras.optionalExtras.length > 0 ? (
       selectedProduct.extras.optionalExtras.map((extra) => (
+        <>
+                          <Typography variant="h6" className="text-start">Optional Extras:</Typography>
 <div key={extra._id} className="flex items-center space-x-2">
 <input
             type="checkbox"
@@ -503,9 +506,10 @@ const [openDialog, setOpenDialog] = useState(false);
     <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
   </label>
         </div>
+        </>
       ))
     ) : (
-      <Typography variant="body2">No optional extras available.</Typography>
+      null
     )}
                 </div>
                 {(isClient) && (

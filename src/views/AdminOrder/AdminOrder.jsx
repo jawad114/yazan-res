@@ -177,31 +177,31 @@ export default function AdminOrder() {
         return totalPrice.toFixed(2);
     };
 
-    // const handleDelete = async (orderId) => {
-    //     try {
-    //         // Ask for confirmation before deleting
-    //         const confirmed = window.confirm(`Are you sure you want to delete order ${orderId}?`);
+    const handleDelete = async (orderId) => {
+        try {
+            // Ask for confirmation before deleting
+            const confirmed = window.confirm(`Are you sure you want to delete order ${orderId}?`);
 
-    //         if (confirmed) {
-    //             // Send delete request to server
-    //             await AxiosRequest.delete(`/orders/${orderId}`);
+            if (confirmed) {
+                // Send delete request to server
+                await AxiosRequest.delete(`/orders/${orderId}`);
 
-    //             // Update state to remove the deleted order from the list
-    //             setOrders((prevOrders) =>
-    //                 prevOrders.filter((order) => order.orderId !== orderId)
-    //             );
+                // Update state to remove the deleted order from the list
+                setOrders((prevOrders) =>
+                    prevOrders.filter((order) => order.orderId !== orderId)
+                );
 
-    //             // Set success message
-    //             setSuccessMessage(`Order ${orderId} has been deleted.`);
-    //         } else {
-    //             // User canceled deletion
-    //             console.log('Deletion canceled.');
-    //         }
-    //     } catch (error) {
-    //         // Error handling
-    //         console.error('Error deleting order:', error);
-    //     }
-    // };
+                // Set success message
+                setSuccessMessage(`Order ${orderId} has been deleted.`);
+            } else {
+                // User canceled deletion
+                console.log('Deletion canceled.');
+            }
+        } catch (error) {
+            // Error handling
+            console.error('Error deleting order:', error);
+        }
+    };
 
 
     const handleGoToRestaurantArea = () => {
@@ -541,10 +541,10 @@ export default function AdminOrder() {
                                                 <Grid item>
                                                     <Button variant="contained" startIcon={<Timelapse />} onClick={() => handlePreparing(order.orderId)}>Preparing</Button>
                                                 </Grid>
-                                                {/* <Grid item>
+                                                 <Grid item>
                                                     <Button variant="contained" startIcon={<Delete />} onClick={() => handleDelete(order.orderId)}>Delete</Button>
                                                 </Grid>
-                                                <Grid item>
+                                               {/* <Grid item>
                                                     <Button variant="contained" startIcon={<LocalShipping />} onClick={() => handleDelivered(order.orderId)}>Delivered</Button>
                                                 </Grid> */}
                                                 <Grid item>

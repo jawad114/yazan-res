@@ -6,6 +6,8 @@ import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
+import { Avatar } from "@material-tailwind/react";
+
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -228,7 +230,13 @@ export default function Categories() {
     </Box>
   </Box>
 )}
-            <h1 className='my-5'>Menu of : {resName}</h1>
+<Avatar
+      src={restaurantImage} // Replace with dynamic category image if needed
+      size="xxl"
+      withBorder={true}
+      color="red"
+    />
+            <h1 className='my-3'>Menu of : {resName}</h1>
             <div>
               {categories.length === 0 ? (
                 <p className='font-bold'>Category Not Found</p>

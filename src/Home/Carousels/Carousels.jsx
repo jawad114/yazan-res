@@ -30,7 +30,7 @@ const Carousels = () => {
   }
 
   return (
-    <div className="w-full h-[50vh] md:h-[70vh] mx-auto">
+    <div className="w-full h-[36vh] md:h-[70vh] mx-auto">
       <Carousel
         autoplay
         loop

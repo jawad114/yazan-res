@@ -90,10 +90,9 @@ const HomeComponent = () => {
 
   return (
     <div className='bg-white'>
-      {/* <img src="https://beyondtype1.org/wp-content/uploads/2023/01/FAST-FOOD-CHAIN-NUTRITION-GUIDE-HEADER.jpg" alt="Header" className={styles.headerImage} /> */}
       <Carousels/>
       <div className={`${styles.p4}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h2>Restaurant Area</h2>
+        <h2 className='mt-4'>Restaurant Area</h2>
         {(localStorage.getItem('isClient') === 'true' || localStorage.getItem('isAdmin') === 'true') && (
           <TextField
             placeholder="Search by restaurant name"
@@ -107,16 +106,36 @@ const HomeComponent = () => {
         {isOwner && (
           <>
             {/* Display user's name */}
-            <Typography  variant="h5" component="h1" gutterBottom>
-              Welcome Back: {name ? name : ''}
-            </Typography>
+            <Typography
+  variant="h5" // Changed to a slightly larger variant for emphasis
+  component="h1"
+  gutterBottom
+  sx={{
+    fontWeight: 'bold',
+    color: '#333', // Dark gray color for better readability
+    textAlign: 'center', // Centered text
+    mb: 3, // Margin-bottom for spacing
+  }}
+>
+  Welcome Back{ name ? `: ${name}` : '' }
+</Typography>
             <Button variant="contained" color="primary" onClick={handleOwnerOrder}>
               View Orders
             </Button>
           </>
         )}
         {localStorage.getItem('isAdmin') === 'true' &&(
-           <Typography className='' variant="h5" component="h1" gutterBottom>
+                      <Typography
+                      variant="h5" // Changed to a slightly larger variant for emphasis
+                      component="h1"
+                      gutterBottom
+                      sx={{
+                        fontWeight: 'bold',
+                        color: '#333', // Dark gray color for better readability
+                        textAlign: 'center', // Centered text
+                        mb: 3, // Margin-bottom for spacing
+                      }}
+                    >
            Welcome Back: Admin 
          </Typography>
         )

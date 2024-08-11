@@ -431,6 +431,12 @@ const Navbar: React.FC = () => {
     };
 
     const fetchCartDebounced = debounce(fetchCart, 500);
+    const handleCartClick = () => {
+        navigate('/cart'); // Navigate to /cart
+      };
+      const handleFavClick = () => {
+        navigate('/favorites'); // Navigate to /cart
+      };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -527,24 +533,32 @@ const Navbar: React.FC = () => {
                                 <SettingsIcon style={{ marginRight: '0.5rem' }}/>Settings                            
                                 </Link>
                         )}
-                        {isClient && (
+                        {/* {isClient && (
                             <Link to="/cart" className='action-btn'>
                                 <div className="cart-icon-container">
                                     <img src={cartIcon} width={20} alt="Cart" className="cart-icon" />
                                     {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                                 </div>
                             </Link>
-                        )}
+                        )} */}
+                        {isClient && (
+      <div onClick={handleCartClick} className='action-btn cursor-pointer'>
+        <div className="cart-icon-container">
+          <img src={cartIcon} width={20} alt="Cart" className="cart-icon" />
+          {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+        </div>
+      </div>
+    )}
 
                         {isLoggedIn && (
                             <>
 
-                                <Link to="/favorites" className='action-btn'>
-                                    <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
+<div onClick={handleFavClick} className='action-btn cursor-pointer'>
+<div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
                                         {favoriteUpdate ? <Favorite  style={{ color: 'red',marginRight: '0.5rem' }} /> : <FavoriteBorder style={{ color: 'black',marginRight: '0.5rem' }} />}
                                         Favorite
                                     </div>
-                                </Link>
+                                </div>
 
                                 {isLoggedIn && (isAdmin || isOwner) && (
                                     <Link to="/finance" className='action-btn'>
@@ -590,19 +604,19 @@ const Navbar: React.FC = () => {
                         {isLoggedIn && (
                             <div className='flex space-x-4'>
 
-                                <Link to="/favorites" className='action-btn'>
+<div onClick={handleFavClick} className='action-btn cursor-pointer'>
                                     <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
                                         {favoriteUpdate ? <Favorite style={{ color: 'red' , fontSize: 18 }} /> : <FavoriteBorder style={{ color: 'black' , fontSize: 18 }} />}
                                     </div>
-                                </Link>
+                                </div>
 
 
-                                <Link to="/cart" className='action-btn'>
-                                    <div className="cart-icon-container">
+                                <div onClick={handleCartClick} className='action-btn cursor-pointer'>
+                                <div className="cart-icon-container">
                                         <img src={cartIcon} alt="Cart" className="cart-icon" />
                                         {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                                     </div>
-                                </Link>
+                                </div>
                             </div>
                         )}
                         <IconButton className="menu-icon" onClick={toggleMenu}>
@@ -658,6 +672,22 @@ const Navbar: React.FC = () => {
               <ListAlt style={{ marginRight: '0.2rem' }}/>Orders
             </MenuItem>
           )}
+                                  {isAdmin && (
+                                    <>
+                                    <MenuItem
+                                    className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+                                    onClick={() => navigate(`/all-orders`)}
+                                  >
+                                <ListAlt style={{ marginRight: '0.2rem' }}/>Orders
+                            </MenuItem>
+                             <MenuItem
+                            className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+                            onClick={() => navigate(`/admin-dashboard`)}
+                             >
+                            <Dashboard style={{ marginRight: '0.2rem' }}/>Dashboard
+                            </MenuItem>
+                            </>
+                        )}
           {(isOwner || isAdmin) && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
