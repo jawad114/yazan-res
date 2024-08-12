@@ -376,17 +376,18 @@ const HomeComponent = () => {
             >
               Welcome Back{name ? `: ${name}` : ''}
             </Typography>
-            <Typography 
+
+</>
+)}
+                  {!isOwner && (
+<>       
+<Typography 
   variant="h6" 
   component="h1" 
   className="font-bold text-center mb-5 text-blue-500 shadow-md rounded-lg p-2 bg-blue-50 via-white to-blue-50"
 >
   What's your taste? <span className="text-3xl">😋</span>
 </Typography>
-</>
-)}
-                  {!isOwner && (
-<>       
         <div className="flex !flex-row flex-wrap justify-start gap-2 mb-4 px-0">
           {Object.keys(filterImages).map((filter) => (
             <FilterCard
