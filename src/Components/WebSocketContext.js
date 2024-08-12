@@ -12,6 +12,7 @@ export const WebSocketProvider = ({ children }) => {
     // wss://layla-res.com
     
     
+    
     setWs(socket);
     socket.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
