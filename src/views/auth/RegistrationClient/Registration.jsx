@@ -79,6 +79,7 @@ import registerImage from "../../../assets/register.svg";
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom for navigation
 
 
+
 const Registration = () => {
   const [formData, setFormData] = useState({
     firstname: "",

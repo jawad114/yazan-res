@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Card, CardContent, TextField, Button, IconButton, InputAdornment } from "@mui/material";
 import "./Registration.css";
+import {
+  Checkbox,
+  Typography
+} from "@material-tailwind/react";
 
 const fields = [
   { name: "firstname", label: "First Name", type: "text" },
@@ -14,6 +18,8 @@ const fields = [
 
 const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); // State for checkbox
+
 
   // Function to check if the password is easy to guess
   const isPasswordEasy = () => {
@@ -23,6 +29,10 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
 
   // Function to validate form fields
   const validateForm = () => {
+    if (!isChecked) {
+      alert("Please agree to the Privacy Policy before registering.");
+      return false;
+    }
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return false;
@@ -49,6 +59,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
   const resetForm = () => {
     const emptyFormData = Object.fromEntries(Object.keys(formData).map(key => [key, ""]));
     handleInputChange({ target: { name: "", value: "" } }); // Clear controlled components
+    setIsChecked(false);
   };
 
   // useEffect hook to reset form fields on component mount
@@ -59,7 +70,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
   return (
     <Card className="registration-card">
       <CardContent>
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleFormSubmit} >
           {fields.map((field, index) => {
             if (field.type === "password") {
               return (
@@ -102,6 +113,28 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
               );
             }
           })}
+    <div className="flex !flex-row items-center justify-between space-x-2">
+    <Checkbox
+    checked={isChecked} // Bind state to Checkbox
+    onChange={(e) => setIsChecked(e.target.checked)}
+          label={
+            <Typography
+              variant="small"
+              color="gray"
+              className="flex items-center mt-[2vh] md:mt-[2.2vh] font-normal"
+              >
+              I agree to the
+              <a
+                href="/privacy-policy"
+                className="font-medium transition-colors hover:text-gray-900"
+              >
+                &nbsp;Privacy Policy
+              </a>
+            </Typography>
+          }
+          containerProps={{ className: "-ml-2.5" }}
+        />
+        </div>
           <Button type="submit" variant="contained" className="submit-btn">
             Sign Up
           </Button>

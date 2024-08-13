@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -12,6 +12,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { toast } from 'react-toastify';
 import AxiosRequest from '../Components/AxiosRequest';
+import GoogleTranslate from '../Components/GoogleTranslate';
+import Translate from '../Components/GoogleTranslate';
 
 
 // const Navbar: React.FC = () => {
@@ -157,6 +159,7 @@ import AxiosRequest from '../Components/AxiosRequest';
 //           checkUserLogin();
 //         }, [ws, notificationSound, audio, ownerRestaurantName,customerId,loggedIn,restaurantName]);
 
+
 const Navbar: React.FC = () => {
   const [scrolling, setScrolling] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -177,6 +180,8 @@ const Navbar: React.FC = () => {
   const [lastInteractionTime, setLastInteractionTime] = useState<number>(Date.now());
 
   const INTERACTION_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+
 
   useEffect(() => {
       const handleScroll = () => {
@@ -230,93 +235,6 @@ const Navbar: React.FC = () => {
               ws.onopen = () => {
                   console.log('WebSocket connection opened');
               };
-
-            //   ws.onmessage = (event: MessageEvent) => {
-            //       try {
-            //           const data = JSON.parse(event.data);
-            //           console.log('WebSocket message received:', data);
-
-            //           if (isClient && data.type === 'cartUpdated') {
-            //               if (customerId) fetchCartDebounced(customerId);
-            //           } else if (isClient && data.type === 'favoritesUpdated') {
-            //               setFavoritesUpdated(true);
-            //           }
-
-            //           if (isOwner && data.type === 'newOrderReceived') {
-            //               if (data.restaurantName === ownerRestaurantName) {
-            //                   console.log('New order received for your restaurant');
-
-            //                   const currentTime = Date.now();
-            //                   if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
-            //                       alert('Please interact with the page to enable audio notifications.');
-            //                       return;
-            //                   }
-
-            //                   if (audio) {
-            //                       audio.pause();
-            //                       audio.currentTime = 0;
-            //                       audio.loop = false; // Ensure the loop is stopped
-            //                       setAudio(null); // Clear the audio object
-            //                   }
-
-            //                   // Create a new audio instance and set it to loop
-            //                   const newAudio = new Audio(notificationSound);
-            //                   newAudio.loop = true; // Set loop to true initially
-            //                   newAudio.play();
-            //                   setAudio(newAudio); // Store the new audio instance
-
-            //                   // Show toast with 'Got it' button
-            //                   const id = toast.success(
-            //                       <div className="toast-custom">
-            //                           <div>New Order Received for {ownerRestaurantName}</div>
-            //                           <button
-            //                               onClick={() => {
-            //                                   toast.dismiss(id); // Dismiss the toast
-            //                                   if (newAudio) {
-            //                                       newAudio.pause();
-            //                                       newAudio.currentTime = 0;
-            //                                       newAudio.loop = false; // Stop the loop
-            //                                       setAudio(null); // Clear the audio object
-            //                                   }
-            //                                   window.location.reload();
-            //                               }}
-            //                           >
-            //                               Got it
-            //                           </button>
-            //                       </div>,
-            //                       {
-            //                           autoClose: false, // Prevent auto-close
-            //                           closeButton: false,
-            //                           hideProgressBar: true,
-            //                           className: 'toast-custom',
-            //                           bodyClassName: 'toast-body',
-            //                           onClose: () => {
-            //                               if (newAudio) {
-            //                                   newAudio.pause();
-            //                                   newAudio.currentTime = 0;
-            //                                   newAudio.loop = false; // Ensure loop is stopped
-            //                                   setAudio(null); // Clear the audio object
-            //                               }
-            //                           }
-            //                       }
-            //                   );
-
-            //                   setToastId(id as string); // Explicitly cast id to string
-            //               }
-            //           }
-
-            //       } catch (error) {
-            //           console.error('Error parsing WebSocket message:', error);
-            //       }
-            //   };
-
-            //   ws.onerror = (event) => {
-            //       console.error('WebSocket error:', event);
-            //   };
-
-            //   ws.onclose = (event) => {
-            //       console.log('WebSocket closed:', event);
-            //   };
             ws.onmessage = (event: MessageEvent) => {
                 try {
                     let data;
@@ -484,7 +402,6 @@ const Navbar: React.FC = () => {
                             </div>
                         </div>
                     </Link>
-
                     <div className='user-actions'>
                         {!isLoggedIn && (
                             <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>
@@ -528,19 +445,16 @@ const Navbar: React.FC = () => {
                             </Link>
                         )}
 
-                        {(isOwner || isAdmin) && (
+                        {isOwner && (
                             <Link to={`/`} className="action-btn">
                                 <SettingsIcon style={{ marginRight: '0.5rem' }}/>Settings                            
                                 </Link>
                         )}
-                        {/* {isClient && (
-                            <Link to="/cart" className='action-btn'>
-                                <div className="cart-icon-container">
-                                    <img src={cartIcon} width={20} alt="Cart" className="cart-icon" />
-                                    {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-                                </div>
-                            </Link>
-                        )} */}
+                         {isAdmin && (
+                            <Link to={`/filter-list`} className="action-btn">
+                                <FilterList style={{ marginRight: '0.5rem' }}/>Filters                            
+                                </Link>
+                        )}
                         {isClient && (
       <div onClick={handleCartClick} className='action-btn cursor-pointer'>
         <div className="cart-icon-container">
@@ -688,7 +602,7 @@ const Navbar: React.FC = () => {
                             </MenuItem>
                             </>
                         )}
-          {(isOwner || isAdmin) && (
+          {isOwner  && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate(`/`)}
@@ -696,10 +610,16 @@ const Navbar: React.FC = () => {
              <SettingsIcon style={{ marginRight: '0.2rem' }}/> Settings
             </MenuItem>
           )}
+
                           {isAdmin &&(
+                            <>
                            <MenuItem onClick={() => navigate('/slider-image-list')} className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200">
                             <Image style={{ marginRight: '0.2rem' }} /> Carousel
                             </MenuItem>
+                            <MenuItem onClick={() => navigate('/filter-list')} className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200">
+                            <FilterList style={{ marginRight: '0.2rem' }}/>Filters                            
+                            </MenuItem>
+                            </>
                           )}
         {!isAdmin &&(                  
           <MenuItem

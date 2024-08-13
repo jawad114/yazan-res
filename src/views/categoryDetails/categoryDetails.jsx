@@ -436,9 +436,9 @@ const [openDialog, setOpenDialog] = useState(false);
         handleClose={handleCloseModal}
         body={
           selectedProduct && (
-            <>
-              <div className="flex flex-col text-start w-screen max-w-[70vw] md:max-w-[25vw] text-start justify-start h-screen overflow-auto max-h-[70vh] ">
-               <div className="flex items-center justify-center mb-[4vh]">
+ <>
+              <div className="flex flex-col text-start w-screen max-w-[70vw] md:max-w-[25vw] text-start justify-start h-full overflow-auto max-h-[70vh] ">
+               <div className="flex items-center justify-center  mb-[4vh]">
                 <img
                   className="md:w-[20vw] object-cover"
                   src={selectedProduct.dishImage}
@@ -456,11 +456,11 @@ const [openDialog, setOpenDialog] = useState(false);
 
                 <div >
                 {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
-  <>
-    <Typography variant="h6" className="text-start">Required Extras:</Typography>
-    {selectedProduct.extras.requiredExtras.map((extra) => (
-      <div key={extra._id} className="flex items-center space-x-2">
-        <input
+                 <>
+                <Typography variant="h6" className="text-start">Required Extras:</Typography>
+           {selectedProduct.extras.requiredExtras.map((extra) => (
+           <div key={extra._id} className="flex items-center space-x-2">
+             <input
           type="radio"
           id={extra._id}
           name="requiredExtra"
@@ -476,7 +476,7 @@ const [openDialog, setOpenDialog] = useState(false);
       </div>
     ))}
   </>
-) : null}
+   ) : null}
 
                 </div>
 
@@ -487,8 +487,8 @@ const [openDialog, setOpenDialog] = useState(false);
                             <Typography variant="h6" className="text-start">Optional Extras:</Typography>
   
       {selectedProduct.extras.optionalExtras.map((extra) => (
-<div key={extra._id} className="flex items-center space-x-2">
-<input
+  <div key={extra._id} className="flex items-center space-x-2">
+  <input
             type="checkbox"
             id={extra._id}
             name="optionalExtra"
@@ -497,7 +497,7 @@ const [openDialog, setOpenDialog] = useState(false);
             onChange={() => handleOptionalExtraChange(extra._id)}
             className="ml-1 mr-2"
           />
-<label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
+ <label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
     <span>{extra.name}</span>
     <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
   </label>
@@ -510,7 +510,7 @@ const [openDialog, setOpenDialog] = useState(false);
     )}
                 </div>
                 {(isClient) && (
-<>
+              <>
                 <div className="flex items-center justify-center mt-[2vh]">
                   <Button onClick={() => handleQuantityChange(selectedProduct._id, -1)} disabled={quantities[selectedProduct._id] === 1}>
                     <RemoveIcon />

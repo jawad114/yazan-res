@@ -113,6 +113,7 @@ li {
   @apply bg-blue-500 text-white border-none p-2 rounded text-sm transition-colors w-full;
 }
 
+
 .order-btn:hover,
 .market-order-btn:hover {
   @apply bg-blue-700;
@@ -168,3 +169,5 @@ li {
 .newCssClass {
   /* Your styles for Btn2 when isOwner is true */
 }
+
+

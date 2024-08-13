@@ -125,7 +125,7 @@ const Orders = () => {
     return true; // Show all orders if no filter is applied
   }).filter(order =>
     order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    order.resName.toLowerCase().includes(searchQuery.toLowerCase()) // Filter by order ID or restaurant name
+    order.products.some(product =>product.orderFrom.toLowerCase().includes(searchQuery.toLowerCase())) // Filter by order ID or restaurant name
   ).sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
 
   const handleOrderClick = (order) => {
@@ -197,7 +197,7 @@ const openWaze = (latitude, longitude) => {
         </MenuItem>
       </Menu>
       <TextField
-        placeholder="Search by Order ID or Restaurant Name"
+        placeholder="Search by Order ID or Place Name"
         variant="outlined"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}

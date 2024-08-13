@@ -217,6 +217,9 @@ import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../Components/AxiosRequest';
 import Carousels from './Carousels/Carousels';
 import { styled } from '@mui/material/styles';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping, faShoppingBasket, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import './customScrollbar.css'
 
 // Styled card for filters
 const FilterCard = styled(MuiCard)(({ theme, selected }) => ({
@@ -232,12 +235,7 @@ const FilterCard = styled(MuiCard)(({ theme, selected }) => ({
   },
 }));
 
-const filterImages = {
-  Pizza: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg?t=st=1723412148~exp=1723412748~hmac=2c9ce93a60185d8f1ba982bc2cdfe94ab6cd4d8fe24ef94f0eba66b293b892cb',
-  Burger: 'https://img.freepik.com/free-photo/tasty-burger-isolated-white-background-fresh-hamburger-fastfood-with-beef-cheese_90220-1063.jpg?t=st=1723412251~exp=1723415851~hmac=5d3735b2ba878286996d8d583fc7d2ec647f81e141d38d5902edccf725f17376&w=740',
-  Drinks: 'https://img.freepik.com/free-vector/soda-can-concept-illustration_114360-26889.jpg?t=st=1723412486~exp=1723416086~hmac=9963c421549ead18be0c30e65be752e393dae5162c0a278a3a78b55a44d097e6&w=740',
-  Sushi: 'https://img.freepik.com/free-photo/side-view-mix-sushi-rolls-tray-with-ginger-wasabi_141793-14242.jpg?t=st=1723412536~exp=1723416136~hmac=8c1dd207a681ec2063a10b5e86b682036b50ff69c104cb2cbc0254c62cdc4fff&w=900'
-};
+
 
 const HomeComponent = () => {
   const [loading, setLoading] = useState(true);
@@ -248,6 +246,8 @@ const HomeComponent = () => {
   const token = localStorage.getItem('token');
   const resName = localStorage.getItem('resName');
   const name = localStorage.getItem('name');
+  const [filter, setFilter] = useState([]);
+
 
   const fetchProducts = async (searchTerm = '') => {
     try {
@@ -294,6 +294,25 @@ const HomeComponent = () => {
     return () => clearInterval(interval);
   }, [token, resName]);
 
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await AxiosRequest.get('/allFilters');
+        setFilter(response.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+  
+    fetchFilters();
+  }, []);
+  
+  const filterImages = filter.reduce((acc, filters) => {
+    acc[filters.title] = filters.imageUrl;
+    return acc;
+  }, {});
+
   const handleOrder = () => {
     window.location.replace('/orders');
   };
@@ -321,10 +340,9 @@ const HomeComponent = () => {
     <div className="bg-white">
       <Carousels />
       <div className="flex flex-col items-center p-4">
-        <h2 className="mt-4 text-2xl font-bold">Restaurant Area</h2>
         {(localStorage.getItem('isClient') === 'true' || localStorage.getItem('isAdmin') === 'true') && (
           <TextField
-            placeholder="Search by restaurant name"
+            placeholder="Search by place name"
             value={searchTerm}
             type="search"
             variant="outlined"
@@ -384,34 +402,43 @@ const HomeComponent = () => {
 <Typography 
   variant="h6" 
   component="h1" 
-  className="font-bold text-center mb-5 text-blue-500 shadow-md rounded-lg p-2 bg-blue-50 via-white to-blue-50"
+  className="!font-bold text-center mb-5 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
 >
-  What's your taste? <span className="text-3xl">😋</span>
+  What you looking for? <span className="text-3xl">😎</span>
 </Typography>
-        <div className="flex !flex-row flex-wrap justify-start gap-2 mb-4 px-0">
-          {Object.keys(filterImages).map((filter) => (
-            <FilterCard
-              key={filter}
-              selected={selectedFilter === filter}
-              onClick={() => handleFilterSelect(filter)}
-              className="flex flex-col  shadow-lg bg-white rounded-lg items-center justify-center w-[20vw]"
-            >
-              <CardMedia
-                component="img"
-                image={filterImages[filter]}
-                alt={filter}
-                className="w-full h-[10vh] md:h-[20vh] object-cover"
-              />
-              <div className='flex items-start justify-start text-start'>
-                <Typography className='font-bold text-black' component="div">
-                  {filter}
-                </Typography>
-              </div>
-            </FilterCard>
-          ))}
+        <div className="flex !flex-row justify-start w-full gap-4 mb-4 px-0 overflow-x-auto custom-scrollbar transition-all duration-300">
+        <div className="flex flex-nowrap w-max gap-2">
+    {Object.keys(filterImages).map((filter) => (
+      <FilterCard
+        key={filter}
+        selected={selectedFilter === filter}
+        onClick={() => handleFilterSelect(filter)}
+        className="flex flex-col shadow-lg bg-white rounded-lg items-center justify-center w-[20vw] min-w-[20vw] max-w-[20vw]"
+      >
+        <CardMedia
+          component="img"
+          image={filterImages[filter]}
+          alt={filter}
+          className="w-full h-[10vh] md:h-[20vh] object-cover"
+        />
+        <div className="flex items-start justify-start text-start">
+          <Typography className="font-bold text-black" component="div">
+            {filter}
+          </Typography>
         </div>
+      </FilterCard>
+    ))}
+  </div>
+</div>
         </>
         )}
+              <Typography 
+  variant="h6" 
+  component="h1" 
+  className="!font-bold text-center mb-2 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
+>
+Market Place <span className="text-3xl"><FontAwesomeIcon icon={faCartShopping} color='black'/></span>
+</Typography>
 <div className={`grid ${isOwner ? 'grid-cols-1 md:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'} gap-4 w-full`}>
 {loading ? (
             <div className="flex justify-center items-center h-64">
@@ -419,7 +446,7 @@ const HomeComponent = () => {
             </div>
           ) : isOwner ? (
             <>
-              {products.length != 0 && (
+              {products.length !== 0 && (
                 <Card key={products._id} product={products}/>
               )
               }

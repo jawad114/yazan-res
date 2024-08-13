@@ -59,7 +59,7 @@ const Favorites = () => {
       {isClient ? (
         <>
           <Typography variant="h4" className="mt-4 text-center mb-4 font-semibold">
-            Favorite Restaurants
+            Favorite Places
           </Typography>
           {loading ? (
             <CircularProgress className="mt-8" />

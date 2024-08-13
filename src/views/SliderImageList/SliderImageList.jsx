@@ -24,7 +24,6 @@ const SliderImageList = () => {
         setSliderImages(response.data);
         setLoading(false);
       } catch (error) {
-        setError('Error fetching slider images');
         setLoading(false);
       }
     };

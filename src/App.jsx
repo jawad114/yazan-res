@@ -45,6 +45,8 @@ import ForgotOwner from './views/auth/LoginOwner/ForgotOwner/ForgotOwner';
 import ResetOwner from './views/auth/LoginOwner/ResetOwner/ResetOwner';
 import SliderImageList from './views/SliderImageList/SliderImageList';
 import AddImagePage from './views/AddImagePage/AddImagePage';
+import AddFilterPage from './views/AddFilterPage/AddFilterPage';
+import FilterList from './views/FilterList/FilterList';
 
 
 const theme = createTheme();
@@ -104,6 +106,8 @@ const App = () => {
               <Route path='/reset-password' element={<Reset />} />
               <Route path='/slider-image-list' element={<SliderImageList />} />
               <Route path='/add-slider-image' element={<AddImagePage />} />
+              <Route path='/filter-list' element={<FilterList />} />
+              <Route path='/add-filter' element={<AddFilterPage />} />
               <Route path='/forgot-password-owner' element={<ForgotOwner />} />
               <Route path='/reset-password-owner' element={<ResetOwner />} />
               <Route path='/verify' element={<Verify />} />

@@ -7,10 +7,10 @@ export const WebSocketProvider = ({ children }) => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const socket = new WebSocket('wss://yazan-layla.onrender.com');
+    const socket = new WebSocket('wss://layla-marketplace.onrender.com');
     
     // wss://layla-res.com
-    
+    // wss://yazan-layla.onrender.com
     
     
     setWs(socket);
