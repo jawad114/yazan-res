@@ -388,13 +388,16 @@ const showFallbackNotification = () => {
         setAnchorEl(null);
     };
 
+    const handleLogoClick = () => {
+        navigate('/'); // Redirect to the home route
+      };
+
     return (
         <>
             {/* Desktop View */}
             <nav className={`navbar desktop-view ${scrolling ? 'scrolling' : ''}`}>
                 <div className='navbar-container'>
-                    <Link to="/">
-                        <div className='logo-container'>
+                        <div onClick={handleLogoClick} className='logo-container hover:cursor-pointer'>
                             <div className='logo'>
                                 <img src={logoImage} alt='YourLogo' />
                             </div>
@@ -402,7 +405,6 @@ const showFallbackNotification = () => {
                                 <h5 id='Logo2'>Order To Your Location</h5>
                             </div>
                         </div>
-                    </Link>
                     <div className='user-actions'>
                         {!isLoggedIn && (
                             <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>

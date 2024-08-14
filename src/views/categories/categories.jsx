@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
 import { Avatar } from "@material-tailwind/react";
-import { ClockIcon } from '@heroicons/react/20/solid';
+import { ClockIcon, PhoneIcon } from '@heroicons/react/20/solid';
 import { Phone } from '@mui/icons-material';
 
 
@@ -234,7 +234,7 @@ export default function Categories() {
     </Box>
   </Box>
 )}
-    {restaurantContact && (
+    {/* {restaurantContact && (
       <Box 
       className='relative flex justify-start items-center w-full  px-4 p-4 rounded-lg shadow-lg'
       sx={{ 
@@ -252,6 +252,13 @@ export default function Categories() {
         {restaurantContact}
       </Typography>
     </Box>
+)} */}
+   {restaurantContact && (
+ <div className='relative flex justify-start items-center w-full  px-4 p-4' >
+    <a href={`tel:${restaurantContact}`} className="text-blue-500 hover:cursor-pointer">
+ <PhoneIcon width={30} color="blue"/>
+ </a>
+</div>
 )}
             <h1 className='my-5'>Menu of : {resName}</h1>
             <div>

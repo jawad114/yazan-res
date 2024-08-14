@@ -13,7 +13,7 @@ import {
   Box
 } from "@mui/material";
 import { Avatar } from "@material-tailwind/react";
-import { ClockIcon } from "@heroicons/react/20/solid";
+import { ClockIcon, PhoneArrowDownLeftIcon, PhoneArrowUpRightIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -380,24 +380,12 @@ const [openDialog, setOpenDialog] = useState(false);
     </Box>
   </Box>
 )}
-    {restaurantContact && (
-      <Box 
-      className='relative flex justify-start items-center w-full  px-4 p-4 rounded-lg shadow-lg'
-      sx={{ 
-        mx: 'auto', 
-        border: '1px solid #ddd',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2,
-        background: 'linear-gradient(135deg, #ff7e5f, #feb47b)', // Gradient background
-        color: '#fff',
-      }}
-    >
-      <Phone className="h-6 w-6 text-white" />
-      <Typography variant="body1">
-        {restaurantContact}
-      </Typography>
-    </Box>
+  {restaurantContact && (
+ <div className='relative flex justify-start items-center w-full  px-4 p-4' >
+    <a href={`tel:${restaurantContact}`} className="text-blue-500 hover:cursor-pointer">
+ <PhoneIcon width={30} color="blue"/>
+ </a>
+</div>
 )}
 
  <div className="flex flex-col w-full p-5">
@@ -436,9 +424,14 @@ const [openDialog, setOpenDialog] = useState(false);
               onClick={() => toggleVisibility(product._id, product.visibility)}
             >
           {product.visibility === false ? (
-                        <VisibilityOff fontSize="small" />
+                        <VisibilityOff fontSize="small"  sx={{
+                          color:'blue'
+                        }} />
                       ) : (
-                        <Visibility fontSize="small" />
+                        <Visibility fontSize="small" sx={{
+                          color:'blue'
+                        }}
+                        />
                       )}
             </div>
           )}
