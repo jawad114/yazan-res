@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { TextField, Modal, Button, Grid, Typography } from '@mui/material';
+import { TextField, Modal, Button, Grid, Typography, TextareaAutosize } from '@mui/material';
 import axios from 'axios';
 import CustomModal from '../modal/modal';
 import MapModal from './Map/MapModal';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {  toast } from "react-toastify";
+import { Textarea } from '@material-tailwind/react';
 
 
 
@@ -108,7 +109,8 @@ const Checkout = () => {
     name: '',
     email: '',
     phoneNumber1: '',
-    phoneNumber2: ''
+    phoneNumber2: '',
+    note:''
   });
 console.log('Cart Data received',cartReceived);
 
@@ -199,6 +201,7 @@ useEffect(() => {
 
   const handleConfirmLocation = (newLocation) => {
     setLocation(newLocation);
+    console.log('New Location',newLocation);
     setShowMap(false);
     handleCreateOrder();
   };
@@ -283,16 +286,17 @@ useEffect(() => {
     try {
       const orderData = {
         products: products,
-        shippingInfo: shippingInfo,
+        shippingInfo:shippingInfo,
         shippingOption: shippingOption,
         userLocation: location,
         ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }) // Conditionally add tableNumber
-      };
+      };      
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
       toast.success('Order created successfully');
       if (selectedOption === 'self-pickup' ) {
         setShowRestaurantLocationModal(true);
-      }else if (selectedOption === 'dine-in') {
+      }
+      else if (selectedOption === 'dine-in' || selectedOption === 'delivery') {
         navigate('/');
       }
     } catch (error) {
@@ -383,7 +387,7 @@ if (Array.isArray(details) && details.length > 0) {
                 >
                   Self-Pickup
                 </Button>
-                <Button
+                {/* <Button
                   onClick={() => {
                     setShippingOption('dine-in')
                     setSelectedOption('dine-in')
@@ -397,12 +401,18 @@ if (Array.isArray(details) && details.length > 0) {
                   }}
                 >
                   Dine In
-                </Button>
+                </Button> */}
               </Grid>
             </div>
             <TextField
               label="Name"
               variant="outlined"
+              sx={{
+                '& .MuiOutlinedInput-input:focus': {
+                  outline: 'none', // Removes the focus ring
+                  boxShadow: 'none',
+                },
+              }}
               fullWidth
               value={shippingInfo.name}
               onChange={(e) => {
@@ -427,6 +437,12 @@ if (Array.isArray(details) && details.length > 0) {
               variant="outlined"
               fullWidth
               value={shippingInfo.email}
+              sx={{
+                '& .MuiOutlinedInput-input:focus': {
+                  outline: 'none', // Removes the focus ring
+                  boxShadow: 'none',
+                },
+              }}
               onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
               required />
           </Grid>
@@ -436,6 +452,12 @@ if (Array.isArray(details) && details.length > 0) {
               variant="outlined"
               fullWidth
               value={shippingInfo.phoneNumber1}
+              sx={{
+                '& .MuiOutlinedInput-input:focus': {
+                  outline: 'none', // Removes the focus ring
+                  boxShadow: 'none',
+                },
+              }}
               onChange={(e) => {
                 const newPhoneNumber = e.target.value;
                 if (/^\d{0,10}$/.test(newPhoneNumber)) {
@@ -445,8 +467,6 @@ if (Array.isArray(details) && details.length > 0) {
                 }
               }}
               required />
-
-
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -454,6 +474,12 @@ if (Array.isArray(details) && details.length > 0) {
               variant="outlined"
               fullWidth
               value={shippingInfo.phoneNumber2}
+              sx={{
+                '& .MuiOutlinedInput-input:focus': {
+                  outline: 'none', // Removes the focus ring
+                  boxShadow: 'none',
+                },
+              }}
               onChange={(e) => {
                 const newPhoneNumber = e.target.value;
                 if (/^\d*$/.test(newPhoneNumber) || newPhoneNumber === "") {
@@ -461,7 +487,8 @@ if (Array.isArray(details) && details.length > 0) {
                 } else {
                   alert("Please enter numbers only for the phone number.");
                 }
-              }} />
+              }} 
+              />
           </Grid>
           </>
           )}
@@ -488,7 +515,28 @@ if (Array.isArray(details) && details.length > 0) {
               location={resLocation}
             />
           )}
-{selectedOption === 'dine-in' && (
+
+{selectedOption === 'delivery' && (
+          <Grid item xs={12}>
+            <TextField
+  label="Note"
+  type="text"
+  variant="outlined"
+  value={shippingInfo.note}
+  onChange={(e) => setShippingInfo({ ...shippingInfo, note: e.target.value })}
+  fullWidth
+  multiline
+  rows={6}
+  sx={{
+    '& .MuiOutlinedInput-input:focus': {
+      outline: 'none', // Removes the focus ring
+      boxShadow: 'none',
+    },
+  }}
+/>
+          </Grid>
+        )}
+{/* {selectedOption === 'dine-in' && (
           <Grid item xs={12}>
             <TextField
               label="Table Number"
@@ -500,9 +548,10 @@ if (Array.isArray(details) && details.length > 0) {
               required
             />
           </Grid>
-        )}
+        )} */}
 
-          <Grid item xs={12}>
+          <Grid item xs={12} >
+            <div className='flex items-center justify-center mt-4'>
           <Button
   className='btn-global'
   variant="contained"
@@ -511,6 +560,7 @@ if (Array.isArray(details) && details.length > 0) {
 >
   Create Order
 </Button>
+</div>
             {/* <CustomModal handleClose={handleCloseModal} open={open} body={<div>
               <Typography className='text-center fs-4'>Order created successfully</Typography> <p>In This Time We Accept Cash Only</p>
               <div className='flex flex-col justify-center items-center'>

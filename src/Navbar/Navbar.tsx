@@ -12,152 +12,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { toast } from 'react-toastify';
 import AxiosRequest from '../Components/AxiosRequest';
-import GoogleTranslate from '../Components/GoogleTranslate';
-import Translate from '../Components/GoogleTranslate';
-
-
-// const Navbar: React.FC = () => {
-//     const [scrolling, setScrolling] = useState(false);
-//     const [cartCount, setCartCount] = useState(0);
-//     const [isLoggedIn, setIsLoggedIn] = useState(false);
-//     const [userRole, setUserRole] = useState('');
-//     const [favoriteUpdate, setFavoritesUpdated] = useState(false);
-//     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-//     const [isMenuOpen, setIsMenuOpen] = useState(false);
-//     const navigate = useNavigate();
-//     const isAdmin = localStorage.getItem('isAdmin') === 'true';
-//     const isOwner = localStorage.getItem('isOwner') === 'true';
-//     const isClient = localStorage.getItem('isClient') === 'true';
-//     const ws = useWebSocket() as WebSocket | null;
-//     const [ownerRestaurantName, setOwnerRestaurantName] = useState('');
-//     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-//     const [notificationSoundPlaying, setNotificationSoundPlaying] = useState(false);
-//     const [toastId, setToastId] = useState<string | null>(null);
-
-//     useEffect(() => {
-//         const handleScroll = () => {
-//             setScrolling(window.scrollY > 50);
-//         };
-
-//         window.addEventListener('scroll', handleScroll);
-
-//         return () => {
-//             window.removeEventListener('scroll', handleScroll);
-//         };
-//     }, []);
-
-//     const customerId = localStorage.getItem('id');
-//     const loggedIn = localStorage.getItem('token') !== null;
-//     const restaurantName = localStorage.getItem('resName') ?? '';
-
-//     useEffect(() => {
-//         const checkUserLogin = () => {
-
-//           if (isAdmin) {
-//             setIsLoggedIn(true);
-//             setUserRole('isAdmin');
-//           } else if (isOwner) {
-//             setIsLoggedIn(true);
-//             setUserRole('isOwner');
-//             setOwnerRestaurantName(restaurantName); // Store the restaurant name
-//           } else if (isClient) {
-//             setIsLoggedIn(true);
-//             setUserRole('isClient');
-//             if (customerId) fetchCartDebounced(customerId);
-//           } else {
-//             setIsLoggedIn(loggedIn);
-//           }
-    
-//           if (loggedIn && ws) {
-//             ws.onopen = () => {
-//               console.log('WebSocket connection opened');
-//             };
-    
-//             ws.onmessage = (event: MessageEvent) => {
-//               console.log('WebSocket message received:', event.data);
-//               try {
-//                 const data = JSON.parse(event.data);
-    
-//                 if (isClient && data.type === 'cartUpdated') {
-//                   if (customerId) fetchCartDebounced(customerId);
-//                 } else if (isClient && data.type === 'favoritesUpdated') {
-//                   setFavoritesUpdated(true);
-//                 }
-    
-//                 if (isOwner && data.type === 'newOrderReceived') {
-//                   if (data.restaurantName === ownerRestaurantName) {
-//                     console.log('New order received for your restaurant');
-    
-//                     if (audio) {
-//                         audio.pause();
-//                         audio.currentTime = 0;
-//                         audio.loop = false; // Ensure the loop is stopped
-//                         setAudio(null); // Clear the audio object
-//                       }
-      
-//                       // Create a new audio instance and set it to loop
-//                       const newAudio = new Audio(notificationSound);
-//                       newAudio.loop = true; // Set loop to true initially
-//                       newAudio.play();
-//                       setAudio(newAudio); // Store the new audio instance
-      
-//                       // Show toast with 'Got it' button
-//                       const id = toast.success(
-//                         <div className="toast-custom">
-//                           <div>New Order Received for {ownerRestaurantName}</div>
-//                           <button
-//                             onClick={() => {
-//                               toast.dismiss(id); // Dismiss the toast
-//                               if (newAudio) {
-//                                 newAudio.pause();
-//                                 newAudio.currentTime = 0;
-//                                 newAudio.loop = false; // Stop the loop
-//                                 setAudio(null); // Clear the audio object
-//                               }
-//                               window.location.reload();
-//                             }}
-//                           >
-//                             Got it
-//                           </button>
-//                         </div>,
-//                         {
-//                           autoClose: false, // Prevent auto-close
-//                           closeButton: false,
-//                           hideProgressBar: true,
-//                           className: 'toast-custom',
-//                           bodyClassName: 'toast-body',
-//                           onClose: () => {
-//                             if (newAudio) {
-//                               newAudio.pause();
-//                               newAudio.currentTime = 0;
-//                               newAudio.loop = false; // Ensure loop is stopped
-//                               setAudio(null); // Clear the audio object
-//                             }
-//                           }
-//                         }
-//                       );
-      
-//                       setToastId(id as string); // Explicitly cast id to string
-//                     }
-//                   }
-      
-//                 } catch (error) {
-//                   console.error('Error parsing WebSocket message:', error);
-//                 }
-//               };
-      
-//               ws.onerror = (event) => {
-//                 console.error('WebSocket error:', event);
-//               };
-      
-//               ws.onclose = (event) => {
-//                 console.log('WebSocket closed:', event);
-//               };
-//             }
-//           };
-      
-//           checkUserLogin();
-//         }, [ws, notificationSound, audio, ownerRestaurantName,customerId,loggedIn,restaurantName]);
 
 
 const Navbar: React.FC = () => {
@@ -213,28 +67,150 @@ const Navbar: React.FC = () => {
   const loggedIn = localStorage.getItem('token') !== null;
   const restaurantName = localStorage.getItem('resName') ?? '';
 
-  useEffect(() => {
-      const checkUserLogin = () => {
+//   useEffect(() => {
+//       const checkUserLogin = () => {
 
-          if (isAdmin) {
-              setIsLoggedIn(true);
-              setUserRole('isAdmin');
-          } else if (isOwner) {
-              setIsLoggedIn(true);
-              setUserRole('isOwner');
-              setOwnerRestaurantName(restaurantName); // Store the restaurant name
-          } else if (isClient) {
-              setIsLoggedIn(true);
-              setUserRole('isClient');
-              if (customerId) fetchCartDebounced(customerId);
-          } else {
-              setIsLoggedIn(loggedIn);
-          }
+//           if (isAdmin) {
+//               setIsLoggedIn(true);
+//               setUserRole('isAdmin');
+//           } else if (isOwner) {
+//               setIsLoggedIn(true);
+//               setUserRole('isOwner');
+//               setOwnerRestaurantName(restaurantName); // Store the restaurant name
+//           } else if (isClient) {
+//               setIsLoggedIn(true);
+//               setUserRole('isClient');
+//               if (customerId) fetchCartDebounced(customerId);
+//           } else {
+//               setIsLoggedIn(loggedIn);
+//           }
 
-          if (loggedIn && ws) {
-              ws.onopen = () => {
-                  console.log('WebSocket connection opened');
-              };
+//           if (loggedIn && ws) {
+//               ws.onopen = () => {
+//                   console.log('WebSocket connection opened');
+//               };
+//             ws.onmessage = (event: MessageEvent) => {
+//                 try {
+//                     let data;
+
+//                     // Attempt to parse the data only if it is a valid JSON string
+//                     try {
+//                         data = JSON.parse(event.data);
+//                     } catch (error) {
+//                         return; // Exit early if parsing fails
+//                     }
+//                     console.log('WebSocket message received:', data);
+            
+//                     if (isClient) {
+//                         if (data.type === 'cartUpdated') {
+//                             if (customerId) fetchCartDebounced(customerId);
+//                         } else if (data.type === 'favoritesUpdated') {
+//                             setFavoritesUpdated(true);
+//                         }
+//                     }
+            
+//                     if (isOwner && data.type === 'newOrderReceived') {
+//                         if (data.restaurantName === ownerRestaurantName) {
+//                             console.log('New order received for your restaurant');
+            
+//                             const currentTime = Date.now();
+//                             if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
+//                                 alert('Please interact with the page to enable audio notifications.');
+//                                 return;
+//                             }
+            
+//                             if (audio) {
+//                                 audio.pause();
+//                                 audio.currentTime = 0;
+//                                 audio.loop = false;
+//                                 setAudio(null);
+//                             }
+            
+//                             const newAudio = new Audio(notificationSound);
+//                             newAudio.loop = true;
+//                             newAudio.play();
+//                             setAudio(newAudio);
+            
+//                             const id = toast.success(
+//                                 <div className="toast-custom">
+//                                     <div>New Order Received for {ownerRestaurantName}</div>
+//                                     <button
+//                                         onClick={() => {
+//                                             toast.dismiss(id);
+//                                             if (newAudio) {
+//                                                 newAudio.pause();
+//                                                 newAudio.currentTime = 0;
+//                                                 newAudio.loop = false;
+//                                                 setAudio(null);
+//                                             }
+//                                             window.location.reload();
+//                                         }}
+//                                     >
+//                                         Got it
+//                                     </button>
+//                                 </div>,
+//                                 {
+//                                     autoClose: false,
+//                                     closeButton: false,
+//                                     hideProgressBar: true,
+//                                     className: 'toast-custom',
+//                                     bodyClassName: 'toast-body',
+//                                     onClose: () => {
+//                                         if (newAudio) {
+//                                             newAudio.pause();
+//                                             newAudio.currentTime = 0;
+//                                             newAudio.loop = false;
+//                                             setAudio(null);
+//                                         }
+//                                     }
+//                                 }
+//                             );
+            
+//                             setToastId(id as string);
+//                         }
+//                     }
+//                 } catch (error) {
+//                     console.error('Error parsing WebSocket message:', error);
+//                 }
+//             };
+            
+//             ws.onerror = (event) => {
+//                 console.error('WebSocket error:', event);
+//             };
+            
+//             ws.onclose = (event) => {
+//                 console.log('WebSocket closed:', event);
+//             };
+            
+//           };
+//       };
+
+//       checkUserLogin();
+//   }, [ws, notificationSound, audio, ownerRestaurantName, customerId, loggedIn, restaurantName]);
+
+
+useEffect(() => {
+    const checkUserLogin = () => {
+        if (isAdmin) {
+            setIsLoggedIn(true);
+            setUserRole('isAdmin');
+        } else if (isOwner) {
+            setIsLoggedIn(true);
+            setUserRole('isOwner');
+            setOwnerRestaurantName(restaurantName); // Store the restaurant name
+        } else if (isClient) {
+            setIsLoggedIn(true);
+            setUserRole('isClient');
+            if (customerId) fetchCartDebounced(customerId);
+        } else {
+            setIsLoggedIn(loggedIn);
+        }
+
+        if (loggedIn && ws) {
+            ws.onopen = () => {
+                console.log('WebSocket connection opened');
+            };
+
             ws.onmessage = (event: MessageEvent) => {
                 try {
                     let data;
@@ -246,7 +222,7 @@ const Navbar: React.FC = () => {
                         return; // Exit early if parsing fails
                     }
                     console.log('WebSocket message received:', data);
-            
+
                     if (isClient) {
                         if (data.type === 'cartUpdated') {
                             if (customerId) fetchCartDebounced(customerId);
@@ -254,85 +230,110 @@ const Navbar: React.FC = () => {
                             setFavoritesUpdated(true);
                         }
                     }
-            
+
                     if (isOwner && data.type === 'newOrderReceived') {
                         if (data.restaurantName === ownerRestaurantName) {
                             console.log('New order received for your restaurant');
-            
+
                             const currentTime = Date.now();
                             if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
-                                alert('Please interact with the page to enable audio notifications.');
+                                // Show a modal or toast asking the user to interact with the page
+                                toast.info('Please click or tap anywhere on the page to enable audio notifications.', {
+                                    autoClose: 5000,
+                                    onClose: () => {
+                                        // Fallback notification without sound
+                                        showFallbackNotification();
+                                    }
+                                });
                                 return;
                             }
-            
-                            if (audio) {
-                                audio.pause();
-                                audio.currentTime = 0;
-                                audio.loop = false;
-                                setAudio(null);
-                            }
-            
-                            const newAudio = new Audio(notificationSound);
-                            newAudio.loop = true;
-                            newAudio.play();
-                            setAudio(newAudio);
-            
-                            const id = toast.success(
-                                <div className="toast-custom">
-                                    <div>New Order Received for {ownerRestaurantName}</div>
-                                    <button
-                                        onClick={() => {
-                                            toast.dismiss(id);
-                                            if (newAudio) {
-                                                newAudio.pause();
-                                                newAudio.currentTime = 0;
-                                                newAudio.loop = false;
-                                                setAudio(null);
-                                            }
-                                            window.location.reload();
-                                        }}
-                                    >
-                                        Got it
-                                    </button>
-                                </div>,
-                                {
-                                    autoClose: false,
-                                    closeButton: false,
-                                    hideProgressBar: true,
-                                    className: 'toast-custom',
-                                    bodyClassName: 'toast-body',
-                                    onClose: () => {
-                                        if (newAudio) {
-                                            newAudio.pause();
-                                            newAudio.currentTime = 0;
-                                            newAudio.loop = false;
-                                            setAudio(null);
-                                        }
-                                    }
-                                }
-                            );
-            
-                            setToastId(id as string);
+
+                            playNotificationSound();
                         }
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
                 }
             };
-            
+
             ws.onerror = (event) => {
                 console.error('WebSocket error:', event);
             };
-            
+
             ws.onclose = (event) => {
                 console.log('WebSocket closed:', event);
             };
-            
-          };
-      };
+        }
+    };
 
-      checkUserLogin();
-  }, [ws, notificationSound, audio, ownerRestaurantName, customerId, loggedIn, restaurantName]);
+    checkUserLogin();
+}, [ws, notificationSound, audio, ownerRestaurantName, customerId, loggedIn, restaurantName]);
+
+// Function to play the notification sound
+const playNotificationSound = () => {
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.loop = false;
+        setAudio(null);
+    }
+
+    const newAudio = new Audio(notificationSound);
+    newAudio.loop = true;
+
+    newAudio.play().catch((error) => {
+        console.warn('Audio playback failed:', error);
+        toast.info('Please interact with the page to enable audio notifications.', {
+            autoClose: 5000
+        });
+    });
+
+    setAudio(newAudio);
+
+    const id = toast.success(
+        <div className="toast-custom">
+            <div>New Order Received for {ownerRestaurantName}</div>
+            <button
+                onClick={() => {
+                    toast.dismiss(id);
+                    if (newAudio) {
+                        newAudio.pause();
+                        newAudio.currentTime = 0;
+                        newAudio.loop = false;
+                        setAudio(null);
+                    }
+                    window.location.reload();
+                }}
+            >
+                Got it
+            </button>
+        </div>,
+        {
+            autoClose: false,
+            closeButton: false,
+            hideProgressBar: true,
+            className: 'toast-custom',
+            bodyClassName: 'toast-body',
+            onClose: () => {
+                if (newAudio) {
+                    newAudio.pause();
+                    newAudio.currentTime = 0;
+                    newAudio.loop = false;
+                    setAudio(null);
+                }
+            }
+        }
+    );
+
+    setToastId(id as string);
+};
+
+// Fallback notification when interaction is not detected
+const showFallbackNotification = () => {
+    toast.warn('New Order Received for your restaurant. Please check your dashboard for details.', {
+        autoClose: 5000,
+    });
+};
 
     const fetchCart = async (customerId: string | null) => {
         try {

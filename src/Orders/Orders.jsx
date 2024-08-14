@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Orders.css'
 import {
   CircularProgress,
@@ -39,6 +39,15 @@ const Orders = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [navigationApp, setNavigationApp] = useState('');
+  const isClient = localStorage.getItem('isClient') === 'true';
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (!isClient) {
+        navigate('/forbidden'); // Replace with your target route
+    }
+}, [isClient,navigate]);
 
   const handleChange = (event) => {
     setNavigationApp(event.target.value);
@@ -247,6 +256,7 @@ const openWaze = (latitude, longitude) => {
           </DialogTitle>
           <DialogContent dividers>
             <Typography variant="body1">Order ID: {selectedOrder.orderId}</Typography>
+            <Typography variant="body1">Name : {selectedOrder.shippingInfo.name}</Typography>
             {selectedOrder.shippingOption === 'self-pickup' && (
         <Box mb={2}>
           <Typography variant="body1" className='text-center' gutterBottom>
@@ -276,11 +286,28 @@ const openWaze = (latitude, longitude) => {
         </Box>
       )}
       {selectedOrder.shippingOption !== 'dine-in' && (
+        <>
       <Typography variant="body1" gutterBottom>
         Phone: {selectedOrder.shippingInfo.phoneNumber1}<br />
         </Typography>
+        <Typography variant="body1">Email : {selectedOrder.shippingInfo.email}</Typography>
+{selectedOrder.shippingInfo.phoneNumber2 &&(
+      <Typography variant="body1" gutterBottom>
+      Phone 2: {selectedOrder.shippingInfo.phoneNumber2}<br />
+      </Typography>  
+)}
+        </>
 
 )}
+      {selectedOrder.shippingOption === 'delivery' && (
+        <>
+        {selectedOrder.shippingInfo.note &&(
+          <Typography variant="body1" gutterBottom>
+            Note: {selectedOrder.shippingInfo.note}
+          </Typography>
+        )}
+        </>
+      )}
 
       <Typography variant="body1" gutterBottom>
         Order Type: {selectedOrder.shippingOption}

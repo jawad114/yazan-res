@@ -478,14 +478,29 @@ useEffect(() => {
                                                             {order.shippingOption !=='dine-in' && (
                                                         <Typography variant="body2">
                                                         Phone: {order.shippingInfo.phoneNumber1}<br />
+                                                        {order.shippingInfo?.phoneNumber2 &&(
+                                                            <>
+                                                        Phone 2 :{order.shippingInfo.phoneNumber2}<br />
+                                                        </>
+                                                        )}
                                                         Email: {order.shippingInfo.email}<br />
                                                         </Typography>
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
+                                                            <>
+                                                            {order.orderLocation?.coordinates && (
                                                               <Typography variant="body2">
                                                             Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
                                                             </Typography>
+                                                            )}
+                                                             {order.shippingInfo?.note && (
+                                                             <Typography variant="body2">
+                                                             Note: {order.shippingInfo.note}<br />
+                                                             </Typography>
+                                                            )}
+                                                            </>
                                                         )}
+
                                                             Order Type: {order.shippingOption}
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">

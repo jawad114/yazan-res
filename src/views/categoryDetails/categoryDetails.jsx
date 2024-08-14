@@ -24,6 +24,9 @@ import AxiosRequest from "../../Components/AxiosRequest";
 import { useNavigate } from 'react-router-dom';
 import "./categoryDetails.module..css"
 import Carousels from "../../Home/Carousels/Carousels";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Phone } from "@mui/icons-material";
 
 const CategoryDetails = () => {
   const [products, setProducts] = useState([]);
@@ -41,52 +44,60 @@ const CategoryDetails = () => {
   const [categoryImage, setCategoryImage] = useState('');
   const [openingHours, setOpeningHours] = useState(null);
   const [restaurantStatus, setRestaurantStatus] = useState('');
-
+  const [restaurantContact, setRestaurantContact] = useState('');
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const isOwner = localStorage.getItem('isOwner') === 'true';
   const isClient = localStorage.getItem('isClient') === 'true';
   const customerId = localStorage.getItem('id');
+  const token = localStorage.getItem('token');
   const [showFullDescription, setShowFullDescription] = useState(false);
 const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        console.log('Res Name in Category Details',resName)
-        const response = await AxiosRequest.get(
-          `/restaurant/${resName}/category/${categoryName}/dishes`
-        );
-        if (response && response.data && response.data.products) {
-          setProducts(response.data.products);
-          setRestaurantImage(response.data.restaurantImage);
-          setCategoryImage(response.data.categoryImage);
+      const fetchProducts = async () => {
+        try {
+          const response = await AxiosRequest.get(
+            `/restaurant/${resName}/category/${categoryName}/dishes`
+          );
+          if (response && response.data && response.data.products) {
+            let filteredProducts = response.data.products;
+    
+            // Filter products based on user role
+            if (!isOwner && !isAdmin){
+              filteredProducts = response.data.products.filter(product => product.visibility !== false);
+            }
+    
+            setProducts(filteredProducts);
+            setRestaurantImage(response.data.restaurantImage);
+            setRestaurantContact(response.data.contact);
+            setCategoryImage(response.data.categoryImage);
+            setLoading(false);
+            setImageLoading(false);
+    
+            const initialQuantities = {};
+            filteredProducts.forEach((product) => {
+              initialQuantities[product._id] = 1;
+            });
+            setQuantities(initialQuantities);
+          } else {
+            setRestaurantImage(response.data.restaurantImage);
+            setLoading(false);
+            setImageLoading(false);
+          }
+        } catch (error) {
+          if (error.response && error.response.data && error.response.data.error) {
+            if (!toast.isActive("errorToast")) {
+              toast.error(error.response.data.error, { toastId: "errorToast" });
+            }
+          } else {
+            if (!toast.isActive("errorToast")) {
+              toast.error("An error occurred", { toastId: "errorToast" });
+            }
+          }
           setLoading(false);
           setImageLoading(false);
-          const initialQuantities = {};
-          response.data.products.forEach((product) => {
-            initialQuantities[product._id] = 1;
-          });
-          setQuantities(initialQuantities);
         }
-        else{
-          setRestaurantImage(response.data.restaurantImage);
-          setLoading(false);
-          setImageLoading(false);
-        }
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.error) {
-          if (!toast.isActive("errorToast")) {
-            toast.error(error.response.data.error, { toastId: "errorToast" });
-          }
-        } else {
-          if (!toast.isActive("errorToast")) {
-            toast.error("An error occurred", { toastId: "errorToast" });
-          }
-        }
-        setLoading(false);
-        setImageLoading(false);
-      }
-    };
+      };
     const fetchOpeningHoursAndStatus = async () => {
       try {
         const [hoursResponse, statusResponse] = await Promise.all([
@@ -107,7 +118,7 @@ const [openDialog, setOpenDialog] = useState(false);
     };
    fetchProducts();
    fetchOpeningHoursAndStatus();
-  }, [resName, categoryName]);
+  }, [resName, categoryName,isOwner,isAdmin]);
 
   useEffect(() => {
     if (selectedProduct) {
@@ -293,6 +304,36 @@ const [openDialog, setOpenDialog] = useState(false);
 
   const dayName = getDayName();
 
+
+  const toggleVisibility = async (productId, currentVisibility) => {
+    try {
+      const newVisibility = !currentVisibility;
+      await AxiosRequest.put(`/update-dish-visibility/${resName}/${categoryName}/${productId}`, { visibility: newVisibility },{
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+      });
+      // Update local state to reflect the change
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product._id === productId ? { ...product, visibility: newVisibility } : product
+        )
+      );
+      toast.success(`Dish visibility updated to ${newVisibility ? 'visible' : 'hidden'}`);
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        if (!toast.isActive("errorToast")) {
+          toast.error(error.response.data.error, { toastId: "errorToast" });
+        }
+      } else {
+        if (!toast.isActive("errorToast")) {
+          toast.error("An error occurred", { toastId: "errorToast" });
+        }
+      }
+    }
+  };
+  
+
   return (
     <div className='bg-white'>
     <img src={categoryImage} alt={alt}  className="w-full h-[36vh] md:h-[70vh] object-cover" />
@@ -339,6 +380,25 @@ const [openDialog, setOpenDialog] = useState(false);
     </Box>
   </Box>
 )}
+    {restaurantContact && (
+      <Box 
+      className='relative flex justify-start items-center w-full  px-4 p-4 rounded-lg shadow-lg'
+      sx={{ 
+        mx: 'auto', 
+        border: '1px solid #ddd',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        background: 'linear-gradient(135deg, #ff7e5f, #feb47b)', // Gradient background
+        color: '#fff',
+      }}
+    >
+      <Phone className="h-6 w-6 text-white" />
+      <Typography variant="body1">
+        {restaurantContact}
+      </Typography>
+    </Box>
+)}
 
  <div className="flex flex-col w-full p-5">
 <div className="flex flex-col gap-4 items-center justify-center mb-2">
@@ -359,48 +419,73 @@ const [openDialog, setOpenDialog] = useState(false);
         <Grid container spacing={3}>
           {errors && <p style={{ color: 'red' }}>{errors}</p>}
           {products.map((product, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
-              <ListItem
-                className="mt-5 mb-5 p-0 bg-light rounded-5  shadow-lg d-flex flex-column"
-              >
-<img className="object-cover w-full h-40  hover:cursor-pointer" onClick={() => handleOpenModal(product)} src={product.dishImage} />
-<ListItemText
-                   primary={
-                    <div className="text-center">
-                      {product.name}
-                    </div>
-                  }
-                  secondary={
-                    <>
-              <div className="flex flex-col p-2 items-center justify-center text-center">
-              <Typography variant="body2" color="textPrimary">
-  {product.description.length > 20 ? (
-    <>
-      {showFullDescription
-        ? product.description
-        : getTextDirection(product.description) === 'ltr'
-        ? product.description.substring(0, 20) + '...'
-        : '...' + product.description.substring(0, 20)
-      }
-      <div>
-      <Typography
-        component="span"
-        color="primary"
-        onClick={handleReadMoreClick}
-        style={{
-          cursor: 'pointer',
-        }}
-      >
-        Read More
-      </Typography>
+<Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+<ListItem
+  className="mt-5 mb-5 p-0 bg-light rounded-5 shadow-lg d-flex flex-column"
+>
+<div className="relative">
+          <img
+            className="object-cover w-full h-40 hover:cursor-pointer"
+            onClick={() => handleOpenModal(product)}
+            src={product.dishImage}
+            alt={product.name}
+          />
+          {(isAdmin || isOwner) && (
+            <div
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={() => toggleVisibility(product._id, product.visibility)}
+            >
+          {product.visibility === false ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+            </div>
+          )}
+        </div>
+  <ListItemText
+    primary={
+      <div className="text-center">
+        {product.name}
       </div>
-    </>
-  ) : (
-    product.description
-  )}
-</Typography>
+    }
+    secondary={
+      <>
+        <div className="flex flex-col p-2 items-center justify-center text-center">
+          <Typography variant="body2" color="textPrimary">
+            {product.description.length > 20 ? (
+              <>
+                {showFullDescription === product.id
+                  ? product.description
+                  : getTextDirection(product.description) === 'ltr'
+                  ? product.description.substring(0, 20) + '...'
+                  : '...' + product.description.substring(0, 20)
+                }
+                <div>
+                  <Typography
+                    component="span"
+                    color="primary"
+                    onClick={() => handleReadMoreClick(product.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {showFullDescription === product.id ? 'Read Less' : 'Read More'}
+                  </Typography>
+                </div>
+              </>
+            ) : (
+              product.description
+            )}
+          </Typography>
+          <Typography variant="body2" color="textPrimary">
+            Price: {parseFloat(product.price).toFixed(2)} ₪
+          </Typography>
+        </div>
+      </>
+    }
+  />
+</ListItem>
 
-        <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+<Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogTitle className="text-center">Description</DialogTitle>
         <DialogContent>
           <Typography className={`${getTextDirection(product.description) === 'ltr' ? 'text-start' :'text-end'}`}>{product.description}</Typography>
@@ -411,16 +496,7 @@ const [openDialog, setOpenDialog] = useState(false);
           </Button>
         </DialogActions>
       </Dialog>
-                      <Typography variant="body2" color="textPrimary">
-                        Price: {parseFloat(product.price).toFixed(2)} ₪
-                      </Typography>
-                      </div>
-                    </>
-                  }
-                />
-              </ListItem>
-
-            </Grid>
+</Grid>
           ))}
         </Grid>
       )}

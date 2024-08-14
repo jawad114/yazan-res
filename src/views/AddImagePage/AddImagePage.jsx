@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AxiosRequest from '../../Components/AxiosRequest'; // Update the path as needed
 import { Button, Input, Spinner } from '@material-tailwind/react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const AddImagePage = () => {
   const [title, setTitle] = useState('');
@@ -10,6 +11,15 @@ const AddImagePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+const navigate = useNavigate();
+
+
+useEffect(() => {
+  if (!isAdmin) {
+      navigate('/forbidden'); // Replace with your target route
+  }
+}, [isAdmin, navigate]);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);

@@ -310,7 +310,11 @@ const Cart = () => {
     <Carousels/>
     <div className='p-4 md:p-6 lg:p-8 bg-gray-100 min-h-screen'>
       {!isClient ? (
-        <div><p style={{ color: 'red' }}>Login as a Client First</p></div>
+        <div>        
+        <Typography variant="h6" className="mt-20 text-center text-red-500">
+        Login as a Client First
+      </Typography>
+      </div>
       ) : error ? (
         <div><p style={{ color: 'red' }}>{error}</p></div>
       ) : loading ? (

@@ -8,11 +8,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
 import { Avatar } from "@material-tailwind/react";
 import { ClockIcon } from '@heroicons/react/20/solid';
+import { Phone } from '@mui/icons-material';
 
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [restaurantImage, setRestaurantImage] = useState('');
+  const [restaurantContact, setRestaurantContact] = useState('');
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentCategory, setCurrentCategory] = useState({});
@@ -61,6 +63,7 @@ export default function Categories() {
         if (response.data.status === "ok") {
           setCategories(response.data.categories);
           setRestaurantImage(response.data.restaurantImage);
+          setRestaurantContact(response.data.contact);
         } else if (response.data.status === "notfound") {
           setRestaurantImage(response.data.restaurantImage);
         }
@@ -231,6 +234,25 @@ export default function Categories() {
     </Box>
   </Box>
 )}
+    {restaurantContact && (
+      <Box 
+      className='relative flex justify-start items-center w-full  px-4 p-4 rounded-lg shadow-lg'
+      sx={{ 
+        mx: 'auto', 
+        border: '1px solid #ddd',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        background: 'linear-gradient(135deg, #ff7e5f, #feb47b)', // Gradient background
+        color: '#fff',
+      }}
+    >
+      <Phone className="h-6 w-6 text-white" />
+      <Typography variant="body1">
+        {restaurantContact}
+      </Typography>
+    </Box>
+)}
             <h1 className='my-5'>Menu of : {resName}</h1>
             <div>
               {categories.length === 0 ? (
@@ -313,10 +335,10 @@ export default function Categories() {
       </Dialog>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Access Denied</DialogTitle>
+        <DialogTitle className='text-center'>Alert</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You must be logged in to create an order.
+            You must be logged in to add items to cart.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

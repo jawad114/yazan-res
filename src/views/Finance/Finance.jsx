@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Box, Typography, TextField, Button, Card, CardContent, Grid } from '@mui/material';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import AxiosRequest from '../../Components/AxiosRequest';
+import { useNavigate } from 'react-router-dom';
 
 const Finance = () => {
   const [restaurantName, setRestaurantName] = useState('');
@@ -19,6 +20,18 @@ const Finance = () => {
   const periods = ['today', 'yesterday', 'thisWeek', 'lastWeek', 'thisMonth', 'lastMonth', 'lastTwoMonths'];
   const [showDetails, setShowDetails] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
+const navigate = useNavigate();
+
+
+useEffect(() => {
+  console.log('isAdmin:', isAdmin);
+  console.log('isOwner:', isOwner);
+
+  if (!isAdmin && !isOwner) {
+    console.log('Redirecting to /forbidden');
+    navigate('/forbidden');
+  }
+}, [isAdmin, isOwner, navigate]);
 
 
   const handlePeriodButtonClick = async (period) => {

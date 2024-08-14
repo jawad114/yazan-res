@@ -15,7 +15,15 @@ const FilterList = () => {
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [newImage, setNewImage] = useState(null);
-  const navigate = useNavigate();
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+const navigate = useNavigate();
+
+
+useEffect(() => {
+  if (!isAdmin) {
+      navigate('/forbidden'); // Replace with your target route
+  }
+}, [isAdmin, navigate]);
 
   useEffect(() => {
     const fetchFilters = async () => {
