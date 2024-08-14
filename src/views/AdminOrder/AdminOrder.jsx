@@ -521,16 +521,18 @@ export default function AdminOrder() {
                                                         </Typography>
                                                         )}
                                                     {order.shippingOption === 'delivery' && (
-                                                   <>
-                                                   <Typography variant="body2">
-                                                    Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
-                                                   </Typography>
-                                                    {order.shippingInfo?.note && (
-                                                    <Typography variant="body2">
-                                                     Note: {order.shippingInfo.note}<br />
-                                                    </Typography>
-                                                )}
-                                                </>
+                                                     <>
+                                            {order.orderLocation?.coordinates && (
+                                            <Typography variant="body2">
+                                             Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
+                                               </Typography>
+                                                         )}
+                                             {order.shippingInfo?.note && (
+                                             <Typography variant="body2">
+                                                Note: {order.shippingInfo.note}<br />
+                                                </Typography>
+                                                  )}
+                                       </>
                                             )}
                                                             Order Type: {order.shippingOption}
                                                             {order.shippingOption === 'dine-in' &&(

@@ -73,11 +73,13 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+          console.log('User current location Latitude and Longitude',latitude, longitude);
           setSelectedLocation({ lat: latitude, lng: longitude });
         },
         (error) => {
           console.error('Error getting current location:', error);
-        }
+        },
+        // { enableHighAccuracy: true }
       );
     } else {
       console.error('Geolocation is not supported by this browser.');

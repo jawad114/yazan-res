@@ -301,7 +301,7 @@ const openWaze = (latitude, longitude) => {
 )}
       {selectedOrder.shippingOption === 'delivery' && (
         <>
-        {selectedOrder.shippingInfo.note &&(
+        {selectedOrder.shippingInfo?.note &&(
           <Typography variant="body1" gutterBottom>
             Note: {selectedOrder.shippingInfo.note}
           </Typography>

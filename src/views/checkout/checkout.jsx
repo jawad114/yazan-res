@@ -181,13 +181,13 @@ useEffect(() => {
     return <div>Loading...</div>;
   }
 
-  const handleMapClick = (event) => {
-    setLocation({
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
-    });
+  // const handleMapClick = (event) => {
+  //   setLocation({
+  //     lat: event.latLng.lat(),
+  //     lng: event.latLng.lng(),
+  //   });
 
-  };
+  // };
 
   const handleCreateOrderButtonClick = async () => {
     if (selectedOption === 'delivery') {
@@ -203,8 +203,8 @@ useEffect(() => {
     setLocation(newLocation);
     console.log('New Location',newLocation);
     setShowMap(false);
-    handleCreateOrder();
-  };
+    handleCreateOrder(newLocation)
+    };
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -242,24 +242,24 @@ useEffect(() => {
     setCart(updatedCart);
   };
 
-  const handleGetCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error('Error getting current location:', error);
-        },
-        { enableHighAccuracy: true }
-      );
-    } else {
-      console.error('Geolocation is not supported by this browser.');
-    }
-  };
+  // const handleGetCurrentLocation = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         setLocation({
+  //           lat: position.coords.latitude,
+  //           lng: position.coords.longitude,
+  //         });
+  //       },
+  //       (error) => {
+  //         console.error('Error getting current location:', error);
+  //       },
+  //       { enableHighAccuracy: true }
+  //     );
+  //   } else {
+  //     console.error('Geolocation is not supported by this browser.');
+  //   }
+  // };
 
 
   const handleCloseModal = () => {
@@ -269,7 +269,7 @@ useEffect(() => {
 
 
 
-  const handleCreateOrder = async () => {
+  const handleCreateOrder = async (currentLocation) => {
     if (
       !shippingInfo.name || 
       (shippingOption !== 'dine-in' && (!shippingInfo.email || !shippingInfo.phoneNumber1))
@@ -279,16 +279,16 @@ useEffect(() => {
       return;
     }
     
-    if (!location) {
-      alert('Please select your location');
+    if (shippingOption === 'delivery' && !currentLocation) {
+      alert('Please select your location for delivery.');
       return;
-    }
+  }
     try {
       const orderData = {
         products: products,
         shippingInfo:shippingInfo,
         shippingOption: shippingOption,
-        userLocation: location,
+        userLocation: currentLocation,
         ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }) // Conditionally add tableNumber
       };      
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
