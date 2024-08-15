@@ -14,12 +14,12 @@ const ContactUs = () => {
     <>
       <div className="containerCo">
         <div className="boxCo">
-          <h3 className="titleCo">Contact Us</h3>
+          <h3 className="titleCo">تواصل معنا</h3>
           <div className="grid-containerCo">
             <div className="paperCo">
-              <h5 className="paper-titleCo">Contact Information</h5>
+              <h5 className="paper-titleCo">معلومات الاتصال</h5>
               <p className="paper-textCo">
-                Please fill out the following fields and send us your message!
+              يرجى ملء الحقول التالية وإرسال رسالتك إلينا
               </p>
               <ContactForm />
 
@@ -28,7 +28,7 @@ const ContactUs = () => {
                 className="text-btn my-4"
                 style={{ cursor: 'pointer' }}
               >
-                Read our Privacy Policy
+                اطلع على سياسة الخصوصية لدينا
               </Typography>
 
               <Dialog
@@ -37,13 +37,13 @@ const ContactUs = () => {
                 maxWidth="md"
                 fullWidth
               >
-                <DialogTitle className='text-center !font-bold'>Privacy Policy</DialogTitle>
+                <DialogTitle className='text-center !font-bold'>سياسة الخصوصية</DialogTitle>
                 <DialogContent>
                   <PrivacyPolicy />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose} color="primary">
-                    Close
+                  اغلق
                   </Button>
                 </DialogActions>
               </Dialog>

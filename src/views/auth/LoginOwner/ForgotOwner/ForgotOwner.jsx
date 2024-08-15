@@ -38,10 +38,10 @@ const ForgotOwner = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
-        <h1 className="text-3xl font-bold mb-6 text-center">Forgot Password</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">استرجاع كلمة المرور</h1>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="البريد الإلكتروني"
           value={email}
           onChange={handleEmailChange}
           size={'medium'}
@@ -57,7 +57,7 @@ const ForgotOwner = () => {
             onClick={handleSendVerificationCode}
             disabled={loading}
           >
-            {loading ? 'Sending Verification Code...' : 'Send Verification Code'}
+            {loading ? 'Sending Verification Code...' : 'إرسال رمز التحقق'}
           </Button>
         </div>
         {error && <p className="text-red-500 mt-2">{error}</p>}

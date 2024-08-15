@@ -41,16 +41,16 @@ function Ownerform() {
   const handleClose = () => setOpen(false);
 
   return (
-    <><h3 id='credentials-Header'>Request credentials</h3><div className="owner-form-container">
+    <><h3 id='credentials-Header'>طلب بيانات الاعتماد</h3><div className="owner-form-container">
       <CustomModal handleClose={handleClose} open={open} body={<div className="modal-body">
-        <Typography variant="h5" align="center">We have received your message!</Typography>
-        <Button onClick={() => window.location.replace('/')} className='btn-global mt-3'>Continue Shopping</Button>
+        <Typography variant="h5" align="center">لقد استلمنا رسالتك!</Typography>
+        <Button onClick={() => window.location.replace('/')} className='btn-global mt-3'>تابع التسوق</Button>
       </div>} />
 
 
       <form id="owner-form" className="owner-form" ref={formRef} onSubmit={handleSendEmail}>
 
-        <p id='parag-credit'>Please provide the name of your restaurant and your email address below. We will review your request and get back to you. If your request is accepted, you will receive your credentials within 1-2 working days via email.</p>
+        <p id='parag-credit'>يرجى تقديم اسم مطعمك وعنوان بريدك الإلكتروني أدناه. سنقوم بمراجعة طلبك والرد عليك. إذا تم قبول طلبك، ستتلقى بيانات الاعتماد الخاصة بك عبر البريد الإلكتروني خلال 1-2 يوم عمل</p>
 
 
         <TextField
@@ -59,7 +59,7 @@ function Ownerform() {
           name="user_name"
           value={form.user_name}
           onChange={handleChange}
-          label="Your Name"
+          label="اسم المستخدم"
           variant="outlined"
           required />
 
@@ -69,7 +69,7 @@ function Ownerform() {
           name="message"
           value={form.message}
           onChange={handleChange}
-          label="Restaurant Name"
+          label="اسم المتجر"
           variant="outlined"
           required />
 
@@ -79,7 +79,7 @@ function Ownerform() {
           name="user_email"
           value={form.user_email}
           onChange={handleChange}
-          label="Owner's Email Address"
+          label="البريد الإلكتروني المسجل"
           variant="outlined"
           required />
 
@@ -88,7 +88,7 @@ function Ownerform() {
           className='btn-global'
           disabled={loading}
         >
-          {loading ? 'Sending...' : 'Send Email'}
+          {loading ? 'Sending...' : 'ارسل'}
         </Button>
       </form>
     </div></>

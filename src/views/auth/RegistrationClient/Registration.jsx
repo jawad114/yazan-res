@@ -134,7 +134,7 @@ const Registration = () => {
       <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-8">
         <div className="flex flex-col items-center mb-6">
           <img src={registerImage} alt="Register" className="h-24 mb-4" />
-          <h3 className="text-2xl font-semibold mb-4">Create your account!</h3>
+          <h3 className="text-2xl font-semibold mb-4">! قم بإنشاء حسابك الآن بشكل مجاني</h3>
         </div>
         <RegistrationForm
           formData={formData}
@@ -143,9 +143,9 @@ const Registration = () => {
         />
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Already have an account?{' '}
+          يوجد لدي حساب{' '}
             <Link to="/login-client" className="text-blue-500 hover:underline">
-              Login instead
+            تسجيل الدخول
             </Link>
           </p>
         </div>

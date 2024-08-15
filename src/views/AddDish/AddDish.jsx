@@ -283,9 +283,9 @@ const AddDish = () => {
   return (
     <div className="flex flex-col p-4 md:p-8">
       <Typography variant="h5" gutterBottom>
-        Add Dish
+      اضف منتج
       </Typography>
-      <label htmlFor="dishImage" className="block mt-4">Dish Image</label>
+      <label htmlFor="dishImage" className="block mt-4">اضف صورة المنتج</label>
       <input 
         id='dishImage' 
         type="file" 
@@ -294,41 +294,41 @@ const AddDish = () => {
       />
       {dishImage && <img className="mt-2" src={URL.createObjectURL(dishImage)} alt="Dish" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
 
-      <label htmlFor="name" className="block mt-4">Name</label>
+      <label htmlFor="name" className="block mt-4">اسم المنتج</label>
       <input 
         id="name" 
         type="text" 
         value={name} 
         onChange={(e) => setName(e.target.value)} 
-        placeholder="Name" 
+        placeholder="اسم المنتج" 
         className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
       />
 
-      <label htmlFor="price" className="block mt-4">Price</label>
+      <label htmlFor="price" className="block mt-4">سعر المنتج</label>
       <input 
         id="price" 
         type="number" 
         value={price} 
         onChange={(e) => setPrice(e.target.value)} 
-        placeholder="Price" 
+        placeholder="سعر المنتج" 
         className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
       />
 
-      <label htmlFor="description" className="block mt-4">Description</label>
+      <label htmlFor="description" className="block mt-4">وصف المنتج</label>
       <TextField 
         id="description" 
         type="text" 
         value={description} 
         onChange={(e) => setDescription(e.target.value)} 
-        placeholder="Description" 
+        placeholder="وصف المنتج" 
         className="w-full  mt-2 rounded-lg border border-gray-300" 
         rows={4} 
       />
 
-      <Typography variant="subtitle1">Required Extras</Typography>
+      <Typography variant="subtitle1">قم بزيادة اضافات اجبارية في حال توفرها</Typography>
       {requiredExtras.map((extra, index) => (
         <div key={index}>
-          <label htmlFor={`requiredExtraName${index}`} className="block mt-4">Name</label>
+          <label htmlFor={`requiredExtraName${index}`} className="block mt-4">اسم الآضافة الاجبارية</label>
           <input 
             id={`requiredExtraName${index}`} 
             type="text" 
@@ -338,11 +338,11 @@ const AddDish = () => {
               newExtras[index].name = e.target.value;
               setRequiredExtras(newExtras);
             }} 
-            placeholder="Name" 
+            placeholder="اسم الآضافة الاجبارية" 
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
 
-          <label htmlFor={`requiredExtraPrice${index}`} className="block mt-4">Price</label>
+          <label htmlFor={`requiredExtraPrice${index}`} className="block mt-4">سعر الآضافة الآجبارية</label>
           <input 
             id={`requiredExtraPrice${index}`} 
             type="number" 
@@ -352,17 +352,17 @@ const AddDish = () => {
               newExtras[index].price = e.target.value;
               setRequiredExtras(newExtras);
             }} 
-            placeholder="Price" 
+            placeholder="سعر الآضافة الآجبارية" 
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
         </div>
       ))}
-      <Button onClick={() => setRequiredExtras([...requiredExtras, { name: "", price: "" }])} className="mt-4">Add Required Extra</Button>
+      <Button onClick={() => setRequiredExtras([...requiredExtras, { name: "", price: "" }])} className="mt-4">أضف خيارًا إضافيًا اجباري بحال توفره</Button>
 
-      <Typography variant="subtitle1" className="mt-8">Optional Extras</Typography>
+      <Typography variant="subtitle1" className="mt-8">قم بزيادة اضافات اختيارية بحال توفرها</Typography>
       {optionalExtras.map((extra, index) => (
         <div key={index}>
-          <label htmlFor={`optionalExtraName${index}`} className="block mt-4">Name</label>
+          <label htmlFor={`optionalExtraName${index}`} className="block mt-4">اسم الآضافة الاختيارية</label>
           <input 
             id={`optionalExtraName${index}`} 
             type="text" 
@@ -372,11 +372,11 @@ const AddDish = () => {
               newExtras[index].name = e.target.value;
               setOptionalExtras(newExtras);
             }} 
-            placeholder="Name" 
+            placeholder="اسم الآضافة الاختيارية" 
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
 
-          <label htmlFor={`optionalExtraPrice${index}`} className="block mt-4">Price</label>
+          <label htmlFor={`optionalExtraPrice${index}`} className="block mt-4">سعر الآضافة الاختيارية</label>
           <input 
             id={`optionalExtraPrice${index}`} 
             type="number" 
@@ -386,14 +386,14 @@ const AddDish = () => {
               newExtras[index].price = e.target.value;
               setOptionalExtras(newExtras);
             }} 
-            placeholder="Price" 
+            placeholder="سعر الآضافة الاختيارية" 
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
         </div>
       ))}
-      <Button onClick={() => setOptionalExtras([...optionalExtras, { name: "", price: "" }])} className="mt-4">Add Optional Extra</Button>
+      <Button onClick={() => setOptionalExtras([...optionalExtras, { name: "", price: "" }])} className="mt-4">أضف خيارًا إضافيًا</Button>
 
-      <Button onClick={handleAddDish} className="mt-8" variant="contained">Add Dish</Button>
+      <Button onClick={handleAddDish} className="mt-8" variant="contained">اضف المنتج</Button>
       <ToastContainer className={toastStyle.container} toastClassName={toastStyle.toast} />
     </div>
   );

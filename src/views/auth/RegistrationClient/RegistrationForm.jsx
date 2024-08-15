@@ -9,11 +9,11 @@ import {
 } from "@material-tailwind/react";
 
 const fields = [
-  { name: "firstname", label: "First Name", type: "text" },
-  { name: "lastname", label: "Last Name", type: "text" },
-  { name: "email", label: "Email Address", type: "email" },
-  { name: "password", label: "Password", type: "password" },
-  { name: "confirmPassword", label: "Confirm Password", type: "password" },
+  { name: "firstname", label: "الاسم", type: "text" },
+  { name: "lastname", label: "اسم العائلة", type: "text" },
+  { name: "email", label: "البريد الإلكتروني: يرجى إدخال عنوان بريد إلكتروني صحيح", type: "email" },
+  { name: "password", label: "انشاء كلمة مرور", type: "password" },
+  { name: "confirmPassword", label: "تأكيد كلمة المرور", type: "password" },
 ];
 
 const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
@@ -30,15 +30,15 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
   // Function to validate form fields
   const validateForm = () => {
     if (!isChecked) {
-      alert("Please agree to the Privacy Policy before registering.");
+      alert("يرجى الموافقة على سياسة الخصوصية قبل التسجيل");
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      alert("كلمات المرور لا تتطابق");
       return false;
     }
     if (isPasswordEasy()) {
-      alert("Your password is easy to guess. Please choose a stronger password.");
+      alert("كلمة المرور الخاصة بك سهلة التخمين. يرجى اختيار كلمة مرور أقوى");
       return false;
     }
     return true;
@@ -123,12 +123,12 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
               color="gray"
               className="flex items-center mt-[2vh] md:mt-[2.2vh] font-normal"
               >
-              I agree to the
+              أوافق على
               <a
                 href="/privacy-policy"
                 className="font-medium transition-colors hover:text-gray-900"
               >
-                &nbsp;Privacy Policy
+                &nbsp;سياسة الخصوصية
               </a>
             </Typography>
           }
@@ -136,7 +136,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
         />
         </div>
           <Button type="submit" variant="contained" className="submit-btn">
-            Sign Up
+          اضعط للتسجيل
           </Button>
         </form>
       </CardContent>

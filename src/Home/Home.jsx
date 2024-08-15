@@ -342,7 +342,13 @@ const HomeComponent = () => {
       <div className="flex flex-col items-center p-4">
         {(localStorage.getItem('isClient') === 'true' || localStorage.getItem('isAdmin') === 'true') && (
           <TextField
-            placeholder="Search by place name"
+            placeholder="البحث عن طريق اسم المتجر"
+            style={{
+              textAlign: 'center', // محاذاة النص إلى المركز
+              direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              width: '100%',      // لضمان ملء الحاوية
+              padding: '8px',    // ضبط الحشو حسب الحاجة
+            }}
             value={searchTerm}
             type="search"
             variant="outlined"
@@ -357,7 +363,7 @@ const HomeComponent = () => {
               component="h1"
               className="font-bold text-center text-gray-800 mb-3"
             >
-              Welcome Back{name ? `: ${name}` : ''}
+              {name ? `${name} :` : ''}أهلاً وسهلاً
             </Typography>
             <Button
               variant="contained"
@@ -365,7 +371,7 @@ const HomeComponent = () => {
               onClick={handleOwnerOrder}
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
             >
-              View Orders
+              طلباتي
             </Button>
           </>
         )}
@@ -375,7 +381,7 @@ const HomeComponent = () => {
             component="h1"
             className="font-bold text-center text-gray-800 mb-3"
           >
-            Welcome Back: Admin 
+             Admin :أهلاً وسهلاً
           </Typography>
         )}
         {localStorage.getItem('isClient') === 'true' && (
@@ -385,14 +391,14 @@ const HomeComponent = () => {
               className= "bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mb-4"
               onClick={handleOrder}
             >
-              My Orders
+              طلباتي
             </Button>
             <Typography
               variant="h5"
               component="h1"
               className="font-bold text-center mb-3"
             >
-              Welcome Back{name ? `: ${name}` : ''}
+              {name ? `${name} :` : ''}أهلاً وسهلاً
             </Typography>
 
 </>
@@ -404,7 +410,7 @@ const HomeComponent = () => {
   component="h1" 
   className="!font-bold text-center mb-5 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
 >
-  What you looking for? <span className="text-3xl">😎</span>
+<span className="text-3xl">😎</span>عن ماذا تبحث اليوم؟
 </Typography>
         <div className="flex !flex-row justify-start w-full gap-4 mb-4 px-0 overflow-x-auto custom-scrollbar transition-all duration-300">
         <div className="flex flex-nowrap w-max gap-2">
@@ -437,7 +443,7 @@ const HomeComponent = () => {
   component="h1" 
   className="!font-bold text-center mb-2 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
 >
-Market Place <span className="text-3xl"><FontAwesomeIcon icon={faCartShopping} color='black'/></span>
+<span className="text-3xl"><FontAwesomeIcon icon={faCartShopping} color='black'/></span> سوق إلكتروني
 </Typography>
 <div className={`grid ${isOwner ? 'grid-cols-1 md:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'} gap-4 w-full`}>
 {loading ? (
@@ -458,7 +464,7 @@ Market Place <span className="text-3xl"><FontAwesomeIcon icon={faCartShopping} c
               ))
             ) : (
               <Typography variant="h5" component="h2" className="text-center col-span-full">
-                No restaurants found
+                لم يتم العثور على المتجر المطلوب
               </Typography>
             )
           )}

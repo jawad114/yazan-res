@@ -218,7 +218,7 @@ const UpdateHours = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className='mt-4'>Update Opening Hours For {isOwner ? resName : restaurantName}</h1>
+      <h1 className='mt-4'>{isOwner ? resName : restaurantName} :تحديث ساعات العمل لـ</h1>
       
       <div className='mt-4'>
         <Typography variant="h6">Opening Hours for {day.charAt(0).toUpperCase() + day.slice(1)}</Typography>
@@ -245,7 +245,7 @@ const UpdateHours = () => {
           ))}
         </div>
         <div className='flex flex-col justify-center items-center'>
-          <h4 className='mt-4'>Select Opening Time</h4>
+          <h4 className='mt-4'>اختر وقت الفتح</h4>
           <DatePicker
             selected={open ? new Date(open) : null}
             onChange={(date) => setOpen(date)}
@@ -257,7 +257,7 @@ const UpdateHours = () => {
             placeholderText="Select opening time"
             className='mt-2'
           />
-          <h4 className='mt-4'>Select Closing Time</h4>
+          <h4 className='mt-4'>اختر وقت الإغلاق</h4>
           <DatePicker
             selected={close ? new Date(close) : null}
             onChange={(date) => setClose(date)}
@@ -275,7 +275,7 @@ const UpdateHours = () => {
             disabled={loading}
             className='mt-4'
           >
-            {loading ? 'Updating...' : 'Update Opening Hours'}
+            {loading ? 'Updating...' : 'تحديث ساعات العمل'}
           </Button>
           {error && <p style={{ color: 'red' }} className='mt-2'>{error}</p>}
           {successMessage && <p style={{ color: 'green' }} className='mt-2'>{successMessage}</p>}
@@ -286,7 +286,7 @@ const UpdateHours = () => {
         variant="contained"
         className='mb-4'
       >
-        Back
+        عودة الى الخلف
       </Button>
     </div>
   );

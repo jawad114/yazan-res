@@ -59,7 +59,7 @@ const Favorites = () => {
       {isClient ? (
         <>
           <Typography variant="h4" className="mt-4 text-center mb-4 font-semibold">
-            Favorite Places
+          المتاجر المفضلة
           </Typography>
           {loading ? (
             <CircularProgress className="mt-8" />
@@ -67,7 +67,7 @@ const Favorites = () => {
             <>
               {favorites.length === 0 ? (
                 <Typography variant="h6" className="mt-8 text-center">
-                  No favorites added yet.
+                  لم تتم إضافة أي مفضلات بعد
                 </Typography>
               ) : (
                 <Grid container spacing={4} className="mt-8 justify-start">
@@ -99,7 +99,7 @@ const Favorites = () => {
         </>
       ) : (
         <Typography variant="h6" className="mt-20 text-center text-red-500">
-          Login as a Client First
+          سجل الدخول كعميل أولاً
         </Typography>
       )}
     </div>

@@ -402,7 +402,7 @@ const [openDialog, setOpenDialog] = useState(false);
           <CircularProgress />
         </div>
       ) : products.length === 0 ? (
-        <Typography className="my-4">No dishes were added yet in this category</Typography>
+        <Typography className="my-4">لم تُضاف أي منتجات بعد في هذه الفئة</Typography>
       ) : (
         <Grid container spacing={3}>
           {errors && <p style={{ color: 'red' }}>{errors}</p>}
@@ -470,7 +470,7 @@ const [openDialog, setOpenDialog] = useState(false);
             )}
           </Typography>
           <Typography variant="body2" color="textPrimary">
-            Price: {parseFloat(product.price).toFixed(2)} ₪
+          ₪ {parseFloat(product.price).toFixed(2)} :السعر
           </Typography>
         </div>
       </>
@@ -479,13 +479,13 @@ const [openDialog, setOpenDialog] = useState(false);
 </ListItem>
 
 <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle className="text-center">Description</DialogTitle>
+        <DialogTitle className="text-center">الوصف</DialogTitle>
         <DialogContent>
           <Typography className={`${getTextDirection(product.description) === 'ltr' ? 'text-start' :'text-end'}`}>{product.description}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
-            Close
+          اغلق
           </Button>
         </DialogActions>
       </Dialog>
@@ -496,7 +496,7 @@ const [openDialog, setOpenDialog] = useState(false);
       {(isAdmin || isOwner) &&(
         <div className="flex items-center justify-center">
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
-        Add Items
+      اضافة منتجات جديدة
       </Button>
       </div>
       )}
@@ -520,13 +520,13 @@ const [openDialog, setOpenDialog] = useState(false);
                   {selectedProduct.description}
                 </ListItemText>
                 <Typography className="mb-[2vh] text-base">
-                  Price: {parseFloat(selectedProduct.price?selectedProduct.price:0).toFixed(2)} ₪
+                 ₪ {parseFloat(selectedProduct.price?selectedProduct.price:0).toFixed(2)} :السعر
                 </Typography>
 
                 <div >
                 {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
                  <>
-                <Typography variant="h6" className="text-start">Required Extras:</Typography>
+                <Typography variant="h6" className="text-start">:اضافات اجبارية قم باختيار اضافة واحدة فقط</Typography>
            {selectedProduct.extras.requiredExtras.map((extra) => (
            <div key={extra._id} className="flex items-center space-x-2">
              <input
@@ -553,7 +553,7 @@ const [openDialog, setOpenDialog] = useState(false);
                   
                   {selectedProduct && selectedProduct.extras && selectedProduct.extras.optionalExtras && selectedProduct.extras.optionalExtras.length > 0 ? (
                             <>
-                            <Typography variant="h6" className="text-start">Optional Extras:</Typography>
+                            <Typography variant="h6" className="text-start">:اضافات اختيارية يمكن طلب اكثر من اضافة</Typography>
   
       {selectedProduct.extras.optionalExtras.map((extra) => (
   <div key={extra._id} className="flex items-center space-x-2">
@@ -591,7 +591,7 @@ const [openDialog, setOpenDialog] = useState(false);
                 </div>
                 <div className="flex items-center justify-center mt-[2vh]">
                 <Typography className="text-base">
-                  Total Price: {totalPrice} ₪
+                 ₪ {totalPrice} :اجمالي السعر
                 </Typography>
                 </div>
                 </>
@@ -612,14 +612,14 @@ const [openDialog, setOpenDialog] = useState(false);
                       )
                     }
                   >
-                    Add to Cart
+                    أضف إلى السلة
                   </Button>
                   <Button
                         className="btn"
                         variant="contained"
                         onClick={() => navigate('/cart')}
                       >
-                        View Cart
+                        عرض السلة
                       </Button>
                       </>
                       )}
@@ -630,14 +630,14 @@ const [openDialog, setOpenDialog] = useState(false);
                         color="primary"
                         onClick={() => handleEdit(selectedProduct)}
                       >
-                        Edit
+                        تعديل
                       </Button>
                       <Button
                         variant="outlined"
                         color="secondary"
                         onClick={() => handleDelete(selectedProduct._id)}
                       >
-                        Delete
+                        حذف
                       </Button>
                     </div>
                   )}

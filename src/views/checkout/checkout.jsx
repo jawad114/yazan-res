@@ -64,16 +64,16 @@ const RestaurantLocationModal = ({ open, onClose, location }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%', maxWidth: 400, backgroundColor: '#fff', padding: 20, borderRadius: 8 }}>
-        <h2>Restaurant Location</h2>
+        <h2>موقع المتجر</h2>
         {mapRef.current ? (
           <div ref={mapRef} style={{ width: '100%', height: 300, marginBottom: 20 }} />
         ) : null}
         <p>Latitude: {location.latitude}</p>
         <p>Longitude: {location.longitude}</p>
         <div className='flex flex-col justify-center items-center'>
-          <Button onClick={handleShowOnGoogleMaps} className='mt-4' variant="contained">Show on Google Maps</Button>
-          <Button onClick={handleShowOnWaze} className='mt-4' variant="contained">Show on Waze</Button>
-          <Button onClick={() => navigate('/')} className='mt-4' variant="contained">Close</Button>
+          <Button onClick={handleShowOnGoogleMaps} className='mt-4' variant="contained">عرض على خرائط جوجل</Button>
+          <Button onClick={handleShowOnWaze} className='mt-4' variant="contained">عرض على ويز</Button>
+          <Button onClick={() => navigate('/')} className='mt-4' variant="contained">اغلق</Button>
         </div>
       </div>
     </Modal>
@@ -345,7 +345,7 @@ if (Array.isArray(details) && details.length > 0) {
   if (localStorage.getItem('token') == null) {
     return <>
 
-      <Typography className='text-dark fw-bold mr-5 p-5'>Please login first to be able to place an order</Typography>
+      <Typography className='text-dark fw-bold mr-5 p-5'>يرجى تسجيل الدخول أولاً لتتمكن من تقديم الطلب</Typography>
       <Button onClick={() => { window.location.replace('/login-client') }} className='btn-global w-50 text-light m-3'>Login now</Button></>
 
 
@@ -353,7 +353,7 @@ if (Array.isArray(details) && details.length > 0) {
   else {
     return (
       <>
-        <h1>Delivery Info</h1><Grid sx={{ p: 6 }} container spacing={2}>
+        <h1>معلومات التوصيل</h1><Grid sx={{ p: 6 }} container spacing={2}>
           <Grid item xs={12}>
             <div className='flex flex-col items-center justify-center mb-4'>
               <Grid item xs={12}>
@@ -370,7 +370,7 @@ if (Array.isArray(details) && details.length > 0) {
                     },
                   }}
                 >
-                  Delivery
+                  توصيل
                 </Button>
                 <Button
                   onClick={() => {
@@ -385,7 +385,7 @@ if (Array.isArray(details) && details.length > 0) {
                     },
                   }}
                 >
-                  Self-Pickup
+                  استلام ذاتي
                 </Button>
                 {/* <Button
                   onClick={() => {
@@ -405,7 +405,7 @@ if (Array.isArray(details) && details.length > 0) {
               </Grid>
             </div>
             <TextField
-              label="Name"
+              label="الاسم"
               variant="outlined"
               sx={{
                 '& .MuiOutlinedInput-input:focus': {
@@ -423,7 +423,7 @@ if (Array.isArray(details) && details.length > 0) {
               }}
               onBlur={() => {
                 if (shippingInfo.name.length < 3) {
-                  alert("The username must be between 3 and 20 characters.");
+                  alert("يجب أن يكون اسم المستخدم بين 3 و 20 حرفًا");
                 }
               }}
               required />
@@ -433,7 +433,7 @@ if (Array.isArray(details) && details.length > 0) {
             <>
           <Grid item xs={12}>
             <TextField
-              label="Email"
+              label="البريد الإلكتروني"
               variant="outlined"
               fullWidth
               value={shippingInfo.email}
@@ -448,7 +448,7 @@ if (Array.isArray(details) && details.length > 0) {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Phone Number"
+              label="رقم الهاتف"
               variant="outlined"
               fullWidth
               value={shippingInfo.phoneNumber1}
@@ -463,14 +463,14 @@ if (Array.isArray(details) && details.length > 0) {
                 if (/^\d{0,10}$/.test(newPhoneNumber)) {
                   setShippingInfo({ ...shippingInfo, phoneNumber1: newPhoneNumber });
                 } else {
-                  alert("Please enter numbers only for the phone number 10 numbers max.");
+                  alert("يرجى إدخال الأرقام فقط لرقم الهاتف بحد أقصى 10 أرقام");
                 }
               }}
               required />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Phone Number 2 is optional"
+              label="رقم هاتف 2 اختياري"
               variant="outlined"
               fullWidth
               value={shippingInfo.phoneNumber2}
@@ -485,7 +485,7 @@ if (Array.isArray(details) && details.length > 0) {
                 if (/^\d*$/.test(newPhoneNumber) || newPhoneNumber === "") {
                   setShippingInfo({ ...shippingInfo, phoneNumber2: newPhoneNumber });
                 } else {
-                  alert("Please enter numbers only for the phone number.");
+                  alert("يرجى إدخال الأرقام فقط لرقم الهاتف");
                 }
               }} 
               />
@@ -495,8 +495,8 @@ if (Array.isArray(details) && details.length > 0) {
           {selectedOption === 'delivery' && showMap && (
             <>
               <div>
-                <h1>Checkout</h1>
-                <Button onClick={() => setShowMap(true)}>Select Location</Button>
+                <h1>إتمام الشراء</h1>
+                <Button onClick={() => setShowMap(true)}>حدد الموقع</Button>
                 {showMap && (
                   <MapModal
                     open={showMap}
@@ -519,7 +519,7 @@ if (Array.isArray(details) && details.length > 0) {
 {selectedOption === 'delivery' && (
           <Grid item xs={12}>
             <TextField
-  label="Note"
+  label="طلبات خاصة"
   type="text"
   variant="outlined"
   value={shippingInfo.note}
@@ -558,7 +558,7 @@ if (Array.isArray(details) && details.length > 0) {
   color="primary"
   onClick={handleCreateOrderButtonClick}
 >
-  Create Order
+إنشاء طلب
 </Button>
 </div>
             {/* <CustomModal handleClose={handleCloseModal} open={open} body={<div>

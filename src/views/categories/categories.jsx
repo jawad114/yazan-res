@@ -228,7 +228,7 @@ export default function Categories() {
           variant='h6' 
           className='font-medium'
         >
-          Closed
+          مغلق
         </Typography>
       )}
     </Box>
@@ -260,10 +260,10 @@ export default function Categories() {
  </a>
 </div>
 )}
-            <h1 className='my-5'>Menu of : {resName}</h1>
+            <h1 className='my-5'>{resName} :الفئات الخاصة في</h1>
             <div>
               {categories.length === 0 ? (
-                <p className='font-bold'>Category Not Found</p>
+                <p className='font-bold'>الفئة غير موجودة</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[4vh]">
                   {categories.map((category, index) => (
@@ -273,13 +273,13 @@ export default function Categories() {
                         alt={`${category.categoryName}'s Image`}
                         className='w-full h-32 object-cover rounded-md'
                       />
-                      <Typography className='text-lg font-semibold text-center'>Category: {category.categoryName}</Typography>
+                      <Typography className='text-lg font-semibold text-center'>{category.categoryName}</Typography>
                       <Button
                         variant='contained'
                         className={styles.btn}
                         onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
                       >
-                        Show Items in {category.categoryName}
+                        {category.categoryName} عرض  فئة
                       </Button>
                       {(isAdmin || isOwner) && (
                         <div className="flex space-x-2 mt-2">
@@ -288,14 +288,14 @@ export default function Categories() {
                             color='primary'
                             onClick={() => handleEditCategory(category)}
                           >
-                            Edit
+                            تعديل
                           </Button>
                           <Button
                             variant='outlined'
                             color='secondary'
                             onClick={() => handleDeleteCategory(category.categoryName)}
                           >
-                            Delete
+                            حذف
                           </Button>
                         </div>
                       )}
@@ -306,7 +306,7 @@ export default function Categories() {
             </div>
             {(isAdmin || isOwner) && (
               <div className='flex w-[24vw] mb-4 items-center justify-center'>
-                <Button variant="contained" className='btn-global' onClick={handleAddCategory}>Add Category</Button>
+                <Button variant="contained" className='btn-global' onClick={handleAddCategory}>اضف فئة</Button>
               </div>
             )}
           </>
@@ -314,16 +314,16 @@ export default function Categories() {
       </div>
 
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
-        <DialogTitle>Edit Category</DialogTitle>
+        <DialogTitle>تعديل الفئة</DialogTitle>
         <DialogContent className='space-y-10'>
           <DialogContentText>
-            To edit this category, please update the name or image and click save.
+          لتعديل هذه الفئة، يرجى تحديث الاسم أو الصورة ثم النقر على حفظ
           </DialogContentText>
           <input
             type="text"
             value={currentCategory.categoryName}
             onChange={(e) => setCurrentCategory({ ...currentCategory, categoryName: e.target.value })}
-            placeholder="Category Name"
+            placeholder="اسم الفئة"
           />
           <input
             type="file"
@@ -333,27 +333,27 @@ export default function Categories() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenEditDialog(false)} color="primary">
-            Cancel
+          الغاء
           </Button>
           <Button onClick={handleUpdateCategory} color="primary">
-            Save
+          حفظ
           </Button>
         </DialogActions>
       </Dialog>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle className='text-center'>Alert</DialogTitle>
+        <DialogTitle className='text-center'>تنبية</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You must be logged in to add items to cart.
+          يجب أن تكون مسجلاً لاتمام عملية الشراء
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+          اغلق
           </Button>
           <Button onClick={handleCreateAccount} color="primary">
-            Create Account
+          إنشاء حساب
           </Button>
         </DialogActions>
       </Dialog>

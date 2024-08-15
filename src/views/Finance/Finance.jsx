@@ -96,12 +96,12 @@ useEffect(() => {
           <Grid item xs={20}>
           <div className='flex flex-col items-center justify-center'>
             <Typography variant="h4" gutterBottom className="text-lg mt-4 mb-4">
-              Finance Dashboard {isAdmin ? '' : `: ${resName}`}
+               {isAdmin ? '' : `${resName} :`}إدارة المال
             </Typography>
             {!isOwner && (
             <Grid item xs={16}>
               <TextField
-                placeholder="Restaurant Name"
+                placeholder="اسم المتجر"
                 value={restaurantName}
                 onChange={(e) => setRestaurantName(e.target.value)}
                 className="mb-4 mt-10 w-[70vw]"
@@ -115,7 +115,7 @@ useEffect(() => {
               <Button variant="contained" onClick={handleRejectedOrders} className="mb-2"  sx={{
                 backgroundColor:  'red' 
               }}>
-                Show Rejected Orders for {currentPeriod}
+                {currentPeriod}: عرض الطلبات المرفوضة لـ
               </Button>
               </div>
             )}
@@ -123,7 +123,7 @@ useEffect(() => {
           </div>
            <div className="flex flex-col md:flex-row md:overflow-auto items-center mt-4 mb-4 ml-2">
             <Typography variant="h6">
-              Filter
+            فلتر
             </Typography>
             {periods.map((period) => (
               <div className="p-2">
@@ -143,7 +143,7 @@ useEffect(() => {
             <Grid item xs={12}>
               <div className='flex items-center justify-center'>
               <Typography variant="h5" gutterBottom >
-                {rejected ? 'Declined Orders' : 'Completed Orders'}
+                {rejected ? 'طلبات مرفوضة' : 'طلبات جاهزة'}
               </Typography>
               </div>
               <Card className="mb-2">
@@ -152,14 +152,14 @@ useEffect(() => {
                   <table className="w-full">
                     <thead className="bg-gray-200">
                       <tr>
-                        <th className="p-2">Order ID</th>
-                        <th className="p-2">Restaurant</th>
-                        <th className="p-2">Price</th>
-                        <th className="p-2">Name</th>
-                        <th className="p-2">Quantity</th>
-                        <th className="p-2">Extras</th>
-                        <th className="p-2">Extras Price</th>
-                        <th className="p-2">Status</th>
+                        <th className="p-2">رقم الطلب</th>
+                        <th className="p-2">المتجر</th>
+                        <th className="p-2">السعر</th>
+                        <th className="p-2">الاسم</th>
+                        <th className="p-2">العدد</th>
+                        <th className="p-2">اضافات</th>
+                        <th className="p-2">سعر الاضافات</th>
+                        <th className="p-2">حالة الطلب</th>
                         <th className="p-2">{rejected? 'Declined At': 'Completed At'}</th>
                       </tr>
                     </thead>
@@ -193,16 +193,16 @@ useEffect(() => {
             sx={{
               backgroundColor:  'green'          
               }}>
-            💰 Calculate Revenue 💰
+            💰 حساب الإيرادات 💰
        </Button>
           )}
        {totalRevenue !== null && displayedOrder && !rejected && (
         <Grid item xs={12}>
       <Typography variant="h5" gutterBottom>
-    🍽️ Restaurant Revenue
+      🍽️ إيرادات المتجر
          </Typography>
          <Typography variant="h5" gutterBottom>
-        Total Revenue is: {totalRevenue} ₪
+         ₪ {totalRevenue} :إجمالي الإيرادات هو
        </Typography>
      </Grid>
     )}

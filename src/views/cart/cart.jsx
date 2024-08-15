@@ -312,7 +312,7 @@ const Cart = () => {
       {!isClient ? (
         <div>        
         <Typography variant="h6" className="mt-20 text-center text-red-500">
-        Login as a Client First
+        سجل الدخول كمستخدم أولاً
       </Typography>
       </div>
       ) : error ? (
@@ -323,10 +323,10 @@ const Cart = () => {
         <>
           <div className='flex flex-col text-start mt-[2vh]'>
             <Typography variant="h5" gutterBottom>
-              Your Cart: {name ? name : ''}
+              {name ? name : ''} :السلة الخاص بك
             </Typography>
             <Typography variant="h5" gutterBottom>
-              Total Items in Cart: {itemsCount}
+              {itemsCount} :إجمالي العناصر في السلة
             </Typography>
           </div>
           {cart.length > 0 ? (
@@ -354,7 +354,7 @@ const Cart = () => {
                         </Typography>
                         {product.extras && product.extras.length > 0 && (
                           <div>
-                            <Typography variant="body2" className='font-semibold'>Extras:</Typography>
+                            <Typography variant="body2" className='font-semibold'>:اضافات</Typography>
                             <ul className='list-disc ml-4'>
                               {product.extras.map((extra, index) => (
                                 <li key={index}>{extra.name}: {extra.price} ₪</li>
@@ -385,20 +385,20 @@ const Cart = () => {
                 ))
               ))}
               <Typography variant="h6" className='text-right mt-4'>
-                Total Price: {calculateTotalPrice()} ₪
+              ₪ {calculateTotalPrice()} :اجمالي السعر
               </Typography>
               <div className='flex flex-col sm:flex-row justify-between mt-6'>
                 <Button onClick={clearCart} variant="contained" color="error" className='mb-3 sm:mb-0'>
-                  Clear Cart
+                افراغ السلة
                 </Button>
                 <Button onClick={() => { navigate(`/checkout`, { state: { cart } })}} variant="contained" color="primary" className='mb-3 sm:mb-0'>
-                  Checkout
+                إتمام عملية الشراء
                 </Button>
               </div>
             </div>
           ) : (
             <Typography variant="body1" className='text-center mt-6'>
-              Cart is empty
+              السلة فارغة
             </Typography>
           )}
         </>

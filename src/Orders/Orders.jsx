@@ -166,8 +166,8 @@ const openWaze = (latitude, longitude) => {
       <Carousels/>
     <Box className='flex flex-col items-center text-center mt-10'>
       <div className="orders-header mb-4">
-        <h2 className="text-3xl font-bold">Your Orders</h2>
-        <h4 className="text-lg"><span>Need Help? </span><Link to="/contact-us" className="text-blue-500">Contact Us</Link></h4>
+        <h2 className="text-3xl font-bold">طلباتك</h2>
+        <h4 className="text-lg"><span>تريد مساعدة؟  </span><Link to="/contact-us" className="text-blue-500">تواصل معنا</Link></h4>
       </div>
       {/* <ButtonGroup className="filter-buttons mb-4 flex md:flex-row flex-col justify-center gap-1 md:gap-2">
         <Button className='!border !border-blue-200' onClick={() => setFilter('all')} variant={filter === 'all' ? 'contained' : 'outlined'}>All Orders</Button>
@@ -183,30 +183,30 @@ const openWaze = (latitude, longitude) => {
         onClick={handleMenuClick}
         endIcon={<ArrowDropDownIcon />}
       >
-        {filter} Orders
+        {filter} الطلبات
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={() => handleMenuClose(filter)}>
         <MenuItem onClick={() => handleMenuClose('all')} selected={filter === 'all'}>
-          All Orders
+        جميع الطلبات
         </MenuItem>
         <MenuItem onClick={() => handleMenuClose('new')} selected={filter === 'new'}>
-          New Orders
+        طلبات جديدة
         </MenuItem>
         <MenuItem onClick={() => handleMenuClose('preparing')} selected={filter === 'preparing'}>
-          Preparing Orders
+        طلبات قيد التحضير
         </MenuItem>
         <MenuItem onClick={() => handleMenuClose('delivered')} selected={filter === 'delivered'}>
-          Delivered Orders
+        طلبات تم ارسالها
         </MenuItem>
         <MenuItem onClick={() => handleMenuClose('completed')} selected={filter === 'completed'}>
-          Completed Orders
+        طلبات جاهزة
         </MenuItem>
         <MenuItem onClick={() => handleMenuClose('declined')} selected={filter === 'declined'}>
-          Declined Orders
+        طلبات مرفوضة
         </MenuItem>
       </Menu>
       <TextField
-        placeholder="Search by Order ID or Place Name"
+        placeholder="البحث حسب رقم الطلب أو اسم المتجر"
         variant="outlined"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -225,7 +225,7 @@ const openWaze = (latitude, longitude) => {
                 return (
                   <ListItemButton key={order._id} divider className="order-item" onClick={() => handleOrderClick(order)}>
                     <ListItemText
-                      primary={`Restaurant: ${orderFrom}`}
+                      primary={`${orderFrom}: المتجر`}
                       secondary={
                         <div className="flex flex-row space-x-[40vw] md:space-x-[60vw] justify-between">
                           <Typography component="span" variant="body2">{formatDate(order.orderTime)}</Typography><br />
@@ -239,13 +239,13 @@ const openWaze = (latitude, longitude) => {
             </List>
           </Paper>
         ) : (
-          <div className="no-orders mt-8">No orders found</div>
+          <div className="no-orders mt-8">لم يتم العثور على طلبات</div>
         )}
       </div>
       {selectedOrder && (
         <Dialog open={Boolean(selectedOrder)} onClose={handleCloseDialog} maxWidth="md" fullWidth>
           <DialogTitle className='text-center'>
-            Order Details
+          تفاصيل الطلب
             <IconButton
               aria-label="close"
               onClick={handleCloseDialog}
@@ -255,16 +255,16 @@ const openWaze = (latitude, longitude) => {
             </IconButton>
           </DialogTitle>
           <DialogContent dividers>
-            <Typography variant="body1">Order ID: {selectedOrder.orderId}</Typography>
-            <Typography variant="body1">Name : {selectedOrder.shippingInfo.name}</Typography>
+            <Typography variant="body1">{selectedOrder.orderId}:رقم الطلب</Typography>
+            <Typography variant="body1">{selectedOrder.shippingInfo.name}:  اسم العميل</Typography>
             {selectedOrder.shippingOption === 'self-pickup' && (
         <Box mb={2}>
           <Typography variant="body1" className='text-center' gutterBottom>
-            Restaurant Address:
+          عنوان المتجر
           </Typography>
           <Box className='flex flex-col gap-4 items-center justify-center' mb={2} spacing={2}>
             <FormControl variant="filled" style={{ minWidth: 200, marginRight: 16 }}>
-              <InputLabel id="navigation-app-label">Choose Navigation</InputLabel>
+              <InputLabel id="navigation-app-label">استخدم الخارطة للوصول الى المتجر</InputLabel>
               <Select
                 labelId="navigation-app-label"
                 id="navigation-app"
@@ -280,7 +280,7 @@ const openWaze = (latitude, longitude) => {
               onClick={() => handleNavigate(selectedOrder.orderLocation.coordinates)}
               disabled={!navigationApp}
             >
-              Open
+              اذهب
             </Button>
           </Box>
         </Box>
@@ -288,12 +288,12 @@ const openWaze = (latitude, longitude) => {
       {selectedOrder.shippingOption !== 'dine-in' && (
         <>
       <Typography variant="body1" gutterBottom>
-        Phone: {selectedOrder.shippingInfo.phoneNumber1}<br />
+        {selectedOrder.shippingInfo.phoneNumber1}: رقم الهاتف<br />
         </Typography>
-        <Typography variant="body1">Email : {selectedOrder.shippingInfo.email}</Typography>
+        <Typography variant="body1">{selectedOrder.shippingInfo.email}: البريد الإلكتروني</Typography>
 {selectedOrder.shippingInfo.phoneNumber2 &&(
       <Typography variant="body1" gutterBottom>
-      Phone 2: {selectedOrder.shippingInfo.phoneNumber2}<br />
+      {selectedOrder.shippingInfo.phoneNumber2}: رقم الهاتف 2<br />
       </Typography>  
 )}
         </>
@@ -303,59 +303,59 @@ const openWaze = (latitude, longitude) => {
         <>
         {selectedOrder.shippingInfo?.note &&(
           <Typography variant="body1" gutterBottom>
-            Note: {selectedOrder.shippingInfo.note}
+            {selectedOrder.shippingInfo.note}: طلبات خاصة
           </Typography>
         )}
         </>
       )}
 
       <Typography variant="body1" gutterBottom>
-        Order Type: {selectedOrder.shippingOption}
+       {selectedOrder.shippingOption}: طريقة استلام الطلب
       </Typography>
       {selectedOrder.shippingOption === 'dine-in' && (
         <Typography variant="body1" gutterBottom>
-          Table Number: {selectedOrder.tableNumber}
+          {selectedOrder.tableNumber}: رقم الطلولة
         </Typography>
       )}
-            <Typography variant="body1">Ordered At: {formatDate(selectedOrder.orderTime)}</Typography>
+            <Typography variant="body1">{formatDate(selectedOrder.orderTime)}: تم الطلب في</Typography>
             {selectedOrder.products.map((product) => (
               <div key={product._id} className='mt-[4vh]'>
-                <Typography variant="body1">Restaurant: {product.orderFrom}</Typography>
-                <Typography component="span" variant="body2">Name: {product.name}</Typography><br />
-                <Typography component="span" variant="body2">Quantity: {product.quantity}</Typography><br />
-                <Typography component="span" variant="body2">Price: {product.price} ₪</Typography><br />
+                <Typography variant="body1">{product.orderFrom}: اسم المتجر</Typography>
+                <Typography component="span" variant="body2">{product.name}: المنتج</Typography><br />
+                <Typography component="span" variant="body2">{product.quantity}: العدد</Typography><br />
+                <Typography component="span" variant="body2">₪{product.price}: السعر</Typography><br />
                 {/* <Typography component="span" variant="body2">Extras: {product.extras ? product.extras.map(extra => extra.name).join(', ') : 'None'}</Typography><br />
                 <Typography component="span" variant="body2">Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}</Typography><br /> */}
                 {product.extras && product.extras.length > 0 ? (
   <>
     <Typography component="span" variant="body2">
-      Extras: {product.extras.map(extra => extra.name).join(', ')}
+      {product.extras.map(extra => extra.name).join(', ')}: اضافات
     </Typography><br />
 
     <Typography component="span" variant="body2">
-      Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0} ₪
+      ₪ {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}: سعر الاضافات
     </Typography><br />
   </>
 ):(
   <>
   <Typography component="span" variant="body2">
-  No Extras
+  لايوجد اضافات
 </Typography><br />
 </>
 )}
                                      <div className="status-info mt-[2vh] mb-[2vh]">
-                          <Typography variant="body1">Status Info</Typography>
+                          <Typography variant="body1">حالة الطلب</Typography>
                           {selectedOrder.status === 'Approved' && (
                             <Paper elevation={3} className="status-card accepted" style={{ backgroundColor: 'green', textAlign: 'center' }}>
                               <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
-                                Accepted
+                              تم قبول الطلب
                               </Typography><br />
                             </Paper>
                           )}
                           {selectedOrder.status === 'Completed' && (
                             <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'center' }}>
                               <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
-                                Completed
+                              الطلب جاهز
                               </Typography><br />
                             </Paper>
                           )}
@@ -364,7 +364,7 @@ const openWaze = (latitude, longitude) => {
                           {selectedOrder.status === 'Delivered' && (
                             <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'center' }}>
                               <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
-                                Delivered
+                              تم الارسال
                               </Typography><br />
                             </Paper>
                           )}
@@ -372,7 +372,7 @@ const openWaze = (latitude, longitude) => {
                           {selectedOrder.status === 'Not Approved' && (
                             <Paper elevation={3} className="status-card declined" style={{ backgroundColor: 'red', textAlign: 'center' }}>
                               <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
-                                Declined
+                              طلب مرفوض
                               </Typography><br />
                             </Paper>
                           )}
@@ -380,7 +380,7 @@ const openWaze = (latitude, longitude) => {
                           {selectedOrder.status === 'Preparing' && selectedOrder.preparingStartedAt && (
                             <Paper elevation={3} className="status-card preparing" style={{ backgroundColor: 'yellow', textAlign: 'center' }}>
                               <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
-                                Preparing
+                              طلب قيد التجهيز
                               </Typography><br />
                               <Typography component="span" variant="body2">Preparing Time Left:{calculateRemainingPreparingTime(selectedOrder)} minutes</Typography>
                             </Paper>
@@ -389,14 +389,14 @@ const openWaze = (latitude, longitude) => {
                           {!selectedOrder.status && (
                             <Paper elevation={3} className="status-card no-status">
                               <Typography component="span" variant="body2">
-                                No Status Yet
+                              الطلب قيد الانتظار
                               </Typography><br />
                             </Paper>
                           )}
                         </div>
               </div>
             ))}
-            <Typography variant="h6" className='text-center'>Total Price: {calculateTotalPrice(selectedOrder)} ₪</Typography>
+            <Typography variant="h6" className='text-center'>₪ {calculateTotalPrice(selectedOrder)}: السعر الإجمالي</Typography>
           </DialogContent>
         </Dialog>
       )}

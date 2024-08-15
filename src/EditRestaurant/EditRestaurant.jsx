@@ -226,7 +226,7 @@ export default function EditRestaurant() {
   return (
     <Paper elevation={3} sx={{ padding: 3, maxWidth: 600, margin: 'auto', mt: 5 }}>
       <Typography variant="h4" gutterBottom align="center">
-        Edit Restaurant
+      تعديل المتجر 
       </Typography>
       <form onSubmit={(e) => {
         e.preventDefault();
@@ -235,7 +235,7 @@ export default function EditRestaurant() {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              label="Restaurant Name"
+              label="اسم المتجر"
               variant="outlined"
               fullWidth
               sx={{
@@ -250,7 +250,7 @@ export default function EditRestaurant() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Phone Number"
+              label="رقم الهاتف"
               variant="outlined"
               fullWidth
               sx={{
@@ -272,7 +272,7 @@ export default function EditRestaurant() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Location"
+              label="الموقع على الخارطة"
               variant="outlined"
               fullWidth
               value={updatedLocation}
@@ -303,7 +303,7 @@ export default function EditRestaurant() {
           <Grid item xs={12}>
             <div className='flex items-center justify-center mt-4'>
             <Button variant="contained" color="primary" type="submit">
-              Update
+             تحديث
             </Button>
             </div>
           </Grid>

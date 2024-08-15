@@ -292,7 +292,7 @@ const playNotificationSound = () => {
 
     const id = toast.success(
         <div className="toast-custom">
-            <div>New Order Received for {ownerRestaurantName}</div>
+            <div>{ownerRestaurantName} تم استلام طلب جديد لـ</div>
             <button
                 onClick={() => {
                     toast.dismiss(id);
@@ -305,7 +305,7 @@ const playNotificationSound = () => {
                     window.location.reload();
                 }}
             >
-                Got it
+                موافق
             </button>
         </div>,
         {
@@ -364,7 +364,7 @@ const showFallbackNotification = () => {
         localStorage.removeItem('isClient');
         localStorage.removeItem('resName');
         localStorage.removeItem('name');
-        alert('You have been successfully logged out.');
+        alert('تم تسجيل خروجك بنجاح');
         setIsLoggedIn(false);
         setUserRole('');
         navigate('/');
@@ -373,7 +373,7 @@ const showFallbackNotification = () => {
 
     const handleLoginRedirect = (path: string, role: string) => {
         if (isLoggedIn && userRole === role) {
-            alert('You are already signed in. Please log out before signing in as a different user.');
+            alert('أنت مسجل الدخول بالفعل. يرجى تسجيل الخروج قبل تسجيل الدخول كمستخدم آخر');
         } else {
             navigate(path);
         }
@@ -408,7 +408,7 @@ const showFallbackNotification = () => {
                     <div className='user-actions'>
                         {!isLoggedIn && (
                             <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>
-                                <PersonIcon /> Login As
+                                <PersonIcon /> تسجيل الدخول
                             </button>)}
                         <Menu
                             anchorEl={anchorEl}
@@ -416,46 +416,46 @@ const showFallbackNotification = () => {
                             onClose={handleMenuClose}
                         >
                             {(!isLoggedIn || !isClient) && (
-                                <MenuItem onClick={() => handleLoginRedirect('/login-client', 'isClient')}>Client</MenuItem>
+                                <MenuItem onClick={() => handleLoginRedirect('/login-client', 'isClient')}>عميل</MenuItem>
                             )}
                             {(!isLoggedIn || !isOwner) && (
-                                <MenuItem onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>Res-Owner</MenuItem>
+                                <MenuItem onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>شركاء</MenuItem>
                             )}
                             {!isLoggedIn && (
-                                <MenuItem onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>Admin</MenuItem>
+                                <MenuItem onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>ادارة</MenuItem>
                             )}
                         </Menu>
                         {!isAdmin &&(
                         <Link to={`/contact-us`} className="action-btn">
-                        <Phone style={{ marginRight: '0.5rem' }} /> Contact Us
+                        <Phone style={{ marginRight: '0.5rem' }} /> تواصل معنا
                         </Link>
                           )}
                           {isAdmin &&(
                            <Link to={`/slider-image-list`} className="action-btn">
-                            <Image style={{ marginRight: '0.5rem' }} /> Carousel
+                            <Image style={{ marginRight: '0.5rem' }} /> اعلانات
                             </Link>
                           )}
 
                         {/* Conditionally render the button based on the logged-in restaurant name */}
                         {isOwner && (
                             <Link to={`/owner`} className="action-btn">
-                                <ListAlt style={{ marginRight: '0.5rem' }}/>Orders                            
+                                <ListAlt style={{ marginRight: '0.5rem' }}/> الطلبات                            
                                 </Link>
                         )}
                         {isAdmin && (
                             <Link to={`/all-orders`} className="action-btn">
-                                <ListAlt style={{ marginRight: '0.5rem' }}/>Orders
+                                <ListAlt style={{ marginRight: '0.5rem' }}/> الطلبات
                             </Link>
                         )}
 
                         {isOwner && (
                             <Link to={`/`} className="action-btn">
-                                <SettingsIcon style={{ marginRight: '0.5rem' }}/>Settings                            
+                                <SettingsIcon style={{ marginRight: '0.5rem' }}/> الإعدادات                          
                                 </Link>
                         )}
                          {isAdmin && (
                             <Link to={`/filter-list`} className="action-btn">
-                                <FilterList style={{ marginRight: '0.5rem' }}/>Filters                            
+                                <FilterList style={{ marginRight: '0.5rem' }}/> فلاتر                            
                                 </Link>
                         )}
                         {isClient && (
@@ -473,14 +473,14 @@ const showFallbackNotification = () => {
 <div onClick={handleFavClick} className='action-btn cursor-pointer'>
 <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
                                         {favoriteUpdate ? <Favorite  style={{ color: 'red',marginRight: '0.5rem' }} /> : <FavoriteBorder style={{ color: 'black',marginRight: '0.5rem' }} />}
-                                        Favorite
+                                        المفضل
                                     </div>
                                 </div>
 
                                 {isLoggedIn && (isAdmin || isOwner) && (
                                     <Link to="/finance" className='action-btn'>
                                         <div className='cart-icon-container'>
-                                            <Money style={{ marginRight: '0.5rem' }}/>Finance
+                                            <Money style={{ marginRight: '0.5rem' }}/> إدارة المال
                                         </div>
                                     </Link>
                                 )}
@@ -488,13 +488,13 @@ const showFallbackNotification = () => {
                                     <Link to="/admin-dashboard" className='action-btn'>
                                         <div className='cart-icon-container'>
                                             <Dashboard style={{ marginRight: '0.5rem' }} />
-                                            Dashboard
+                                            لوحة التحكم
                                         </div>
                                     </Link>
                                 )}
 
                                 <button className='action-btn' onClick={handleLogout}>
-                                    <ExitToApp style={{ marginRight: '0.5rem' }} /> Logout
+                                    <ExitToApp style={{ marginRight: '0.5rem' }} /> تسحيل الخروج
                                 </button>
                             </>
                         )}
@@ -554,7 +554,7 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 text-white rounded-md p-2 transition-colors duration-200"
               onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}
             >
-              <Person style={{ marginRight: '0.2rem' }}/>Admin
+              <Person style={{ marginRight: '0.2rem' }}/> ادارة
             </MenuItem>
           )}
           {!isLoggedIn && !isClient && (
@@ -562,7 +562,7 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => handleLoginRedirect('/login-client', 'isClient')}
             >
-              <Person style={{ marginRight: '0.2rem' }}/>Client
+              <Person style={{ marginRight: '0.2rem' }}/> عميل
             </MenuItem>
           )}
           {!isLoggedIn && !isOwner && (
@@ -570,7 +570,7 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}
             >
-              <Person style={{ marginRight: '0.2rem' }}/>Res-Owner
+              <Person style={{ marginRight: '0.2rem' }}/> شركاء
             </MenuItem>
           )}
           {isLoggedIn && (isAdmin || isOwner) && (
@@ -578,7 +578,7 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate('/finance')}
             >
-              <Money style={{ marginRight: '0.2rem' }} />Finance
+              <Money style={{ marginRight: '0.2rem' }} /> إدارة المال
             </MenuItem>
           )}
           {isOwner && (
@@ -586,7 +586,7 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate(`/owner`)}
             >
-              <ListAlt style={{ marginRight: '0.2rem' }}/>Orders
+              <ListAlt style={{ marginRight: '0.2rem' }}/> طلبات
             </MenuItem>
           )}
                                   {isAdmin && (
@@ -595,13 +595,13 @@ const showFallbackNotification = () => {
                                     className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
                                     onClick={() => navigate(`/all-orders`)}
                                   >
-                                <ListAlt style={{ marginRight: '0.2rem' }}/>Orders
+                                <ListAlt style={{ marginRight: '0.2rem' }}/> طلبات
                             </MenuItem>
                              <MenuItem
                             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
                             onClick={() => navigate(`/admin-dashboard`)}
                              >
-                            <Dashboard style={{ marginRight: '0.2rem' }}/>Dashboard
+                            <Dashboard style={{ marginRight: '0.2rem' }}/> لوحة الإعدادات
                             </MenuItem>
                             </>
                         )}
@@ -610,17 +610,17 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate(`/`)}
             >
-             <SettingsIcon style={{ marginRight: '0.2rem' }}/> Settings
+             <SettingsIcon style={{ marginRight: '0.2rem' }}/> الإعدادات
             </MenuItem>
           )}
 
                           {isAdmin &&(
                             <>
                            <MenuItem onClick={() => navigate('/slider-image-list')} className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200">
-                            <Image style={{ marginRight: '0.2rem' }} /> Carousel
+                            <Image style={{ marginRight: '0.2rem' }} /> اعلانات
                             </MenuItem>
                             <MenuItem onClick={() => navigate('/filter-list')} className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200">
-                            <FilterList style={{ marginRight: '0.2rem' }}/>Filters                            
+                            <FilterList style={{ marginRight: '0.2rem' }}/> فلاتر                            
                             </MenuItem>
                             </>
                           )}
@@ -629,7 +629,7 @@ const showFallbackNotification = () => {
             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
             onClick={() => navigate('/contact-us')}
           >
-           <Phone style={{ marginRight: '0.2rem' }}/> Contact Us
+           <Phone style={{ marginRight: '0.2rem' }}/> تواصل معنا
           </MenuItem>
         )}
           {isLoggedIn && (
@@ -637,7 +637,7 @@ const showFallbackNotification = () => {
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={handleLogout}
             >
-              <ExitToApp style={{ marginRight: '0.2rem' }}/>Logout
+              <ExitToApp style={{ marginRight: '0.2rem' }}/> تسجيل خروج
             </MenuItem>
           )}
         </div>

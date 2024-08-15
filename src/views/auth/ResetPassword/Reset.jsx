@@ -51,7 +51,7 @@ const Reset = () => {
     return (
         <div className="flex justify-center items-center h-screen">
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
-            <h1 className="text-3xl font-bold mb-6 text-center">Reset Password</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center">استرجاع كلمة المرور الخاصة بك</h1>
 
                 <div className="mb-4">
                     <input
@@ -59,7 +59,7 @@ const Reset = () => {
                         name="email"
                         value={state.email}
                         onChange={handleChange}
-                        placeholder="Email"
+                        placeholder="البريد الإلكتروني"
                         className="mb-4 border-2 border-black rounded"
                         />
                     <input
@@ -67,7 +67,7 @@ const Reset = () => {
                         name="verificationCode"
                         value={state.verificationCode}
                         onChange={handleChange}
-                        placeholder="Verification Code"
+                        placeholder="الرجاء ادخال رمز التحقق المرسل الى بريدك الإلكتروني"
                         className="mb-4 border-2 border-black rounded"
                         />
                     <input
@@ -75,7 +75,7 @@ const Reset = () => {
                         name="newPassword"
                         value={state.newPassword}
                         onChange={handleChange}
-                        placeholder="New Password"
+                        placeholder="كلمة مرور جديدة"
                         className="mb-4 border-2 border-black rounded"
                         />
                 </div>
@@ -87,7 +87,7 @@ const Reset = () => {
                     rounded={false}
                     block
                     className="mb-2"
-                    >Reset Password</Button>
+                    >تعين كلمة المرور</Button>
                     {error && <p className="text-red-500">{error}</p>}
                     {success && <p className="text-green-500">{success}</p>}
                 </div>

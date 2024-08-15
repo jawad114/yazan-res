@@ -311,7 +311,7 @@ useEffect(() => {
     return (
         <Box className='min-w-screen flex flex-col items-center justify-center text-center'>
             <Typography className='mt-4' variant="h4" component="h1" gutterBottom>
-                Orders for {resName}
+                {resName} سجل طلبات
             </Typography>
             {successMessage && <div className="success-message">{successMessage}</div>}
             <Box className='flex overflow-auto flex-col items-center'>
@@ -332,7 +332,6 @@ useEffect(() => {
         fontWeight: 'bold',
     }}
 >
-    Current Restaurant Status: 
     <span
         style={{
             color: currentStatus === 'open' ? 'green' :
@@ -341,7 +340,7 @@ useEffect(() => {
                    'black' // default color if no match
         }}
     >
-        {` ${currentStatus.toUpperCase()}`}
+        {` ${currentStatus.toUpperCase()} : حالة المتجر الحالية`}
     </span>
 </Typography>
 
@@ -353,7 +352,7 @@ useEffect(() => {
                     sx={{
                         color: 'black',
                         fontWeight: 'bold',
-                    }}>Set Restaurant Status To:</Typography>
+                    }}>:تعيين حالة المطعم إلى</Typography>
 
                 <div>
 
@@ -373,7 +372,7 @@ useEffect(() => {
                                     borderRadius: 'md',
                                 }}
                             >
-                                Open
+                                مفتوح
                             </Button>
 
                         </Grid>
@@ -392,7 +391,7 @@ useEffect(() => {
                                     borderRadius: 'md',
                                 }}
                             >
-                                Busy
+                                مشغول
                             </Button>
 
                         </Grid>
@@ -410,7 +409,7 @@ useEffect(() => {
                                     borderRadius: 'md',
                                 }}
                             >
-                                Closed
+                                مغلق
                             </Button>
                         </Grid>
                     </Grid>
@@ -428,16 +427,16 @@ useEffect(() => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>All Orders</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>New Orders</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>Preparing</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>جميع الطلبات</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>طلبات جديدة</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>طلبات قيد الحضير</MenuItem>
           {/* <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem> */}
-          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>Completed Orders</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>Declined Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>طلبات جاهزة</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>طلبات مرفوضة</MenuItem>
         </Menu>
       </Grid>
                     <Typography variant="h6" align="center">
-                        Current Status Filter: {statusFilter}
+                        {statusFilter} :فلتر الحالة الحالية
                     </Typography>
                 </div>
 
@@ -452,59 +451,59 @@ useEffect(() => {
                                         <>
                                             {order.status === 'Preparing' && order.preparingTime && (
                                                 <Typography variant="h6" gutterBottom>
-                                                    Preparing Time: {order.preparingTime} minutes
+                                                   {order.preparingTime} :الوقت المقدر لتجهيز الطلب
                                                 </Typography>
                                             )}
                                             <Typography variant="h6" gutterBottom>
-                                                Order ID: {order.orderId}
+                                                {order.orderId} :رقم الطلبية
                                             </Typography>
                                             {order.orderLocation && order.shippingOption === 'delivery' && (
                                                 <div className="flex justify-center mb-2 space-x-4">
                                                     <Button variant="contained" onClick={() => openGoogleMaps(order.orderLocation.coordinates[0], order.orderLocation.coordinates[1])}>
-                                                        Open in Google Maps
+                                                    اذهب عن طريق خارطة جوجل
                                                     </Button>
                                                     <Button variant="contained" onClick={() => openWaze(order.orderLocation.coordinates[0], order.orderLocation.coordinates[1])}>
-                                                        Open in Waze
+                                                    اذهب عن طريق خارطة ويز
                                                     </Button>
                                                 </div>
                                             )}
 
                                             {order.shippingInfo && (
                                                 <div className="flex flex-col gap-2">
-                                                    <Typography variant="body2" className="font-bold">Shipping Info:</Typography>
+                                                    <Typography variant="body2" className="font-bold">:تفاصيل الشحن</Typography>
                                                     <div className="p-4 bg-gray-100 rounded-lg">
                                                         <Typography variant="body2">
-                                                            Customer Name: {order.shippingInfo.name}<br />
+                                                            {order.shippingInfo.name} :اسم العميل<br />
                                                             {order.shippingOption !=='dine-in' && (
                                                         <Typography variant="body2">
-                                                        Phone: {order.shippingInfo.phoneNumber1}<br />
+                                                        {order.shippingInfo.phoneNumber1} :هاتف<br />
                                                         {order.shippingInfo?.phoneNumber2 &&(
                                                             <>
-                                                        Phone 2 :{order.shippingInfo.phoneNumber2}<br />
+                                                        {order.shippingInfo.phoneNumber2} :هاتف 2<br />
                                                         </>
                                                         )}
-                                                        Email: {order.shippingInfo.email}<br />
+                                                        {order.shippingInfo.email} :البريد الإلكتروني<br />
                                                         </Typography>
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
                                                             {order.orderLocation?.coordinates && (
                                                               <Typography variant="body2">
-                                                            Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
+                                                            {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]} :العنوان<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
                                                              <Typography variant="body2">
-                                                             Note: {order.shippingInfo.note}<br />
+                                                             {order.shippingInfo.note} :طلبات خاصة<br />
                                                              </Typography>
                                                             )}
                                                             </>
                                                         )}
 
-                                                            Order Type: {order.shippingOption}
+                                                            {order.shippingOption} :طريقة الاستلام
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
-                                                                Table Number: {order.tableNumber}
+                                                                {order.tableNumber} :رقم الطاولة
                                                                 </Typography>
                                                             )}
                                                         </Typography>
@@ -516,24 +515,24 @@ useEffect(() => {
                                                 {order.products.map(product => (
                                                     <div key={product._id} className="p-4 bg-gray-100 rounded-lg">
                                                         <Typography variant="body2">
-                                                            Name: {product.name}<br />
-                                                            Quantity: {product.quantity}<br />
-                                                            Price: {product.price} ₪<br />
-                                                            Extras: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
-                                                            Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'}<br />
-                                                            Total Price: {calculateTotalPrice(product)} ₪<br />
-                                                            Status: {order.status ? order.status : 'No Status Yet'}<br />
-                                                            Ordered At: {formatDate(order.orderTime)}
+                                                            {product.name} :المنتج<br />
+                                                            {product.quantity} :العدد<br />
+                                                            ₪ {product.price} :السعر<br />
+                                                            {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'} :اضافات<br />
+                                                            {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'} :سعر الاضافات<br />
+                                                            ₪ {calculateTotalPrice(product)} :اجمالي المبلغ<br />
+                                                            {order.status ? order.status : 'قيد الانتضار'} :حالة الطلب<br />
+                                                            {formatDate(order.orderTime)} :تم الطلب في
                                                         </Typography>
                                                     </div>
                                                 ))}
                                             </div>
                                             <Grid container classes={{ root: 'grid grid-cols-1 md:grid-rows-1' }} className='mb-4' spacing={2} justifyContent="center">
                                                 <Grid item>
-                                                    <Button variant='contained' startIcon={<CheckCircle />} onClick={() => handleApprove(order.orderId)}>Approved</Button>
+                                                    <Button variant='contained' startIcon={<CheckCircle />} onClick={() => handleApprove(order.orderId)}>قبول الطلب</Button>
                                                 </Grid>
                                                 <Grid item>
-                                                    <Button variant="contained" startIcon={<Cancel />} onClick={() => handleNotApproved(order.orderId)}>Not Approved</Button>
+                                                    <Button variant="contained" startIcon={<Cancel />} onClick={() => handleNotApproved(order.orderId)}>رفض الطلب</Button>
                                                 </Grid>
                                             </Grid>
                                         </>
@@ -541,71 +540,71 @@ useEffect(() => {
                                         <>
                                             {order.status === 'Preparing' && order.preparingTime && (
                                                 <Typography variant="h6" gutterBottom>
-                                                    Preparing Time: {order.preparingTime} minutes
+                                                {order.preparingTime} :الوقت المقدر لتجهيز الطلبية
                                                 </Typography>
                                             )}
                                             {order.status === 'Preparing' && order.preparingStartedAt && (
                                                 <Typography variant="h6" gutterBottom>
-                                                    Remaining Preparing Time: {calculateRemainingPreparingTime(order)} minutes
+                                                {calculateRemainingPreparingTime(order)} :الوقت المتبقي للتحضير
                                                 </Typography>
                                             )}
                                             <Typography variant="h6" gutterBottom>
-                                                Order ID: {order.orderId}
+                                            {order.orderId} :رقم الطلب
                                             </Typography>
                                             <div className="flex flex-col gap-2">
-                                                <Typography variant="body2" className="font-bold">Shipping Info:</Typography>
+                                                <Typography variant="body2" className="font-bold">:تفاصيل الشحن</Typography>
                                                 <div className="p-4 bg-gray-100 rounded-lg">
                                                     <Typography variant="body2">
-                                                        Customer Name: {order.shippingInfo.name}<br />
+                                                        {order.shippingInfo.name} :اسم العميل<br />
                                                         {order.shippingOption !=='dine-in' &&(
                                                         <Typography variant="body2">
-                                                        Phone: {order.shippingInfo.phoneNumber1}<br />
-                                                        Email: {order.shippingInfo.email}<br />
+                                                        {order.shippingInfo.phoneNumber1} :الهاتف<br />
+                                                        {order.shippingInfo.email} :البريد الإلكتروني<br />
                                                         </Typography>
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
                                                             {order.orderLocation?.coordinates && (
                                                               <Typography variant="body2">
-                                                            Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
+                                                            {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]} :العنوان<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
                                                              <Typography variant="body2">
-                                                             Note: {order.shippingInfo.note}<br />
+                                                             {order.shippingInfo.note} :طلبات خاصة<br />
                                                              </Typography>
                                                             )}
                                                             </>
                                                         )}
-                                                            Order Type: {order.shippingOption}
+                                                            {order.shippingOption} :طريقة الاستلام
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
-                                                                Table Number: {order.tableNumber}
+                                                                {order.tableNumber} :رقم الطاولة
                                                                 </Typography>
                                                             )}
                                                     </Typography>
                                                 </div>
                                             </div>
                                             <div className="flex flex-col gap-2">
-                                                <Typography variant="body2" className="font-bold">Products:</Typography>
+                                                <Typography variant="body2" className="font-bold">:المنتجات</Typography>
                                                 {order.products.map(product => (
                                                     <div key={product._id} className="p-4 bg-gray-100 rounded-lg">
                                                         <Typography variant="body2">
-                                                            Name: {product.name}<br />
-                                                            Quantity: {product.quantity}<br />
-                                                            Price: {product.price} ₪<br />
-                                                            Extras: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
-                                                            Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'}<br />
-                                                            Total Price: {calculateTotalPrice(product)} ₪<br />
-                                                            Status: {order.status ? order.status : 'No Status Yet'}<br />
-                                                            Ordered At: {formatDate(order.orderTime)}
+                                                            {product.name} :المنتج<br />
+                                                            {product.quantity} :العدد<br />
+                                                            ₪ {product.price} :السعر<br />
+                                                            {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'} :اضافات<br />
+                                                            ₪ {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'} :سعر الاضافات<br />
+                                                            ₪ {calculateTotalPrice(product)} :اجمالي السعر<br />
+                                                            {order.status ? order.status : 'قيد الانتظار'} :حالة الطلب<br />
+                                                            {formatDate(order.orderTime)} :تم الطلب في
                                                         </Typography>
                                                     </div>
                                                 ))}
                                             </div>
                                             <Grid container classes={{ root: 'grid grid-cols-1 md:grid-rows-1' }} className='mb-4' spacing={2} justifyContent="center">
                                                 <Grid item>
-                                                    <Button variant="contained" startIcon={<Timelapse />} onClick={() => handlePreparing(order.orderId)}>Preparing</Button>
+                                                    <Button variant="contained" startIcon={<Timelapse />} onClick={() => handlePreparing(order.orderId)}>البدء بالتحضير</Button>
                                                 </Grid>
                                                 {/* <Grid item>
                                                     <Button variant="contained" startIcon={<Delete />} onClick={() => handleDelete(order.orderId)}>Delete</Button>
@@ -614,7 +613,7 @@ useEffect(() => {
                                                     <Button variant="contained" startIcon={<LocalShipping />} onClick={() => handleDelivered(order.orderId)}>Delivered</Button>
                                                 </Grid> */}
                                                 <Grid item>
-                                                    <Button variant="contained" startIcon={<CheckCircle />} onClick={() => handleCompleted(order.orderId)}>Completed</Button>
+                                                    <Button variant="contained" startIcon={<CheckCircle />} onClick={() => handleCompleted(order.orderId)}>الطب جاهز</Button>
                                                 </Grid>
 
                                             </Grid>
@@ -643,7 +642,7 @@ useEffect(() => {
                                                         variant="contained"
                                                         onClick={handleSetPreparingTime}
                                                     >
-                                                        Set Preparing Time
+                                                        تعيين وقت التحضير
                                                     </Button>
                                                 </FormControl>
                                             )}
@@ -655,11 +654,11 @@ useEffect(() => {
                     </Paper>
                 ) : !loading &&(
                     <Typography textAlign="center" mt={5} fontWeight="bold">
-                        No orders found
+                       لم يتم العثور على طلبات
                     </Typography>
                 )}
                 <Button className="mt-4 mb-4" variant="contained" onClick={handleGoToRestaurantArea}>
-                    GO TO RESTAURANT AREA
+                انتقل إلى منطقة المطعم
                 </Button>
             </Box>
         </Box>

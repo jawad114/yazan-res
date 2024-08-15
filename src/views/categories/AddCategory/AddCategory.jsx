@@ -289,18 +289,18 @@ export default function AddCategory() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold">Add Category</h1>
+      <h1 className="text-2xl font-bold">اضف فئة</h1>
       <div className="mt-6">
         {menu.map((category, categoryIndex) => (
           <div key={categoryIndex} className="mt-6 p-4 border border-gray-200 rounded">
-            <label className="block">Category Name:</label>
+            <label className="block">:سجل اسم الفئة</label>
             <input
               className="mt-1 block w-full"
               type="text"
               value={category.categoryName}
               onChange={(e) => handleInputChange(categoryIndex, 'categoryName', e.target.value)}
             />
-            <label className="block">Category Image:</label>
+            <label className="block">:قم بتحميل صورة الفئة</label>
             <input
               className="mt-1 block w-full"
               type="file"
@@ -312,7 +312,7 @@ export default function AddCategory() {
                 className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => handleRemoveCategory(categoryIndex)}
               >
-                Remove Category
+                احذف تصنيف
               </button>
             </div>
           </div>
@@ -322,14 +322,14 @@ export default function AddCategory() {
             className="mt-6 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleAddCategory}
           >
-            Add Category
+            اضف فئات
           </button>
           <button
             className="mt-6 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleSubmit}
             disabled={loading}
           >
-            Submit
+            حفط
           </button>
         </div>
       </div>

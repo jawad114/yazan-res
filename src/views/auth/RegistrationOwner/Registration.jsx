@@ -40,7 +40,7 @@ const RegistrationOwner = () => {
     <div className="containerReg" style={{}}>
       <div className="grid-containerReg">
         <div className="paperReg">
-          <h3>Create your account!</h3>
+          <h3>قم بإنشاء حسابك الآن</h3>
           <RegistrationForm
             formData={formData}
             handleInputChange={handleInputChange}

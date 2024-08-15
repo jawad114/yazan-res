@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 
 const fields = [
-  { name: "firstname", label: "First Name", type: "text" },
-  { name: "lastname", label: "Last Name", type: "text" },
-  { name: "password", label: "Password", type: "password" },
-  { name: "email", label: "Email Address", type: "email" },
+  { name: "firstname", label: "الاسم", type: "text" },
+  { name: "lastname", label: "اسم العائلة", type: "text" },
+  { name: "password", label: "انشاء كلمة مرور", type: "password" },
+  { name: "email", label: "البريد الإلكتروني: يرجى إدخال عنوان بريد إلكتروني صحيح", type: "email" },
 ];
 
 const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
@@ -21,7 +21,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
         />
       ))}
       <button type="submit" className="myButtonReg">
-        Sign Up
+      اضعط للتسجيل
       </button>
     </form>
   );

@@ -64,21 +64,28 @@ const ContactForm = () => {
       value={form.user_email}
       onChange={handleChange}
         type="email"
-        placeholder="Your email"
+        placeholder="البريد الإلكتروني"
         className="input-fieldCo"
       />
       <input
        name="message" 
         value={form.message}
       onChange={handleChange}
-        placeholder="Your Message"
+        placeholder="اترك رسالة مع شرح واضح"
         className="textarea-fieldCo  p-5"
       />
-      <Button className="btn-global text-light w-100" type="submit">Send</Button>
+      <Button className="btn-global text-light w-100" type="submit">ارسل</Button>
     </form>
     <CustomModal handleClose={handleCloseContact} open={openContact} body={
           <div >
-        <Typography className='text-center fs-4'>We have receiver your message!</Typography>  
+        <Typography className='text-center fs-4'>! لقد استلمنا رسالتك
+          
+
+
+        "احصل على ردود أذكى، قم بتحميل الملفات والصور، وأكثر."
+
+
+               اشترك    </Typography>  
           <Button onClick={()=>{window.location.replace('/')}} className='btn-global fs-5 w-100 mt-5 text-light'>Continue Shopping </Button>
           </div>
           }/>      

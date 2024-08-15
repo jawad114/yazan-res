@@ -218,15 +218,15 @@ const Status = ({ status }) => {
   switch (status) {
     case 'open':
       backgroundColor = 'green';
-      statusText = 'Open';
+      statusText = 'مفتوح';
       break;
     case 'busy':
       backgroundColor = 'orange';
-      statusText = 'Busy';
+      statusText = 'مشغول';
       break;
     case 'closed':
       backgroundColor = 'red';
-      statusText = 'Closed';
+      statusText = 'مغلق';
       break;
     default:
       backgroundColor = 'gray';
@@ -372,24 +372,24 @@ export default function Card({ product }) {
           </div>
           <Status status={status} />
           <div className="flex flex-wrap items-center justify-center">
-            <button className="btn mt-2" onClick={handleShowCategories}>Show Categories</button>
+            <button className="btn mt-2" onClick={handleShowCategories}>عرض الفئات</button>
             {isAdmin && (
               <>
-                <button className="btn mt-2" onClick={handleEdit}>Edit</button>
-                <button className="btn mt-2" onClick={handleDelete}>Delete</button>
-                <button className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
-                <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>Busy</button>
-                <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>Closed</button>
-                <button className="btn mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
+                <button className="btn mt-2" onClick={handleEdit}>تعديل</button>
+                <button className="btn mt-2" onClick={handleDelete}>حذف</button>
+                <button className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>مفتوح</button>
+                <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>مشغول</button>
+                <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>مغلق</button>
+                <button className="btn mt-2" onClick={handleUpdateHours}>تحديث ساعات العمل</button>
               </>
             )}
             {isOwner && (
               <>
-                <button className="btn mt-2" onClick={handleEdit}>Edit</button>
-                <button className="mt-2  bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>Open</button>
-                <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>Busy</button>
-                <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>Closed</button>
-                <button className="btn mt-2" onClick={handleUpdateHours}>Update Opening Hours</button>
+                <button className="btn mt-2" onClick={handleEdit}>تعديل</button>
+                <button className="mt-2  bg-green-500 hover:bg-green-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('open')}>مفتوح</button>
+                <button className="mt-2 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('busy')}>مشغول</button>
+                <button className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 w-full rounded" onClick={() => handleStatus('closed')}>مغلق</button>
+                <button className="btn mt-2" onClick={handleUpdateHours}>تحديث ساعات العمل</button>
               </>
             )}
           </div>
