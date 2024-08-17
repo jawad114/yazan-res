@@ -216,7 +216,9 @@ const [openDialog, setOpenDialog] = useState(false);
         orderFrom: resName,
         coordinates
       });
-      toast.success('Item added successfully');
+      toast.success('Item added successfully', {
+        duration: 2000, 
+      });
       handleCloseModal();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
