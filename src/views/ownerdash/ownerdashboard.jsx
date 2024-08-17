@@ -487,9 +487,14 @@ useEffect(() => {
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
-                                                            {order.orderLocation?.coordinates && (
+                                                            {order.orderLocation?.formatted_address && (
                                                               <Typography variant="body2">
-                                                            {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]} :العنوان<br />
+                                                            {order.orderLocation.formatted_address} :العنوان<br />
+                                                            </Typography>
+                                                            )}
+                                                             {order.shippingInfo?.address && (
+                                                              <Typography variant="body2">
+                                                            {order.shippingInfo.address} :العنوان التفصيلي<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
@@ -564,9 +569,14 @@ useEffect(() => {
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
-                                                            {order.orderLocation?.coordinates && (
+                                                            {order.orderLocation?.formatted_address && (
                                                               <Typography variant="body2">
-                                                            {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]} :العنوان<br />
+                                                            {order.orderLocation.formatted_address} :العنوان<br />
+                                                            </Typography>
+                                                            )}
+                                                             {order.shippingInfo?.address && (
+                                                              <Typography variant="body2">
+                                                            {order.shippingInfo.address} :العنوان التفصيلي<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (

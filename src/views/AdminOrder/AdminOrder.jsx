@@ -441,9 +441,14 @@ export default function AdminOrder() {
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
-                                                            {order.orderLocation?.coordinates && (
+                                                            {order.orderLocation?.formatted_address && (
                                                               <Typography variant="body2">
-                                                            Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
+                                                            Address: {order.orderLocation.formatted_address}<br />
+                                                            </Typography>
+                                                            )}
+                                                              {order.shippingInfo?.address && (
+                                                              <Typography variant="body2">
+                                                            Detailed Address: {order.shippingInfo.address}<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
@@ -522,11 +527,16 @@ export default function AdminOrder() {
                                                         )}
                                                     {order.shippingOption === 'delivery' && (
                                                      <>
-                                            {order.orderLocation?.coordinates && (
-                                            <Typography variant="body2">
-                                             Address: {order.orderLocation.coordinates[0] + ', ' + order.orderLocation.coordinates[1]}<br />
-                                               </Typography>
-                                                         )}
+                                            {order.orderLocation?.formatted_address && (
+                                                              <Typography variant="body2">
+                                                            Address: {order.orderLocation.formatted_address}<br />
+                                                            </Typography>
+                                                            )}
+                                                              {order.shippingInfo?.address && (
+                                                              <Typography variant="body2">
+                                                            Detailed Address: {order.shippingInfo.address}<br />
+                                                            </Typography>
+                                                            )}
                                              {order.shippingInfo?.note && (
                                              <Typography variant="body2">
                                                 Note: {order.shippingInfo.note}<br />

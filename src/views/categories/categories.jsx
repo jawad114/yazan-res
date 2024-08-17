@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
 import { Avatar } from "@material-tailwind/react";
-import { ClockIcon, PhoneIcon } from '@heroicons/react/20/solid';
-import { Phone } from '@mui/icons-material';
+import { ClockIcon} from '@heroicons/react/20/solid';
+import OldPhoneIcon from '../../assets/landline.png';
 
 
 export default function Categories() {
@@ -253,14 +253,20 @@ export default function Categories() {
       </Typography>
     </Box>
 )} */}
-   {restaurantContact && (
- <div className='relative flex justify-start items-center w-full  px-4 p-4' >
-    <a href={`tel:${restaurantContact}`} className="text-blue-500 hover:cursor-pointer">
- <PhoneIcon width={30} color="blue"/>
- </a>
-</div>
-)}
-            <h1 className='my-5'>{resName} :الفئات الخاصة في</h1>
+{restaurantContact && (
+        <div className="relative flex items-center justify-start w-full px-4 py-2 ">
+          <a 
+            href={`tel:${restaurantContact}`} 
+            className="flex items-center space-x-3 hover:bg-blue-100 p-2 rounded-lg transition-colors duration-300"
+          >
+            <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+            <img src={OldPhoneIcon} width={30}/>
+            </div>
+            <span className="text-blue-600 text-lg font-semibold">{restaurantContact}</span>
+          </a>
+        </div>
+      )}
+            <h1 className='py-4'>{resName} :الفئات الخاصة في</h1>
             <div>
               {categories.length === 0 ? (
                 <p className='font-bold'>الفئة غير موجودة</p>

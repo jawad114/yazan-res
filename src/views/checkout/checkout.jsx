@@ -1,24 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { TextField, Modal, Button, Grid, Typography, TextareaAutosize } from '@mui/material';
-import axios from 'axios';
-import CustomModal from '../modal/modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMotorcycle, faPersonWalking } from '@fortawesome/free-solid-svg-icons'; // Import FontAwesome icons
 import MapModal from './Map/MapModal';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {  toast } from "react-toastify";
-import { Textarea } from '@material-tailwind/react';
 
-
-
-const mapContainerStyle = {
-  width: '100%',
-  height: '40vh',
-};
-
-const center = {
-  lat: 31.7683,
-  lng: 35.2137,
-};
 
 const RestaurantLocationModal = ({ open, onClose, location }) => {
   const mapRef = useRef(null);
@@ -96,7 +84,7 @@ const Checkout = () => {
   const [resName, setResName] = useState('');
   const customerId = localStorage.getItem('id');
   const [shippingOption, setShippingOption] = useState('');
-  const [location, setLocation] = useState({ lat: 31.7683, lng: 35.2137 });
+  const [location, setLocation] = useState({ lat: 0, lng: 0,address:''});
   const token = localStorage.getItem('token');
   const [selectedOption, setSelectedOption] = useState('');
   const [showMap, setShowMap] = useState(false);
@@ -110,7 +98,8 @@ const Checkout = () => {
     email: '',
     phoneNumber1: '',
     phoneNumber2: '',
-    note:''
+    note:'',
+    address:''
   });
 console.log('Cart Data received',cartReceived);
 
@@ -155,6 +144,40 @@ useEffect(() => {
 
 
 
+useEffect(() => {
+  const fetchOrders = async () => {
+    try {
+      const response = await AxiosRequest.get(`/order/delivery/${customerId}`);
+      const { order } = response.data;
+      console.log('Order', order);
+        const { orderLocation,shippingInfo } = order;
+        console.log('Order Location', orderLocation);
+        if (orderLocation && orderLocation.coordinates && orderLocation.formatted_address) {
+          // Set location with latitude, longitude, and address
+          setShippingInfo({
+            name: shippingInfo.name || '',
+            email: shippingInfo.email || '',
+            phoneNumber1: shippingInfo.phoneNumber1 || '',
+            phoneNumber2: shippingInfo.phoneNumber2 || '',
+            note: shippingInfo.note || '',
+            address:shippingInfo.address || '',
+          })
+          setLocation({
+            lat: orderLocation.coordinates[1], 
+            lng: orderLocation.coordinates[0],
+            address: orderLocation.formatted_address
+          });
+        }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  fetchOrders();
+}, [customerId]);
+
+
+
   // useEffect(() => {
   //   const fetchDishDetails = async () => {
   //     if (cart) {
@@ -188,6 +211,10 @@ useEffect(() => {
   //   });
 
   // };
+
+
+
+  
 
   const handleCreateOrderButtonClick = async () => {
     if (selectedOption === 'delivery') {
@@ -352,41 +379,44 @@ if (Array.isArray(details) && details.length > 0) {
   }
   else {
     return (
-      <>
-        <h1>معلومات التوصيل</h1><Grid sx={{ p: 6 }} container spacing={2}>
+      <div className='bg-white'>
+        <h1 className='text-center mt-4'>معلومات التوصيل</h1>
+        <Grid sx={{ p: 6 }} container spacing={2}>
           <Grid item xs={12}>
-            <div className='flex flex-col items-center justify-center mb-4'>
+            <div className='flex flex-col items-center justify-center text-center mb-4'>
               <Grid item xs={12}>
-                <Button
-                  onClick={() => {
-                    setShippingOption('delivery')
-                    setSelectedOption('delivery')
-                  }}
-                  sx={{
-                    backgroundColor: selectedOption === 'delivery' ? '#4caf50' : 'transparent',
-                    color: selectedOption === 'delivery' ? '#fff' : '#000',
-                    '&:hover': {
-                      backgroundColor: selectedOption === 'delivery' ? '#4caf50' : '#f1f1f1',
-                    },
-                  }}
-                >
-                  توصيل
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShippingOption('self-pickup')
-                    setSelectedOption('self-pickup')
-                  }}
-                  sx={{
-                    backgroundColor: selectedOption === 'self-pickup' ? '#4caf50' : 'transparent',
-                    color: selectedOption === 'self-pickup' ? '#fff' : '#000',
-                    '&:hover': {
-                      backgroundColor: selectedOption === 'self-pickup' ? '#4caf50' : '#f1f1f1',
-                    },
-                  }}
-                >
-                  استلام ذاتي
-                </Button>
+              <Button
+              onClick={() => {
+                setShippingOption('delivery');
+                setSelectedOption('delivery');
+              }}
+              sx={{
+                backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : 'transparent',
+                color: selectedOption === 'delivery' ? '#fff' : '#000',
+                '&:hover': {
+                  backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : '#f1f1f1',
+                },
+              }}
+              startIcon={<FontAwesomeIcon icon={faMotorcycle} />} // Motorcycle icon for delivery
+            >
+              توصيل
+            </Button>
+            <Button
+              onClick={() => {
+                setShippingOption('self-pickup');
+                setSelectedOption('self-pickup');
+              }}
+              sx={{
+                backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : 'transparent',
+                color: selectedOption === 'self-pickup' ? '#fff' : '#000',
+                '&:hover': {
+                  backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : '#f1f1f1',
+                },
+              }}
+              startIcon={<FontAwesomeIcon icon={faPersonWalking} />} // Motorcycle icon for delivery
+            >
+              استلام ذاتي
+            </Button>
                 {/* <Button
                   onClick={() => {
                     setShippingOption('dine-in')
@@ -517,6 +547,25 @@ if (Array.isArray(details) && details.length > 0) {
           )}
 
 {selectedOption === 'delivery' && (
+  <>
+            <Grid item xs={12}>
+            <TextField
+  label="يرجى إدخال عنوانك الكامل"
+  type="text"
+  variant="outlined"
+  value={shippingInfo.address}
+  onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
+  fullWidth
+  multiline
+  rows={6}
+  sx={{
+    '& .MuiOutlinedInput-input:focus': {
+      outline: 'none', // Removes the focus ring
+      boxShadow: 'none',
+    },
+  }}
+/>
+          </Grid>
           <Grid item xs={12}>
             <TextField
   label="طلبات خاصة"
@@ -535,6 +584,7 @@ if (Array.isArray(details) && details.length > 0) {
   }}
 />
           </Grid>
+            </>
         )}
 {/* {selectedOption === 'dine-in' && (
           <Grid item xs={12}>
@@ -570,7 +620,7 @@ if (Array.isArray(details) && details.length > 0) {
             </div>} /> */}
           </Grid>
         </Grid>
-        </>
+        </div>
     );
   }
 };
