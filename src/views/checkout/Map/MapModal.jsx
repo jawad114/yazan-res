@@ -254,59 +254,25 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
   }, [selectedLocation]);
 
 
-  // const checkLocationPermission = async () => {
-  //   try {
-  //     const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
-  //     if (permissionStatus.state === 'denied' || permissionStatus.state === 'prompt') {
-  //       return false;
-  //     }
-  //     return true;
-  //   } catch (error) {
-  //     console.error('Error checking location permissions:', error);
-  //     return false;
-  //   }
-  // };
-
   const checkLocationPermission = async () => {
     try {
-      // Check the permission status using the Permissions API
       const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
-  
-      if (permissionStatus.state === 'granted') {
-        // Permission is granted, now attempt to access the location
-        return new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            () => resolve(true), // Location retrieved successfully
-            (error) => {
-              if (error.code === error.POSITION_UNAVAILABLE) {
-                // Location services might be turned off
-                resolve(false);
-              } else {
-                reject(error); // Some other error occurred
-              }
-            }
-          );
-        });
-      } else if (permissionStatus.state === 'denied' || permissionStatus.state === 'prompt') {
-        // Permission is denied or prompt, so location services are not accessible
-        return false;
-      } else {
-        // Default to false if the permission state is unknown
+      if (permissionStatus.state === 'denied' || permissionStatus.state === 'prompt') {
         return false;
       }
+      return true;
     } catch (error) {
-      console.error('Error checking location permissions or services:', error);
+      console.error('Error checking location permissions:', error);
       return false;
     }
   };
-  
 
   const handleUseMyLocation =async () => {
     if (navigator.geolocation) {
       const isLocationEnabled = await checkLocationPermission();
 
       if (!isLocationEnabled) {
-        toast.info('Please allow or turn on your location services to use this feature.');
+        toast.info('Please turn on your location services to use this feature.');
         return;
       }
   

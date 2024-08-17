@@ -84,7 +84,7 @@ const Checkout = () => {
   const [resName, setResName] = useState('');
   const customerId = localStorage.getItem('id');
   const [shippingOption, setShippingOption] = useState('');
-  const [location, setLocation] = useState({ lat: 0, lng: 0,address:''});
+  const [location, setLocation] = useState({ lat: 31.7683, lng: 35.2137,address:''});
   const token = localStorage.getItem('token');
   const [selectedOption, setSelectedOption] = useState('');
   const [showMap, setShowMap] = useState(false);
