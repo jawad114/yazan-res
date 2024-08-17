@@ -262,7 +262,6 @@ export default function Categories() {
             <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
             <img src={OldPhoneIcon} width={30}/>
             </div>
-            <span className="text-blue-600 text-lg font-semibold">{restaurantContact}</span>
           </a>
         </div>
       )}

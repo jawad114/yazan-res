@@ -175,6 +175,7 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
   const [selectedLocation, setSelectedLocation] = useState(location);
   const [address, setAddress] = useState(location.address);
   const [autocompleteOptions, setAutocompleteOptions] = useState([]);
+  const [show,setShow] = useState(false);
   const mapRef = useRef(null);
   const autoCompleteRef = useRef(null);
 
@@ -254,26 +255,12 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
   }, [selectedLocation]);
 
 
-  const checkLocationPermission = async () => {
-    try {
-      const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
-      if (permissionStatus.state === 'denied' || permissionStatus.state === 'prompt') {
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error('Error checking location permissions:', error);
-      return false;
-    }
-  };
 
   const handleUseMyLocation =async () => {
     if (navigator.geolocation) {
-      const isLocationEnabled = await checkLocationPermission();
-
-      if (!isLocationEnabled) {
-        toast.info('Please turn on your location services to use this feature.');
-        return;
+      if(!show){
+      toast.info('الرجاء التاكد من ان خدمات الموقع  لوكيشين مفعلة لديك');
+      setShow(true);
       }
   
       navigator.geolocation.getCurrentPosition(
@@ -358,9 +345,9 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
 
         <div className="flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between mt-4">
           <Button variant="contained" startIcon={<MyLocationIcon />} onClick={handleUseMyLocation}>
-            Use My Location
+          استخدم موقعي الحالي
           </Button>
-          <Button variant="contained" onClick={handleConfirmLocation}>Confirm Location</Button>
+          <Button variant="contained" onClick={handleConfirmLocation}>الموافقة على موقعي</Button>
         </div>
         <div className="mt-4">
           <p className="text-gray-500 text-sm">Drag the marker to select a more accurate location.</p>
