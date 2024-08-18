@@ -17,16 +17,19 @@ const ContactUs = () => {
           <h3 className="titleCo">تواصل معنا</h3>
           <div className="grid-containerCo">
             <div className="paperCo">
-              <h5 className="paper-titleCo">معلومات الاتصال</h5>
-              <p className="paper-textCo">
+              <h5 className="paper-titleCo text-end">معلومات الاتصال</h5>
+              <p className="paper-textCo text-end">
               يرجى ملء الحقول التالية وإرسال رسالتك إلينا
               </p>
               <ContactForm />
 
               <Typography
                 onClick={() => setOpen(true)}
-                className="text-btn my-4"
-                style={{ cursor: 'pointer' }}
+                className="text-btn  my-4 hover:cursor-pointer"
+                style={{
+                  textAlign: 'start', // محاذاة النص إلى المركز
+                  direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                }}
               >
                 اطلع على سياسة الخصوصية لدينا
               </Typography>

@@ -40,14 +40,14 @@ export default function OwnerDashboard() {
     const open = Boolean(anchorEl);
 
 
-    // const [totalOrders, setTotalOrders] = useState({
-    //     'All orders': 0,
-    //     'New orders': 0,
-    //     'Delivered': 0,
-    //     'Preparing': 0,
-    //     'Declined': 0,
-    //     'Completed': 0,
-    // });
+    const [totalOrders, setTotalOrders] = useState({
+        'All orders': 0,
+        'New orders': 0,
+        'Delivered': 0,
+        'Preparing': 0,
+        'Declined': 0,
+        'Completed': 0,
+    });
 
     const handleStatusFilterChange = (filter) => {
         setStatusFilter(filter);
@@ -111,39 +111,86 @@ export default function OwnerDashboard() {
       }, [resName]);
 
 
+// useEffect(() => {
+//     let filtered = orders;
+
+//     // Filter orders based on statusFilter
+//     filtered = filtered.filter(order => {
+//         // Handle empty status or invalid status values
+//         const status = order.status || '';
+
+//         switch(statusFilter) {
+//             case 'All orders':
+//                 return ['No Status Yet', 'Approved', 'Not Approved', 'Preparing', 'Completed', 'Delivered'].includes(status) || status === '';
+//             case 'New orders':
+//                 return (['Approved', 'Preparing', ''].includes(status)) && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000);
+//             case 'Delivered':
+//                 return status === 'Delivered';
+//             case 'Preparing':
+//                 return status === 'Preparing';
+//             case 'Declined':
+//                 return status === 'Not Approved';
+//             case 'Completed':
+//                 return status === 'Completed';
+//             default:
+//                 return true; // Show all orders if no filter is applied
+//         }
+//     });
+
+//     // Filter orders based on search term (order ID)
+//     filtered = filtered.filter(order => order.orderId.toLowerCase().includes(searchTerm.toLowerCase()));
+
+//     // Sort orders by orderTime in descending order
+//     filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+
+//     setFilteredOrders(filtered);
+// }, [searchTerm, orders, statusFilter]);
+
+
 useEffect(() => {
     let filtered = orders;
 
-    // Filter orders based on statusFilter
-    filtered = filtered.filter(order => {
-        // Handle empty status or invalid status values
-        const status = order.status || '';
+    // Filter orders based on statusFilter and calculate counts for each filter
+    const allOrders = filtered.filter(order => order.status === '' || order.status === 'No Status Yet' || order.status === 'Approved' || order.status === 'Not Approved' || order.status === 'Preparing' || order.status === 'Completed' || order.status === 'Delivered');
+    const newOrders = filtered.filter(order => (order.status === 'Approved' || order.status === 'Preparing' || order.status === '') && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000));
+    const deliveredOrders = filtered.filter(order => order.status === 'Delivered' && order.status !== 'Not Approved');
+    const preparingOrders = filtered.filter(order => order.status === 'Preparing');
+    const declinedOrders = filtered.filter(order => order.status === 'Not Approved');
+    const completedOrders = filtered.filter(order => order.status === 'Completed');
 
-        switch(statusFilter) {
-            case 'All orders':
-                return ['No Status Yet', 'Approved', 'Not Approved', 'Preparing', 'Completed', 'Delivered'].includes(status) || status === '';
-            case 'New orders':
-                return (['Approved', 'Preparing', ''].includes(status)) && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000);
-            case 'Delivered':
-                return status === 'Delivered';
-            case 'Preparing':
-                return status === 'Preparing';
-            case 'Declined':
-                return status === 'Not Approved';
-            case 'Completed':
-                return status === 'Completed';
-            default:
-                return true; // Show all orders if no filter is applied
-        }
+    setTotalOrders({
+        'All orders': allOrders.length,
+        'New orders': newOrders.length,
+        'Delivered': deliveredOrders.length,
+        'Preparing': preparingOrders.length,
+        'Declined': declinedOrders.length,
+        'Completed': completedOrders.length,
     });
 
-    // Filter orders based on search term (order ID)
-    filtered = filtered.filter(order => order.orderId.toLowerCase().includes(searchTerm.toLowerCase()));
+    // Apply the filter based on statusFilter
+    if (statusFilter === 'All orders') {
+        filtered = allOrders;
+    } else if (statusFilter === 'New orders') {
+        filtered = newOrders;
+    } else if (statusFilter === 'Delivered') {
+        filtered = deliveredOrders;
+    } else if (statusFilter === 'Preparing') {
+        filtered = preparingOrders;
+    } else if (statusFilter === 'Declined') {
+        filtered = declinedOrders;
+    } else if (statusFilter === 'Completed') {
+        filtered = completedOrders;
+    }
 
-    // Sort orders by orderTime in descending order
+    // Filter orders based on search term (order ID)
+    filtered = filtered.filter(order => order.orderId.includes(searchTerm.toLowerCase()));
+
+    // Sort orders by order time in descending order
     filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
 
+    // Set the filtered orders
     setFilteredOrders(filtered);
+
 }, [searchTerm, orders, statusFilter]);
 
 
@@ -414,6 +461,11 @@ useEffect(() => {
                         </Grid>
                     </Grid>
 
+                    <div className='mb-2'>
+                <Typography variant="h6" align="center">
+                    Total {statusFilter.split(' ')[0]} Orders: {totalOrders[statusFilter]}
+                </Typography>
+            </div>
                     <Grid container justifyContent="center" className='mb-4'>
         <Button
           variant="contained"
@@ -427,12 +479,12 @@ useEffect(() => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>جميع الطلبات</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>طلبات جديدة</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>طلبات قيد الحضير</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>({totalOrders['All orders']}) جميع الطلبات</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>({totalOrders['New orders']}) طلبات جديدة</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>({totalOrders['Preparing']}) طلبات قيد الحضير</MenuItem>
           {/* <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem> */}
-          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>طلبات جاهزة</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>طلبات مرفوضة</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>({totalOrders['Completed']}) طلبات جاهزة</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>({totalOrders['Declined']}) طلبات مرفوضة</MenuItem>
         </Menu>
       </Grid>
                     <Typography variant="h6" align="center">
@@ -516,7 +568,7 @@ useEffect(() => {
                                                 </div>
                                             )}
                                             <div className="flex flex-col gap-2">
-                                                <Typography variant="body2" className="font-bold">Products:</Typography>
+                                                <Typography variant="body2" className="font-bold">:المنتجات</Typography>
                                                 {order.products.map(product => (
                                                     <div key={product._id} className="p-4 bg-gray-100 rounded-lg">
                                                         <Typography variant="body2">

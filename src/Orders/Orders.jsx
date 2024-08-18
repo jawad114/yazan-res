@@ -208,6 +208,10 @@ const openWaze = (latitude, longitude) => {
       <TextField
         placeholder="البحث حسب رقم الطلب أو اسم المتجر"
         variant="outlined"
+        style={{
+          textAlign: 'center', // محاذاة النص إلى المركز
+          direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+        }}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="mb-4 w-[80vw]"
@@ -255,8 +259,8 @@ const openWaze = (latitude, longitude) => {
             </IconButton>
           </DialogTitle>
           <DialogContent dividers>
-            <Typography variant="body1">{selectedOrder.orderId}:رقم الطلب</Typography>
-            <Typography variant="body1">{selectedOrder.shippingInfo.name}:  اسم العميل</Typography>
+            <Typography variant="body1" className='text-end'>{selectedOrder.orderId}:رقم الطلب</Typography>
+            <Typography variant="body1" className='text-end'>{selectedOrder.shippingInfo.name}:  اسم العميل</Typography>
             {selectedOrder.shippingOption === 'self-pickup' && (
         <Box mb={2}>
           <Typography variant="body1" className='text-center' gutterBottom>
@@ -287,12 +291,12 @@ const openWaze = (latitude, longitude) => {
       )}
       {selectedOrder.shippingOption !== 'dine-in' && (
         <>
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" className='text-end' gutterBottom>
         {selectedOrder.shippingInfo.phoneNumber1}: رقم الهاتف<br />
         </Typography>
-        <Typography variant="body1">{selectedOrder.shippingInfo.email}: البريد الإلكتروني</Typography>
+        <Typography variant="body1" className='text-end'>{selectedOrder.shippingInfo.email}: البريد الإلكتروني</Typography>
 {selectedOrder.shippingInfo.phoneNumber2 &&(
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" className='text-end' gutterBottom>
       {selectedOrder.shippingInfo.phoneNumber2}: رقم الهاتف 2<br />
       </Typography>  
 )}
@@ -302,33 +306,33 @@ const openWaze = (latitude, longitude) => {
       {selectedOrder.shippingOption === 'delivery' && (
         <>
         {selectedOrder.shippingInfo?.note &&(
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" className='text-end' gutterBottom>
             {selectedOrder.shippingInfo.note}: طلبات خاصة
           </Typography>
         )}
         </>
       )}
 
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" className='text-end' gutterBottom>
        {selectedOrder.shippingOption}: طريقة استلام الطلب
       </Typography>
       {selectedOrder.shippingOption === 'dine-in' && (
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body1" className='text-end' gutterBottom>
           {selectedOrder.tableNumber}: رقم الطلولة
         </Typography>
       )}
-            <Typography variant="body1">{formatDate(selectedOrder.orderTime)}: تم الطلب في</Typography>
+            <Typography variant="body1" className='text-end'>{formatDate(selectedOrder.orderTime)}: تم الطلب في</Typography>
             {selectedOrder.products.map((product) => (
-              <div key={product._id} className='mt-[4vh]'>
+              <div key={product._id} className='mt-[4vh] text-end'>
                 <Typography variant="body1">{product.orderFrom}: اسم المتجر</Typography>
-                <Typography component="span" variant="body2">{product.name}: المنتج</Typography><br />
-                <Typography component="span" variant="body2">{product.quantity}: العدد</Typography><br />
-                <Typography component="span" variant="body2">₪{product.price}: السعر</Typography><br />
+                <Typography component="span" variant="body2" >{product.name}: المنتج</Typography><br />
+                <Typography component="span" variant="body2" >{product.quantity}: العدد</Typography><br />
+                <Typography component="span" variant="body2" >₪{product.price}: السعر</Typography><br />
                 {/* <Typography component="span" variant="body2">Extras: {product.extras ? product.extras.map(extra => extra.name).join(', ') : 'None'}</Typography><br />
                 <Typography component="span" variant="body2">Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}</Typography><br /> */}
                 {product.extras && product.extras.length > 0 ? (
   <>
-    <Typography component="span" variant="body2">
+    <Typography component="span" variant="body2" >
       {product.extras.map(extra => extra.name).join(', ')}: اضافات
     </Typography><br />
 
@@ -338,23 +342,23 @@ const openWaze = (latitude, longitude) => {
   </>
 ):(
   <>
-  <Typography component="span" variant="body2">
+  <Typography component="span" variant="body2" className='text-end'>
   لايوجد اضافات
 </Typography><br />
 </>
 )}
                                      <div className="status-info mt-[2vh] mb-[2vh]">
-                          <Typography variant="body1">حالة الطلب</Typography>
+                          <Typography variant="body1" className='text-end'>حالة الطلب</Typography>
                           {selectedOrder.status === 'Approved' && (
-                            <Paper elevation={3} className="status-card accepted" style={{ backgroundColor: 'green', textAlign: 'center' }}>
-                              <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
+                            <Paper elevation={3} className="status-card accepted" style={{ backgroundColor: 'green', textAlign: 'end' }}>
+                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
                               تم قبول الطلب
                               </Typography><br />
                             </Paper>
                           )}
                           {selectedOrder.status === 'Completed' && (
-                            <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'center' }}>
-                              <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
+                            <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'end' }}>
+                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
                               الطلب جاهز
                               </Typography><br />
                             </Paper>
@@ -362,33 +366,33 @@ const openWaze = (latitude, longitude) => {
 
 
                           {selectedOrder.status === 'Delivered' && (
-                            <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'center' }}>
-                              <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
+                            <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'end' }}>
+                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
                               تم الارسال
                               </Typography><br />
                             </Paper>
                           )}
 
                           {selectedOrder.status === 'Not Approved' && (
-                            <Paper elevation={3} className="status-card declined" style={{ backgroundColor: 'red', textAlign: 'center' }}>
-                              <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
+                            <Paper elevation={3} className="status-card declined" style={{ backgroundColor: 'red', textAlign: 'end' }}>
+                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
                               طلب مرفوض
                               </Typography><br />
                             </Paper>
                           )}
 
                           {selectedOrder.status === 'Preparing' && selectedOrder.preparingStartedAt && (
-                            <Paper elevation={3} className="status-card preparing" style={{ backgroundColor: 'yellow', textAlign: 'center' }}>
-                              <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
+                            <Paper elevation={3} className="status-card preparing" style={{ backgroundColor: 'yellow', textAlign: 'end' }}>
+                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
                               طلب قيد التجهيز
                               </Typography><br />
-                              <Typography component="span" variant="body2">Preparing Time Left:{calculateRemainingPreparingTime(selectedOrder)} minutes</Typography>
+                              <Typography component="span" variant="body2" className='text-end'>Preparing Time Left:{calculateRemainingPreparingTime(selectedOrder)} minutes</Typography>
                             </Paper>
                           )}
 
                           {!selectedOrder.status && (
-                            <Paper elevation={3} className="status-card no-status">
-                              <Typography component="span" variant="body2">
+                            <Paper elevation={3} className="status-card no-status text-end">
+                              <Typography component="span" variant="body2" className='text-end'>
                               الطلب قيد الانتظار
                               </Typography><br />
                             </Paper>

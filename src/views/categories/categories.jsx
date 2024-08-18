@@ -265,14 +265,26 @@ export default function Categories() {
           </a>
         </div>
       )}
+
             <h1 className='py-4'>{resName} :الفئات الخاصة في</h1>
+            { isAdmin && (
+            <div className='flex  items-center mt-[2vh] mb-[4vh] justify-center'>
+             <Button
+                        variant='contained'
+                        className={styles.btn}
+                       onClick={() => { navigate(`/all-orders`, { state: { resName } })}}                     
+                        >
+                       الطلبات 
+                      </Button>
+                      </div>
+)}
             <div>
               {categories.length === 0 ? (
                 <p className='font-bold'>الفئة غير موجودة</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[4vh]">
                   {categories.map((category, index) => (
-                    <div className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white' key={index}>
+                    <div onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }} className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white hover:cursor-pointer' key={index}>
                       <img
                         src={category.categoryImage}
                         alt={`${category.categoryName}'s Image`}

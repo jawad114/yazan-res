@@ -17,7 +17,7 @@ import {
 import { CheckCircle, Cancel, Delete, LocalShipping, Timelapse } from '@mui/icons-material';
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../Components/AxiosRequest';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
@@ -38,17 +38,17 @@ export default function AdminOrder() {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const locationData = useLocation();
+    const resReceived = locationData.state?.resName;
 
-
-
-    // const [totalOrders, setTotalOrders] = useState({
-    //     'All orders': 0,
-    //     'New orders': 0,
-    //     'Delivered': 0,
-    //     'Preparing': 0,
-    //     'Declined': 0,
-    //     'Completed': 0,
-    // });
+    const [totalOrders, setTotalOrders] = useState({
+        'All orders': 0,
+        'New orders': 0,
+        'Delivered': 0,
+        'Preparing': 0,
+        'Declined': 0,
+        'Completed': 0,
+    });
     const handleStatusFilterChange = (filter) => {
         setStatusFilter(filter);
         setAnchorEl(null); // Close the dropdown after selecting a filter
@@ -71,7 +71,7 @@ export default function AdminOrder() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await AxiosRequest.get(`/orders`);
+                const response = await AxiosRequest.get(`/orders/${resReceived}`);
                 setOrders(response.data.orders);
                 setLoading(false);
             } catch (error) {
@@ -92,41 +92,88 @@ export default function AdminOrder() {
     }, []);
 
 
+    // useEffect(() => {
+    //     let filtered = orders;
+
+    //     // Filter orders based on statusFilter and include orders with no status, Approved status, and Preparing status
+    //     filtered = filtered.filter(order => {
+    //         if (statusFilter === 'All orders') {
+    //             return order.status === '' || order.status === 'No Status Yet' || order.status === 'Approved' || order.status === 'Not Approved' || order.status === 'Preparing' || order.status === 'Completed' || order.status === 'Delivered';
+    //         }
+    //         else if (statusFilter === 'New orders') {
+    //             // Filter orders with status 'Approved', 'Preparing', empty status, or 'no status' within the last hour
+    //             return (order.status === 'Approved' || order.status === 'Preparing' || order.status === '') && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000);
+    //         }
+    //         else if (statusFilter === 'Delivered') {
+    //             return order.status === 'Delivered' && order.status !== 'Not Approved';
+    //         }
+    //         else if (statusFilter === 'Preparing') {
+    //             return order.status === 'Preparing';
+    //         }
+    //         else if (statusFilter === 'Declined') {
+    //             return order.status === 'Not Approved';
+    //         }
+    //         else if (statusFilter === 'Completed') {
+    //             return order.status === 'Completed';
+    //         }
+    //         return true; // Show all orders if no filter is applied
+
+    //     });
+
+    //     // Filter orders based on search term (order ID)
+    //     filtered = filtered.filter(order => order.orderId.includes(searchTerm.toLowerCase()));
+    //     filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+
+
+    //     setFilteredOrders(filtered);
+    // }, [searchTerm, orders, statusFilter]);
+
     useEffect(() => {
         let filtered = orders;
 
-        // Filter orders based on statusFilter and include orders with no status, Approved status, and Preparing status
-        filtered = filtered.filter(order => {
-            if (statusFilter === 'All orders') {
-                return order.status === '' || order.status === 'No Status Yet' || order.status === 'Approved' || order.status === 'Not Approved' || order.status === 'Preparing' || order.status === 'Completed' || order.status === 'Delivered';
-            }
-            else if (statusFilter === 'New orders') {
-                // Filter orders with status 'Approved', 'Preparing', empty status, or 'no status' within the last hour
-                return (order.status === 'Approved' || order.status === 'Preparing' || order.status === '') && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000);
-            }
-            else if (statusFilter === 'Delivered') {
-                return order.status === 'Delivered' && order.status !== 'Not Approved';
-            }
-            else if (statusFilter === 'Preparing') {
-                return order.status === 'Preparing';
-            }
-            else if (statusFilter === 'Declined') {
-                return order.status === 'Not Approved';
-            }
-            else if (statusFilter === 'Completed') {
-                return order.status === 'Completed';
-            }
-            return true; // Show all orders if no filter is applied
+        // Filter orders based on statusFilter and calculate counts for each filter
+        const allOrders = filtered.filter(order => order.status === '' || order.status === 'No Status Yet' || order.status === 'Approved' || order.status === 'Not Approved' || order.status === 'Preparing' || order.status === 'Completed' || order.status === 'Delivered');
+        const newOrders = filtered.filter(order => (order.status === 'Approved' || order.status === 'Preparing' || order.status === '') && new Date(order.orderTime) > new Date(Date.now() - 60 * 60 * 1000));
+        const deliveredOrders = filtered.filter(order => order.status === 'Delivered' && order.status !== 'Not Approved');
+        const preparingOrders = filtered.filter(order => order.status === 'Preparing');
+        const declinedOrders = filtered.filter(order => order.status === 'Not Approved');
+        const completedOrders = filtered.filter(order => order.status === 'Completed');
 
+        setTotalOrders({
+            'All orders': allOrders.length,
+            'New orders': newOrders.length,
+            'Delivered': deliveredOrders.length,
+            'Preparing': preparingOrders.length,
+            'Declined': declinedOrders.length,
+            'Completed': completedOrders.length,
         });
+
+        // Apply the filter based on statusFilter
+        if (statusFilter === 'All orders') {
+            filtered = allOrders;
+        } else if (statusFilter === 'New orders') {
+            filtered = newOrders;
+        } else if (statusFilter === 'Delivered') {
+            filtered = deliveredOrders;
+        } else if (statusFilter === 'Preparing') {
+            filtered = preparingOrders;
+        } else if (statusFilter === 'Declined') {
+            filtered = declinedOrders;
+        } else if (statusFilter === 'Completed') {
+            filtered = completedOrders;
+        }
 
         // Filter orders based on search term (order ID)
         filtered = filtered.filter(order => order.orderId.includes(searchTerm.toLowerCase()));
+
+        // Sort orders by order time in descending order
         filtered = filtered.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
 
-
+        // Set the filtered orders
         setFilteredOrders(filtered);
+
     }, [searchTerm, orders, statusFilter]);
+
 
 
     // const calculateTotalOrders = useMemo(() => {
@@ -292,7 +339,7 @@ export default function AdminOrder() {
     return (
         <Box className='min-w-screen flex flex-col items-center justify-center text-center'>
             <Typography className='mt-4' variant="h4" component="h1" gutterBottom>
-                All Orders
+                Orders of {resReceived}
             </Typography>
             {successMessage && <div className="success-message">{successMessage}</div>}
             <Box className='flex overflow-auto flex-col items-center'>
@@ -372,7 +419,11 @@ export default function AdminOrder() {
                             </Button>
                         </Grid>
                     </Grid> */}
-
+            <div className='mb-2'>
+                <Typography variant="h6" align="center">
+                    Total {statusFilter.split(' ')[0]} Orders: {totalOrders[statusFilter]}
+                </Typography>
+            </div>
 <Grid container justifyContent="center" className='mb-4'>
         <Button
           variant="contained"
@@ -386,12 +437,12 @@ export default function AdminOrder() {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>All Orders</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>New Orders</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>Preparing</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('All orders')}>All Orders ({totalOrders['All orders']})</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('New orders')}>New Orders ({totalOrders['New orders']})</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Preparing')}>Preparing ({totalOrders['Preparing']})</MenuItem>
           {/* <MenuItem onClick={() => handleStatusFilterChange('Delivered')}>Delivered Orders</MenuItem> */}
-          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>Completed Orders</MenuItem>
-          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>Declined Orders</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Completed')}>Completed Orders ({totalOrders['Completed']})</MenuItem>
+          <MenuItem onClick={() => handleStatusFilterChange('Declined')}>Declined Orders ({totalOrders['Declined']})</MenuItem>
         </Menu>
       </Grid>
                     <Typography variant="h6" align="center">

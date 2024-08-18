@@ -66,6 +66,10 @@ const ContactForm = () => {
         type="email"
         placeholder="البريد الإلكتروني"
         className="input-fieldCo"
+        style={{
+          textAlign: 'start', // محاذاة النص إلى المركز
+          direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+        }}
       />
       <input
        name="message" 
@@ -73,6 +77,10 @@ const ContactForm = () => {
       onChange={handleChange}
         placeholder="اترك رسالة مع شرح واضح"
         className="textarea-fieldCo  p-5"
+        style={{
+          textAlign: 'start', // محاذاة النص إلى المركز
+          direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+        }}
       />
       <Button className="btn-global text-light w-100" type="submit">ارسل</Button>
     </form>

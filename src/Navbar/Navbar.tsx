@@ -442,11 +442,11 @@ const showFallbackNotification = () => {
                                 <ListAlt style={{ marginRight: '0.5rem' }}/> الطلبات                            
                                 </Link>
                         )}
-                        {isAdmin && (
+                        {/* {isAdmin && (
                             <Link to={`/all-orders`} className="action-btn">
                                 <ListAlt style={{ marginRight: '0.5rem' }}/> الطلبات
                             </Link>
-                        )}
+                        )} */}
 
                         {isOwner && (
                             <Link to={`/`} className="action-btn">
@@ -591,12 +591,12 @@ const showFallbackNotification = () => {
           )}
                                   {isAdmin && (
                                     <>
-                                    <MenuItem
+                                    {/* <MenuItem
                                     className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
                                     onClick={() => navigate(`/all-orders`)}
                                   >
                                 <ListAlt style={{ marginRight: '0.2rem' }}/> طلبات
-                            </MenuItem>
+                            </MenuItem> */}
                              <MenuItem
                             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
                             onClick={() => navigate(`/admin-dashboard`)}

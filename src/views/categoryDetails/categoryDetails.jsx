@@ -528,20 +528,20 @@ const [openDialog, setOpenDialog] = useState(false);
                   src={selectedProduct.dishImage}
                 />
                 </div>
-                <ListItemText className="mb-[2vh] text-3xl">
+                <ListItemText className="mb-[2vh] text-3xl text-center">
                   {selectedProduct.name}
                 </ListItemText>
-                <ListItemText className="mb-[2vh] text-base">
+                <ListItemText className="mb-[2vh] text-base text-center">
                   {selectedProduct.description}
                 </ListItemText>
-                <Typography className="mb-[2vh] text-base">
+                <Typography className="mb-[2vh] text-base text-center">
                  ₪ {parseFloat(selectedProduct.price?selectedProduct.price:0).toFixed(2)} :السعر
                 </Typography>
 
                 <div >
                 {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
                  <>
-                <Typography variant="h6" className="text-start">:اضافات اجبارية قم باختيار اضافة واحدة فقط</Typography>
+                <Typography variant="body1" className="text-end !font-bold">:اضافات اجبارية قم باختيار اضافة واحدة فقط</Typography>
            {selectedProduct.extras.requiredExtras.map((extra) => (
            <div key={extra._id} className="flex items-center space-x-2">
              <input
@@ -568,7 +568,7 @@ const [openDialog, setOpenDialog] = useState(false);
                   
                   {selectedProduct && selectedProduct.extras && selectedProduct.extras.optionalExtras && selectedProduct.extras.optionalExtras.length > 0 ? (
                             <>
-                            <Typography variant="h6" className="text-start">:اضافات اختيارية يمكن طلب اكثر من اضافة</Typography>
+                            <Typography variant="body1" className="text-end !font-bold">:اضافات اختيارية يمكن طلب اكثر من اضافة</Typography>
   
       {selectedProduct.extras.optionalExtras.map((extra) => (
   <div key={extra._id} className="flex items-center space-x-2">

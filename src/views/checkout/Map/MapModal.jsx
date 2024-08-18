@@ -259,7 +259,7 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
   const handleUseMyLocation =async () => {
     if (navigator.geolocation) {
       if(!show){
-      toast.info('الرجاء التاكد من ان خدمات الموقع  لوكيشين مفعلة لديك');
+      toast.info('في حال عدم ظهور موقعك على الخارطة، يرجى التأكد من تفعيل خدمات الموقع لوكيشين لضمان دقة التحديد');
       setShow(true);
       }
   
@@ -314,7 +314,7 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle className='text-center'>Select Your Location</DialogTitle>
+      <DialogTitle className='text-center'>حدد موقعك على الخارطة</DialogTitle>
       <DialogContent>
         <Combobox onSelect={(value) => console.log(value)}>
           <div className="relative mt-4 w-full mx-auto">
@@ -349,8 +349,8 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
           </Button>
           <Button variant="contained" onClick={handleConfirmLocation}>الموافقة على موقعي</Button>
         </div>
-        <div className="mt-4">
-          <p className="text-gray-500 text-sm">Drag the marker to select a more accurate location.</p>
+        <div className="mt-4 items-center text-end">
+          <p className="text-gray-500 text-sm">بحال عدم تمكن الخارطة من تحديد موقعك قد بسحب العلامة الحمراء ووضعها في موقعك الصحيح او استخدم البحث في الاعلى بكتابة موقعك البلدة والشارع</p>
         </div>
       </DialogContent>
     </Dialog>

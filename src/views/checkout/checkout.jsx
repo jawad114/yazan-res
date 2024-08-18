@@ -217,6 +217,10 @@ useEffect(() => {
   
 
   const handleCreateOrderButtonClick = async () => {
+    if(!selectedOption){
+      toast.error('الرجاء اختيار طريقة الاستلام قبل اكمال الطلب');
+      return;
+     }
     if (selectedOption === 'delivery') {
       setShowMap(true);
     } else if (selectedOption === 'self-pickup' || selectedOption === 'dine-in') {
@@ -301,13 +305,13 @@ useEffect(() => {
       !shippingInfo.name || 
       (shippingOption !== 'dine-in' && (!shippingInfo.email || !shippingInfo.phoneNumber1))
     ) {
-      alert('Please fill all the fields');
+      toast.error('Please fill all the fields');
       setShowRestaurantLocationModal(false);
       return;
     }
     
     if (shippingOption === 'delivery' && !currentLocation) {
-      alert('Please select your location for delivery.');
+      toast.error('Please select your location for delivery.');
       return;
   }
     try {
@@ -550,7 +554,7 @@ if (Array.isArray(details) && details.length > 0) {
   <>
             <Grid item xs={12}>
             <TextField
-  label="يرجى إدخال عنوانك الكامل"
+  label="في حال حدوث عطل في الخارطة التلقائية، يرجى استخدام هذا المربع لإدخال بياناتك يدويًا"
   type="text"
   variant="outlined"
   value={shippingInfo.address}

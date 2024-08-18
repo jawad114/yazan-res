@@ -321,7 +321,7 @@ const Cart = () => {
         <div>Loading...</div>
       ) : (
         <>
-          <div className='flex flex-col text-start mt-[2vh]'>
+          <div className='flex flex-col text-end mt-[2vh]'>
             <Typography variant="h5" gutterBottom>
               {name ? name : ''} :السلة الخاص بك
             </Typography>
@@ -354,7 +354,7 @@ const Cart = () => {
                         </Typography>
                         {product.extras && product.extras.length > 0 && (
                           <div>
-                            <Typography variant="body2" className='font-semibold'>:اضافات</Typography>
+                            <Typography variant="body2" className='font-semibold text-end'>:اضافات</Typography>
                             <ul className='list-disc ml-4'>
                               {product.extras.map((extra, index) => (
                                 <li key={index}>{extra.name}: {extra.price} ₪</li>

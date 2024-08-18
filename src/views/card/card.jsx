@@ -354,7 +354,7 @@ export default function Card({ product }) {
     <div className="relative flex bg-white rounded-xl items-center justify-center shadow-lg mt-4">
       <div className="max-w-md">
         <div className="grid">
-          <img className="object-cover w-screen md:h-40 h-30" src={picture} alt={restaurantName} />
+          <img  onClick={handleShowCategories} className="object-cover w-screen md:h-40 h-30 hover:cursor-pointer" src={picture} alt={restaurantName} />
           {isClient && (
             <div className="absolute top-2 right-2">
               <span onClick={isFavorite ? removeFromFavorites : addToFavorites} className="cursor-pointer">
