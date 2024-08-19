@@ -12,6 +12,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { toast } from 'react-toastify';
 import AxiosRequest from '../Components/AxiosRequest';
+import BackToTopButton from '../Components/BackToTopButton';
 
 
 const Navbar: React.FC = () => {
@@ -395,6 +396,7 @@ const showFallbackNotification = () => {
     return (
         <>
             {/* Desktop View */}
+            <BackToTopButton/>
             <nav className={`navbar desktop-view ${scrolling ? 'scrolling' : ''}`}>
                 <div className='navbar-container'>
                         <div onClick={handleLogoClick} className='logo-container hover:cursor-pointer'>
