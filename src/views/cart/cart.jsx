@@ -334,12 +334,15 @@ const Cart = () => {
               {cart.map((cartItem) => (
                 cartItem.products.map((product) => (
                   <div className='flex items-center justify-between border p-4 my-4 bg-white rounded-lg shadow-sm' key={product._id}>
-                    <div className='flex items-start'>
+                      <IconButton onClick={() => removeFromCart(product._id)} color="error">
+                      <DeleteIcon />
+                    </IconButton>
+                    <div className='flex items-start' style={{ direction: 'rtl',textAlign:'start' }}>
                       {product && product.dishImage && (
                         <img
                           src={product.dishImage}
                           alt={product.name}
-                          className='w-16 h-16 rounded-full object-cover mr-4'
+                          className='w-16 h-16 rounded-full object-cover ml-4'
                         />
                       )}
                       <div>
@@ -357,20 +360,13 @@ const Cart = () => {
   <Typography variant="body2" className="font-semibold">
     إضافات:
   </Typography>
-  <ul className="list-none">
-  {product.extras.map((extra, index) => (
-    <li key={index} style={{direction:'ltr'}} className="flex justify-between items-center">
-      <div className="flex mr-1">
-      <Typography className="text-start">{extra.price} ₪</Typography>
-      </div>
-      <span className="text-center">:</span>
-      <div className="flex items-center gap-2 ml-1 text-start">
-        <Typography className="text-start">{extra.name}</Typography>
-        <Typography className="w-2 h-2 bg-black rounded-full inline-block"></Typography>
-      </div>
-    </li>
-  ))}
-</ul>
+  <ul className="list-disc flex flex-col">
+    {product.extras.map((extra, index) => (
+      <li key={index}>
+        {extra.name} : ₪ {extra.price}
+      </li>
+    ))}
+  </ul>
 </div>
 
                         )}
@@ -378,21 +374,18 @@ const Cart = () => {
                           {product.orderFrom || 'Not Found'}
                         </Typography>
                         <div className='flex items-center mt-2'>
-                          <IconButton onClick={() => updateQuantity(product._id, product.quantity - 1)} disabled={product.quantity <= 1}>
-                            <RemoveCircleOutlineIcon />
+                        <IconButton onClick={() => updateQuantity(product._id, product.quantity + 1)}>
+                            <AddCircleOutlineIcon />
                           </IconButton>
                           <Typography variant="body2" className='mx-2'>
                             {product.quantity}
                           </Typography>
-                          <IconButton onClick={() => updateQuantity(product._id, product.quantity + 1)}>
-                            <AddCircleOutlineIcon />
+                          <IconButton onClick={() => updateQuantity(product._id, product.quantity - 1)} disabled={product.quantity <= 1}>
+                            <RemoveCircleOutlineIcon />
                           </IconButton>
                         </div>
                       </div>
                     </div>
-                    <IconButton onClick={() => removeFromCart(product._id)} color="error">
-                      <DeleteIcon />
-                    </IconButton>
                   </div>
                 ))
               ))}
