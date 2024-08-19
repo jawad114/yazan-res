@@ -428,8 +428,8 @@ const [openDialog, setOpenDialog] = useState(false);
 >
 <div className="relative">
           <img
-            className="object-cover w-full h-40 hover:cursor-pointer"
-            onClick={() => handleOpenModal(product)}
+          className="h-40 object-cover hover:cursor-pointer"
+          onClick={() => handleOpenModal(product)}
             src={product.dishImage}
             alt={product.name}
           />
@@ -476,7 +476,7 @@ const [openDialog, setOpenDialog] = useState(false);
                     onClick={() => handleReadMoreClick(product.id)}
                     style={{ cursor: 'pointer' }}
                   >
-                    {showFullDescription === product.id ? 'Read Less' : 'Read More'}
+                    {/* {showFullDescription === product.id ? 'Read Less' : 'Read More'} */}
                   </Typography>
                 </div>
               </>
@@ -521,10 +521,11 @@ const [openDialog, setOpenDialog] = useState(false);
         body={
           selectedProduct && (
  <>
-              <div className="flex flex-col text-start w-screen max-w-[70vw] md:max-w-[25vw] text-start justify-start h-full overflow-auto max-h-[70vh] ">
+              <div className="flex flex-col text-start w-screen max-w-[70vw] md:max-w-[25vw] text-start justify-start h-full overflow-y-auto custom-scrollbar  max-h-[70vh] ">
                <div className="flex items-center justify-center  mb-[4vh]">
                 <img
-                  className="md:w-[20vw] object-cover"
+                width={300}
+                  className="h-60 object-cover"
                   src={selectedProduct.dishImage}
                 />
                 </div>
@@ -541,9 +542,13 @@ const [openDialog, setOpenDialog] = useState(false);
                 <div >
                 {selectedProduct && selectedProduct.extras && selectedProduct.extras.requiredExtras && selectedProduct.extras.requiredExtras.length > 0 ? (
                  <>
-                <Typography variant="body1" className="text-end !font-bold">:اضافات اجبارية قم باختيار اضافة واحدة فقط</Typography>
+                <Typography variant="body2" className="text-end !font-bold">:اضافات اجبارية قم باختيار اضافة واحدة فقط</Typography>
            {selectedProduct.extras.requiredExtras.map((extra) => (
-           <div key={extra._id} className="flex items-center space-x-2">
+           <div key={extra._id} className="flex items-center space-x-2 mr-2">
+             <label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
+             <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
+          <span>{extra.name}</span>
+        </label>
              <input
           type="radio"
           id={extra._id}
@@ -551,12 +556,7 @@ const [openDialog, setOpenDialog] = useState(false);
           value={extra._id}
           checked={selectedExtras[extra._id] || false}
           onChange={() => handleRequiredExtraChange(extra._id)}
-          className="ml-1 mr-2"
         />
-        <label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
-          <span>{extra.name}</span>
-          <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
-        </label>
       </div>
     ))}
   </>
@@ -568,10 +568,14 @@ const [openDialog, setOpenDialog] = useState(false);
                   
                   {selectedProduct && selectedProduct.extras && selectedProduct.extras.optionalExtras && selectedProduct.extras.optionalExtras.length > 0 ? (
                             <>
-                            <Typography variant="body1" className="text-end !font-bold">:اضافات اختيارية يمكن طلب اكثر من اضافة</Typography>
+                            <Typography variant="body2" className="text-end !font-bold">:اضافات اختيارية يمكن طلب اكثر من اضافة</Typography>
   
       {selectedProduct.extras.optionalExtras.map((extra) => (
-  <div key={extra._id} className="flex items-center space-x-2">
+  <div key={extra._id} className="flex items-center space-x-2 mr-2">
+     <label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
+     <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
+    <span>{extra.name}</span>
+  </label>
   <input
             type="checkbox"
             id={extra._id}
@@ -581,10 +585,7 @@ const [openDialog, setOpenDialog] = useState(false);
             onChange={() => handleOptionalExtraChange(extra._id)}
             className="ml-1 mr-2"
           />
- <label htmlFor={extra._id} className="flex-1 flex justify-between items-center">
-    <span>{extra.name}</span>
-    <span>{extra.price ? extra.price.toFixed(2) : '0.00'} ₪</span>
-  </label>
+
         </div>
         
       ))}

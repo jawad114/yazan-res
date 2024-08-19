@@ -284,11 +284,13 @@ export default function Categories() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[4vh]">
                   {categories.map((category, index) => (
-                    <div onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }} className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white hover:cursor-pointer' key={index}>
+                    <div  className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white' key={index}>
                       <img
                         src={category.categoryImage}
                         alt={`${category.categoryName}'s Image`}
-                        className='w-full h-32 object-cover rounded-md'
+                        width={200}
+                        onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
+                        className='h-32 object-cover rounded-md hover:cursor-pointer'
                       />
                       <Typography className='text-lg font-semibold text-center'>{category.categoryName}</Typography>
                       <Button

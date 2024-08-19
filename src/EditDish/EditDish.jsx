@@ -1,11 +1,10 @@
 // import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
 // import { useNavigate, useParams } from 'react-router-dom';
 // import AxiosRequest from '../Components/AxiosRequest';
 // import { toast } from 'react-toastify';
 
 // export default function EditRestaurant() {
-//   const { resName,categoryName, dishId } = useParams();
+//   const { resName, categoryName, dishId } = useParams();
 //   const [loading, setLoading] = useState(true);
 //   const [dish, setDish] = useState(null);
 //   const [updatedDishName, setUpdatedDishName] = useState('');
@@ -13,16 +12,13 @@
 //   const [updatedDescription, setUpdatedDescription] = useState('');
 //   const [imageFile, setImageFile] = useState(null);
 //   const token = localStorage.getItem('token');
-//   console.log(token);
-//   const isAdmin = localStorage.getItem('isAdmin') === 'true';
-//   const isOwner = localStorage.getItem('isOwner') === 'true';
 //   const navigate = useNavigate();
 
 //   useEffect(() => {
-//     if (!isAdmin && !isOwner) {
-//         navigate('/forbidden'); // Replace with your target route
+//     if (!localStorage.getItem('isAdmin') && !localStorage.getItem('isOwner')) {
+//       navigate('/forbidden'); // Replace with your target route
 //     }
-// }, [isAdmin, isOwner, navigate]);
+//   }, [navigate]);
 
 //   useEffect(() => {
 //     const fetchDish = async () => {
@@ -31,7 +27,7 @@
 //         if (token) {
 //           headers.Authorization = `Bearer ${token}`;
 //         }
-//         const response = await AxiosRequest.get(`/dishes/${dishId}`,{headers});
+//         const response = await AxiosRequest.get(`/dishes/${dishId}`, { headers });
 //         setDish(response.data);
 //         setLoading(false);
 //       } catch (error) {
@@ -41,52 +37,45 @@
 //     };
 
 //     fetchDish();
-//   }, [resName, dishId]);
-
+//   }, [dishId, token]);
 
 //   const handleUpdate = async () => {
 //     try {
-//       const base64Image = imageFile ? await convertToBase64(imageFile) : dish.dishImage; // Use the existing image if no new file is selected
-//       let headers = {};
+//       const formData = new FormData();
+//       formData.append('name', updatedDishName);
+//       formData.append('price', updatedPrice);
+//       formData.append('description', updatedDescription);
+//       if (imageFile) {
+//         formData.append('dishImage', imageFile);
+//       }
+
+//       let headers = {
+//         'Content-Type': 'multipart/form-data'
+//       };
 //       if (token) {
 //         headers.Authorization = `Bearer ${token}`;
 //       }
-  
-//       const res = await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, {
-//         name: updatedDishName,
-//         price: updatedPrice,
-//         description: updatedDescription,
-//         dishImage: base64Image
-//       }, { headers });
-  
+
+//       const res = await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, formData, { headers });
+
 //       console.log(res.data);
-  
+
 //       // Update the local state to reflect the changes
 //       setDish({
 //         ...dish,
 //         name: updatedDishName,
 //         price: updatedPrice,
 //         description: updatedDescription,
-//         dishImage: base64Image
+//         dishImage: imageFile ? URL.createObjectURL(imageFile) : dish.dishImage
 //       });
-  
+
 //       // Optional: Show a success message
-//       toast.success('Dish updated successfully');
+//       toast.success('Item updated successfully');
 //       navigate(-1);
 //     } catch (error) {
-//       console.error('Error updating dish:', error);
-//       toast.error('Failed to update dish');
+//       console.error('Error updating item:', error);
+//       toast.error('Failed to update item');
 //     }
-//   };
-  
-
-//   const convertToBase64 = (file) => {
-//     return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.readAsDataURL(file);
-//       reader.onload = () => resolve(reader.result);
-//       reader.onerror = (error) => reject(error);
-//     });
 //   };
 
 //   if (loading) {
@@ -144,10 +133,11 @@
 
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import AxiosRequest from '../Components/AxiosRequest';
 import { toast } from 'react-toastify';
+import { Input, TextField } from '@mui/material';
+import { Button } from '@material-tailwind/react';
 
 export default function EditRestaurant() {
   const { resName, categoryName, dishId } = useParams();
@@ -162,7 +152,7 @@ export default function EditRestaurant() {
 
   useEffect(() => {
     if (!localStorage.getItem('isAdmin') && !localStorage.getItem('isOwner')) {
-      navigate('/forbidden'); // Replace with your target route
+      navigate('/forbidden');
     }
   }, [navigate]);
 
@@ -206,7 +196,6 @@ export default function EditRestaurant() {
 
       console.log(res.data);
 
-      // Update the local state to reflect the changes
       setDish({
         ...dish,
         name: updatedDishName,
@@ -215,7 +204,6 @@ export default function EditRestaurant() {
         dishImage: imageFile ? URL.createObjectURL(imageFile) : dish.dishImage
       });
 
-      // Optional: Show a success message
       toast.success('Item updated successfully');
       navigate(-1);
     } catch (error) {
@@ -225,54 +213,112 @@ export default function EditRestaurant() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center text-gray-500">Loading...</div>;
   }
 
   if (!dish) {
-    return <div>Dish not found for ID: {dishId}</div>;
+    return <div className="text-center text-red-500">Dish not found for ID: {dishId}</div>;
   }
 
   return (
     <div>
-      <h2>Edit Dish</h2>
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        handleUpdate();
-      }}>
-        <label>
-          Dish Name:
-          <input
+    <div className="max-w-xl flex flex-col mx-auto mt-8 p-6 bg-white shadow-lg mb-4 rounded-lg">
+      <h2 className="text-2xl text-center font-semibold text-gray-800 mb-6">تعديل المنتج</h2>
+      <form 
+        className="space-y-6" 
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpdate();
+        }}>
+        <div>
+          <TextField
             type="text"
+            variant="outlined"
+            fullWidth
+            label='اسم المنتج'
             value={updatedDishName}
+            style={{
+              textAlign: 'center', // محاذاة النص إلى المركز
+              direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+            }}
             onChange={(e) => setUpdatedDishName(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-input:focus': {
+                outline: 'none', // Removes the focus ring
+                boxShadow: 'none',
+              },
+            }}
           />
-        </label>
-        <label>
-          Price:
-          <input
+        </div>
+        <div>
+          <TextField
             type="number"
             value={updatedPrice}
+            variant="outlined"
+            label="السعر"
             onChange={(e) => setUpdatedPrice(e.target.value)}
+            fullWidth
+            style={{
+              textAlign: 'center', // محاذاة النص إلى المركز
+              direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+            }}
+            inputProps={{ min: 0 }}
+            sx={{
+              '& .MuiOutlinedInput-input:focus': {
+                outline: 'none', // Removes the focus ring
+                boxShadow: 'none',
+              },
+            }}
           />
-        </label>
-        <label>
-          Description:
-          <input
-            type="text"
+        </div>
+        <div>
+          <TextField
             value={updatedDescription}
+            variant="outlined"
+            label='وصف المنتج'
             onChange={(e) => setUpdatedDescription(e.target.value)}
-          />
-        </label>
-        <label>
-          Dish Image:
-          <input
+            fullWidth
+            multiline
+            rows={4}
+            style={{
+              textAlign: 'center', // محاذاة النص إلى المركز
+              direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+            }}
+            sx={{
+              '& .MuiOutlinedInput-input:focus': {
+                outline: 'none', // Removes the focus ring
+                boxShadow: 'none',
+              },
+            }}
+            />
+        </div>
+        <div>
+          <label className="block text-gray-700 text-center font-medium mb-2">
+            :صورة المنتج
+          </label>
+          <Input
             type="file"
             accept="image/*"
+            variant="outlined"
             onChange={(e) => setImageFile(e.target.files[0])}
-          />
-        </label>
-        <button type="submit">Update</button>
+            fullWidth
+            sx={{
+              '& .MuiOutlinedInput-input:focus': {
+                outline: 'none', // Removes the focus ring
+                boxShadow: 'none',
+              },
+            }}
+            />
+        </div>
+        <div className='flex items-center justify-center'>
+        <Button 
+          type="submit" 
+          >
+          Update
+        </Button>
+        </div>
       </form>
+    </div>
     </div>
   );
 }

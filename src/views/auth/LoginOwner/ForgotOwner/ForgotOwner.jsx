@@ -44,6 +44,10 @@ const ForgotOwner = () => {
           placeholder="البريد الإلكتروني"
           value={email}
           onChange={handleEmailChange}
+          style={{
+            textAlign: 'start', // محاذاة النص إلى المركز
+            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+          }}
           size={'medium'}
           className="border-2 border-black rounded"
         />

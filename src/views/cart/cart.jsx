@@ -353,14 +353,26 @@ const Cart = () => {
                           {product.price} ₪
                         </Typography>
                         {product.extras && product.extras.length > 0 && (
-                          <div>
-                            <Typography variant="body2" className='font-semibold text-end'>:اضافات</Typography>
-                            <ul className='list-disc ml-4'>
-                              {product.extras.map((extra, index) => (
-                                <li key={index}>{extra.name}: {extra.price} ₪</li>
-                              ))}
-                            </ul>
-                          </div>
+                          <div style={{ direction: 'rtl',textAlign:'start' }}>
+  <Typography variant="body2" className="font-semibold">
+    إضافات:
+  </Typography>
+  <ul className="list-none">
+  {product.extras.map((extra, index) => (
+    <li key={index} style={{direction:'ltr'}} className="flex justify-between items-center">
+      <div className="flex mr-1">
+      <Typography className="text-start">{extra.price} ₪</Typography>
+      </div>
+      <span className="text-center">:</span>
+      <div className="flex items-center gap-2 ml-1 text-start">
+        <Typography className="text-start">{extra.name}</Typography>
+        <Typography className="w-2 h-2 bg-black rounded-full inline-block"></Typography>
+      </div>
+    </li>
+  ))}
+</ul>
+</div>
+
                         )}
                         <Typography variant="body2" color="textSecondary">
                           {product.orderFrom || 'Not Found'}

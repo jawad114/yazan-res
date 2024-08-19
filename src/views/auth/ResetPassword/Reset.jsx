@@ -58,6 +58,10 @@ const Reset = () => {
                         type="email"
                         name="email"
                         value={state.email}
+                        style={{
+                            textAlign: 'start', // محاذاة النص إلى المركز
+                            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                          }}
                         onChange={handleChange}
                         placeholder="البريد الإلكتروني"
                         className="mb-4 border-2 border-black rounded"
@@ -66,6 +70,10 @@ const Reset = () => {
                         type="text"
                         name="verificationCode"
                         value={state.verificationCode}
+                        style={{
+                            textAlign: 'start', // محاذاة النص إلى المركز
+                            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                          }}
                         onChange={handleChange}
                         placeholder="الرجاء ادخال رمز التحقق المرسل الى بريدك الإلكتروني"
                         className="mb-4 border-2 border-black rounded"
@@ -74,6 +82,10 @@ const Reset = () => {
                         type="password"
                         name="newPassword"
                         value={state.newPassword}
+                        style={{
+                            textAlign: 'start', // محاذاة النص إلى المركز
+                            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                          }}
                         onChange={handleChange}
                         placeholder="كلمة مرور جديدة"
                         className="mb-4 border-2 border-black rounded"

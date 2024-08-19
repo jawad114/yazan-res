@@ -61,6 +61,10 @@ const ResetOwner = () => {
                         name="email"
                         value={state.email}
                         onChange={handleChange}
+                        style={{
+                            textAlign: 'start', // محاذاة النص إلى المركز
+                            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                          }}
                         placeholder="البريد الإلكتروني"
                         className="mb-4 border-2 border-black rounded"
                         />
@@ -69,6 +73,10 @@ const ResetOwner = () => {
                         name="verificationCode"
                         value={state.verificationCode}
                         onChange={handleChange}
+                        style={{
+                            textAlign: 'start', // محاذاة النص إلى المركز
+                            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                          }}
                         placeholder="الرجاء ادخال رمز التحقق المرسل الى بريدك الإلكتروني"
                         className="mb-4 border-2 border-black rounded"
                         />
@@ -76,6 +84,10 @@ const ResetOwner = () => {
                         type="password"
                         name="newPassword"
                         value={state.newPassword}
+                        style={{
+                            textAlign: 'start', // محاذاة النص إلى المركز
+                            direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                          }}
                         onChange={handleChange}
                         placeholder="ادخل كلمة مرور جديدة"
                         className="mb-4 border-2 border-black rounded"

@@ -105,6 +105,16 @@ useEffect(() => {
                 value={restaurantName}
                 onChange={(e) => setRestaurantName(e.target.value)}
                 className="mb-4 mt-10 w-[70vw]"
+                sx={{
+                  '& .MuiOutlinedInput-input:focus': {
+                    outline: 'none', // Removes the focus ring
+                    boxShadow: 'none',
+                  },
+                }}
+                style={{
+                  textAlign: 'center', // محاذاة النص إلى المركز
+                  direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                }}
               />
             </Grid>
           )}
@@ -168,12 +178,12 @@ useEffect(() => {
                         order.products.map((product) => (
                           <tr key={product._id}>
                             <td className="p-2">{order.orderId}</td>
-                            <td className="p-2">{order.resName}</td>
+                            <td className="p-2">{product.orderFrom}</td>
                             <td className="p-2">{product.price} ₪</td>
                             <td className="p-2">{product.name}</td>
                             <td className="p-2">{product.quantity}</td>
                             <td className="p-2">{product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}</td>
-                            <td className="p-2">{product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(', ') : 'None'} ₪</td>
+                            <td className="p-2">{product.extras && product.extras.length > 0 ? `${product.extras.map(extra => extra.price).join(', ')} ₪` : 'None'}</td>
                             <td className="p-2">{order.status ? order.status : 'No Status Yet'}</td>
                             <td className="p-2">{rejected ? formatDate(order.declinedAt) : formatDate(order.completedAt)}</td>
                           </tr>

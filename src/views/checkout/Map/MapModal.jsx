@@ -350,7 +350,7 @@ const MapModal = ({ open, onClose, location, onConfirm }) => {
           <Button variant="contained" onClick={handleConfirmLocation}>الموافقة على موقعي</Button>
         </div>
         <div className="mt-4 items-center text-end">
-          <p className="text-gray-500 text-sm">بحال عدم تمكن الخارطة من تحديد موقعك قد بسحب العلامة الحمراء ووضعها في موقعك الصحيح او استخدم البحث في الاعلى بكتابة موقعك البلدة والشارع</p>
+          <p className="text-gray-500 text-sm">بحال عدم تمكن الخارطة من تحديد موقعك قم بسحب العلامة الحمراء وضعها في موقعك الصحيح او استخدم البحث في الأعلى بكتابة موقعك البلدة والشارع</p>
         </div>
       </DialogContent>
     </Dialog>

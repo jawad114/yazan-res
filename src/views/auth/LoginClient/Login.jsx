@@ -75,6 +75,10 @@ const LoginClient = () => {
               name="email"
               value={state.email}
               onChange={handleInputChange}
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               placeholder="بريدك الإلكتروني"
               required
             />
@@ -84,6 +88,10 @@ const LoginClient = () => {
               className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="password"
               name="password"
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               value={state.password}
               onChange={handleInputChange}
               placeholder="كلمة المرور الخاصة بك"
@@ -100,16 +108,17 @@ const LoginClient = () => {
             <a href="/forgot-password" className="text-blue-500 hover:underline">نسيت كلمة المرور؟</a>
           </div>
           <div className="flex items-center justify-between mt-4">
-            <Typography className="text-sm text-red-500">ليس لديك حساب؟</Typography>
             <Button
   size="sm"
   color="green"
   className="text-white cursor-pointer hover:underline mt-2 flex items-center justify-center"
   onClick={() => window.location.replace('/register-client')}
 >
-  <PersonIcon className="mr-2" />
   <span className="whitespace-nowrap">إنشاء حساب</span>
+  <PersonIcon className="ml-2" />
+
 </Button>
+<Typography className="text-sm text-red-500">ليس لديك حساب؟</Typography>
 
           </div>
 

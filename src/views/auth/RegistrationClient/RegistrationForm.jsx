@@ -76,12 +76,21 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
               return (
                 <TextField
                   key={index}
-                  className="form-input"
                   name={field.name}
                   label={field.label}
                   type={showPassword ? "text" : "password"}
                   value={formData[field.name]}
                   onChange={handleInputChange}
+                  style={{
+                    textAlign: 'start', // محاذاة النص إلى المركز
+                    direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-input:focus': {
+                      outline: 'none', // Removes the focus ring
+                      boxShadow: 'none',
+                    },
+                  }}
                   required
                   fullWidth
                   margin="normal"
@@ -100,10 +109,19 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
               return (
                 <TextField
                   key={index}
-                  className="form-input"
                   name={field.name}
                   label={field.label}
                   type={field.type}
+                  style={{
+                    textAlign: 'start', // محاذاة النص إلى المركز
+                    direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-input:focus': {
+                      outline: 'none', // Removes the focus ring
+                      boxShadow: 'none',
+                    },
+                  }}
                   value={formData[field.name]}
                   onChange={handleInputChange}
                   required

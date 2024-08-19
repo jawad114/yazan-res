@@ -66,23 +66,31 @@ const LoginOwner = () => {
         <h3 className="text-2xl font-semibold text-center mb-6">تسجيل الدخول للشركاء</h3>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-field flex flex-col">
-          <label className="mb-2 text-sm font-medium">:البريد الالكتروني</label>
+          <label className="mb-2 text-sm text-end font-medium">:البريد الالكتروني</label>
             <input
-              className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="p-2 border rounded focus:outline-none  focus:ring-2 focus:ring-blue-400"
               type="email"
               name="email"
               value={state.email}
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               onChange={handleInputChange}
               placeholder="البريد الالكتروني"
               required
             />
           </div>
           <div className="form-field flex flex-col">
-          <label className="mb-2 text-sm font-medium">:كلمة المرور</label>
+          <label className="mb-2 text-sm text-end font-medium">:كلمة المرور</label>
             <input
               className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="password"
               name="password"
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               value={state.password}
               onChange={handleInputChange}
               placeholder="كلمة المرور"

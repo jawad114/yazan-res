@@ -395,10 +395,10 @@ if (Array.isArray(details) && details.length > 0) {
                 setSelectedOption('delivery');
               }}
               sx={{
-                backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : 'transparent',
+                backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : 'lightgray',
                 color: selectedOption === 'delivery' ? '#fff' : '#000',
                 '&:hover': {
-                  backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : '#f1f1f1',
+                  backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : '#fff',
                 },
               }}
               startIcon={<FontAwesomeIcon icon={faMotorcycle} />} // Motorcycle icon for delivery
@@ -411,10 +411,10 @@ if (Array.isArray(details) && details.length > 0) {
                 setSelectedOption('self-pickup');
               }}
               sx={{
-                backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : 'transparent',
+                backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : 'lightgray',
                 color: selectedOption === 'self-pickup' ? '#fff' : '#000',
                 '&:hover': {
-                  backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : '#f1f1f1',
+                  backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : '#fff',
                 },
               }}
               startIcon={<FontAwesomeIcon icon={faPersonWalking} />} // Motorcycle icon for delivery
@@ -447,6 +447,10 @@ if (Array.isArray(details) && details.length > 0) {
                   boxShadow: 'none',
                 },
               }}
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               fullWidth
               value={shippingInfo.name}
               onChange={(e) => {
@@ -471,6 +475,10 @@ if (Array.isArray(details) && details.length > 0) {
               variant="outlined"
               fullWidth
               value={shippingInfo.email}
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               sx={{
                 '& .MuiOutlinedInput-input:focus': {
                   outline: 'none', // Removes the focus ring
@@ -485,6 +493,10 @@ if (Array.isArray(details) && details.length > 0) {
               label="رقم الهاتف"
               variant="outlined"
               fullWidth
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               value={shippingInfo.phoneNumber1}
               sx={{
                 '& .MuiOutlinedInput-input:focus': {
@@ -506,6 +518,10 @@ if (Array.isArray(details) && details.length > 0) {
             <TextField
               label="رقم هاتف 2 اختياري"
               variant="outlined"
+              style={{
+                textAlign: 'start', // محاذاة النص إلى المركز
+                direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              }}
               fullWidth
               value={shippingInfo.phoneNumber2}
               sx={{
@@ -558,6 +574,10 @@ if (Array.isArray(details) && details.length > 0) {
   type="text"
   variant="outlined"
   value={shippingInfo.address}
+  style={{
+    textAlign: 'start', // محاذاة النص إلى المركز
+    direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+  }}
   onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
   fullWidth
   multiline
@@ -576,6 +596,10 @@ if (Array.isArray(details) && details.length > 0) {
   type="text"
   variant="outlined"
   value={shippingInfo.note}
+  style={{
+    textAlign: 'start', // محاذاة النص إلى المركز
+    direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+  }}
   onChange={(e) => setShippingInfo({ ...shippingInfo, note: e.target.value })}
   fullWidth
   multiline
