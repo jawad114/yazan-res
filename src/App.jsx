@@ -47,7 +47,7 @@ import SliderImageList from './views/SliderImageList/SliderImageList';
 import AddImagePage from './views/AddImagePage/AddImagePage';
 import AddFilterPage from './views/AddFilterPage/AddFilterPage';
 import FilterList from './views/FilterList/FilterList';
-
+import ScrollToTopButton from './Components/scrollToTopButton';
 
 const theme = createTheme();
 
@@ -117,6 +117,7 @@ const App = () => {
               <Route path='*' element={<NotFound />} />
             </Routes>
           </div>
+          <ScrollToTopButton /> {/* Add ScrollToTopButton here */}
         </FavoriteProvider>
       </Router>
     </ThemeProvider>
