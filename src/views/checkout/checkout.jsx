@@ -131,6 +131,7 @@ useEffect(() => {
         // Update state
         setResLocation(location);
         setProducts(productsByRestaurant);
+        console.log('Products From Restaurant: ', productsByRestaurant);
       } else {
         console.error('cartReceived is not an array');
       }

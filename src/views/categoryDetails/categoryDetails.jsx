@@ -521,11 +521,10 @@ const [openDialog, setOpenDialog] = useState(false);
         body={
           selectedProduct && (
  <>
-              <div className="flex flex-col text-start w-screen max-w-[70vw] md:max-w-[25vw] text-start justify-start h-full overflow-y-auto custom-scrollbar  max-h-[70vh] ">
+              <div className="flex flex-col text-start w-screen p-2 max-w-[70vw] md:max-w-[25vw] text-start justify-start h-full overflow-y-auto custom-scrollbar  max-h-[70vh] ">
                <div className="flex items-center justify-center  mb-[4vh]">
                 <img
-                width={300}
-                  className="h-60 object-cover"
+                  className="object-cover"
                   src={selectedProduct.dishImage}
                 />
                 </div>

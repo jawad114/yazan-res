@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Avatar } from '@material-tailwind/react';
 
 
 export default function OwnerDashboard() {
@@ -523,44 +524,44 @@ useEffect(() => {
                                             {order.shippingInfo && (
                                                 <div className="flex flex-col gap-2">
                                                     <Typography variant="body2" className="font-bold">:تفاصيل الشحن</Typography>
-                                                    <div className="p-4 bg-gray-100 rounded-lg">
+                                                    <div className="p-4 bg-gray-100 rounded-lg text-end" style={{direction:'rtl'}} >
                                                         <Typography variant="body2">
-                                                            {order.shippingInfo.name} :اسم العميل<br />
+                                                       اسم العميل: {order.shippingInfo.name}<br />
                                                             {order.shippingOption !=='dine-in' && (
                                                         <Typography variant="body2">
-                                                        {order.shippingInfo.phoneNumber1} :هاتف<br />
+                                                        هاتف: {order.shippingInfo.phoneNumber1}<br />
                                                         {order.shippingInfo?.phoneNumber2 &&(
                                                             <>
-                                                        {order.shippingInfo.phoneNumber2} :هاتف 2<br />
+                                                        هاتف 2: {order.shippingInfo.phoneNumber2}<br />
                                                         </>
                                                         )}
-                                                        {order.shippingInfo.email} :البريد الإلكتروني<br />
+                                                        البريد الإلكتروني: {order.shippingInfo.email}<br />
                                                         </Typography>
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
                                                             {order.orderLocation?.formatted_address && (
                                                               <Typography variant="body2">
-                                                            {order.orderLocation.formatted_address} :العنوان<br />
+                                                            العنوان: {order.orderLocation.formatted_address}<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
-                                                            {order.shippingInfo.address} :العنوان التفصيلي<br />
+                                                            العنوان التفصيلي: {order.shippingInfo.address}<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
                                                              <Typography variant="body2">
-                                                             {order.shippingInfo.note} :طلبات خاصة<br />
+                                                             طلبات خاصة: {order.shippingInfo.note}<br />
                                                              </Typography>
                                                             )}
                                                             </>
                                                         )}
 
-                                                            {order.shippingOption} :طريقة الاستلام
+                                                            طريقة الاستلام: {order.shippingOption}
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
-                                                                {order.tableNumber} :رقم الطاولة
+                                                                رقم الطاولة: {order.tableNumber}
                                                                 </Typography>
                                                             )}
                                                         </Typography>
@@ -570,16 +571,19 @@ useEffect(() => {
                                             <div className="flex flex-col gap-2">
                                                 <Typography variant="body2" className="font-bold">:المنتجات</Typography>
                                                 {order.products.map(product => (
-                                                    <div key={product._id} className="p-4 bg-gray-100 rounded-lg">
-                                                        <Typography variant="body2">
-                                                            {product.name} :المنتج<br />
-                                                            {product.quantity} :العدد<br />
-                                                            ₪ {product.price} :السعر<br />
-                                                            {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'} :اضافات<br />
-                                                            {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'} :سعر الاضافات<br />
-                                                            ₪ {calculateTotalPrice(product)} :اجمالي المبلغ<br />
-                                                            {order.status ? order.status : 'قيد الانتضار'} :حالة الطلب<br />
-                                                            {formatDate(order.orderTime)} :تم الطلب في
+                                                    <div key={product._id} className="p-4 bg-gray-100 flex flex-col gap-4  rounded-lg">
+                                                        <div className='flex items-center justify-center'>
+                                                        <Avatar src={product.dishImage} variant='circular' size='xl' className='mb-2 object-cover'/>
+                                                        </div>
+                                                        <Typography variant="body2" className='text-end' style={{direction:'rtl'}}>
+                                                        المنتج: {product.name}<br />
+                                                        العدد: {product.quantity}<br />
+                                                        السعر: ₪ {product.price}<br />
+                                                        اضافات: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
+                                                        سعر الاضافات: {product.extras && product.extras.length > 0 ? ' ₪ '+product.extras.map(extra => extra.price).join(' ,₪  ') : 'None'}<br />
+                                                        اجمالي المبلغ: ₪ {calculateTotalPrice(product)}<br />
+                                                        حالة الطلب: {order.status ? order.status : 'قيد الانتضار'}<br />
+                                                        تم الطلب في: {formatDate(order.orderTime)}
                                                         </Typography>
                                                     </div>
                                                 ))}
@@ -610,35 +614,35 @@ useEffect(() => {
                                             </Typography>
                                             <div className="flex flex-col gap-2">
                                                 <Typography variant="body2" className="font-bold">:تفاصيل الشحن</Typography>
-                                                <div className="p-4 bg-gray-100 rounded-lg">
+                                                <div className="p-4 bg-gray-100 rounded-lg text-end" style={{direction:'rtl'}}>
                                                     <Typography variant="body2">
-                                                        {order.shippingInfo.name} :اسم العميل<br />
+                                                    اسم العميل: {order.shippingInfo.name}<br />
                                                         {order.shippingOption !=='dine-in' &&(
                                                         <Typography variant="body2">
-                                                        {order.shippingInfo.phoneNumber1} :الهاتف<br />
-                                                        {order.shippingInfo.email} :البريد الإلكتروني<br />
+                                                        الهاتف: {order.shippingInfo.phoneNumber1}<br />
+                                                        البريد الإلكتروني: {order.shippingInfo.email}<br />
                                                         </Typography>
                                                         )}
                                                         {order.shippingOption === 'delivery' && (
                                                             <>
                                                             {order.orderLocation?.formatted_address && (
                                                               <Typography variant="body2">
-                                                            {order.orderLocation.formatted_address} :العنوان<br />
+                                                            العنوان: {order.orderLocation.formatted_address}<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
-                                                            {order.shippingInfo.address} :العنوان التفصيلي<br />
+                                                            العنوان التفصيلي: {order.shippingInfo.address}<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
                                                              <Typography variant="body2">
-                                                             {order.shippingInfo.note} :طلبات خاصة<br />
+                                                             طلبات خاصة: {order.shippingInfo.note}<br />
                                                              </Typography>
                                                             )}
                                                             </>
                                                         )}
-                                                            {order.shippingOption} :طريقة الاستلام
+                                                            طريقة الاستلام: {order.shippingOption}
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
                                                                 {order.tableNumber} :رقم الطاولة
@@ -651,15 +655,18 @@ useEffect(() => {
                                                 <Typography variant="body2" className="font-bold">:المنتجات</Typography>
                                                 {order.products.map(product => (
                                                     <div key={product._id} className="p-4 bg-gray-100 rounded-lg">
-                                                        <Typography variant="body2">
-                                                            {product.name} :المنتج<br />
-                                                            {product.quantity} :العدد<br />
-                                                            ₪ {product.price} :السعر<br />
-                                                            {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'} :اضافات<br />
-                                                            ₪ {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'} :سعر الاضافات<br />
-                                                            ₪ {calculateTotalPrice(product)} :اجمالي السعر<br />
-                                                            {order.status ? order.status : 'قيد الانتظار'} :حالة الطلب<br />
-                                                            {formatDate(order.orderTime)} :تم الطلب في
+                                                         <div className='flex items-center justify-center'>
+                                                        <Avatar src={product.dishImage} variant='circular' size='xl' className='mb-2 object-cover'/>
+                                                        </div>
+                                                        <Typography variant="body2" className='text-end' style={{direction:'rtl'}}>
+                                                        المنتج: {product.name}<br />
+                                                        العدد: {product.quantity}<br />
+                                                        السعر: ₪ {product.price}<br />
+                                                        اضافات: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
+                                                        سعر الاضافات: {product.extras && product.extras.length > 0 ? ' ₪ '+product.extras.map(extra => extra.price).join(' ,₪  ') : 'None'}<br />
+                                                        اجمالي المبلغ: ₪ {calculateTotalPrice(product)}<br />
+                                                        حالة الطلب: {order.status ? order.status : 'قيد الانتضار'}<br />
+                                                        تم الطلب في: {formatDate(order.orderTime)}
                                                         </Typography>
                                                     </div>
                                                 ))}

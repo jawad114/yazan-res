@@ -24,6 +24,7 @@ import {
   InputLabel,
   ListItemButton,
 } from '@mui/material';
+import { Avatar } from '@material-tailwind/react';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AxiosRequest from '../Components/AxiosRequest';
@@ -258,9 +259,9 @@ const openWaze = (latitude, longitude) => {
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          <DialogContent dividers>
-            <Typography variant="body1" className='text-end'>{selectedOrder.orderId}:رقم الطلب</Typography>
-            <Typography variant="body1" className='text-end'>{selectedOrder.shippingInfo.name}:  اسم العميل</Typography>
+          <DialogContent dividers style={{direction:'rtl'}}>
+            <Typography variant="body1" className='text-end'>رقم الطلب: {selectedOrder.orderId}</Typography>
+            <Typography variant="body1" className='text-end'>اسم العميل: {selectedOrder.shippingInfo.name}</Typography>
             {selectedOrder.shippingOption === 'self-pickup' && (
         <Box mb={2}>
           <Typography variant="body1" className='text-center' gutterBottom>
@@ -291,45 +292,59 @@ const openWaze = (latitude, longitude) => {
       )}
       {selectedOrder.shippingOption !== 'dine-in' && (
         <>
-      <Typography variant="body1" className='text-end' gutterBottom>
-        {selectedOrder.shippingInfo.phoneNumber1}: رقم الهاتف<br />
+        <div className='flex justify-start' style={{direction:'rtl'}}>
+        <Typography variant="body1" className='text-end' gutterBottom>
+      رقم الهاتف: {selectedOrder.shippingInfo.phoneNumber1}<br />
         </Typography>
-        <Typography variant="body1" className='text-end'>{selectedOrder.shippingInfo.email}: البريد الإلكتروني</Typography>
+        </div>
+        <div className='flex justify-start' style={{direction:'rtl'}}>
+        <Typography variant="body1" className='text-end'>إيميل: {selectedOrder.shippingInfo.email}</Typography><br/>
+        </div>
+        <div className='flex justify-start' style={{direction:'rtl'}}>
 {selectedOrder.shippingInfo.phoneNumber2 &&(
       <Typography variant="body1" className='text-end' gutterBottom>
-      {selectedOrder.shippingInfo.phoneNumber2}: رقم الهاتف 2<br />
+      رقم الهاتف 2: {selectedOrder.shippingInfo.phoneNumber2}<br />
       </Typography>  
 )}
+</div>
         </>
 
 )}
       {selectedOrder.shippingOption === 'delivery' && (
         <>
+        <div className='flex justify-start' style={{direction:'rtl'}}>
         {selectedOrder.shippingInfo?.note &&(
-          <Typography variant="body1" className='text-end' gutterBottom>
-            {selectedOrder.shippingInfo.note}: طلبات خاصة
+          <Typography variant="body1" className='text-start' gutterBottom>
+            طلبات خاصة: {selectedOrder.shippingInfo.note}
           </Typography>
         )}
+        </div>
         </>
       )}
-
-      <Typography variant="body1" className='text-end' gutterBottom>
-       {selectedOrder.shippingOption}: طريقة استلام الطلب
+        <div className='flex justify-start' style={{direction:'rtl'}}>
+        <Typography variant="body1" className='text-start' gutterBottom>
+      طريقة استلام الطلب: {selectedOrder.shippingOption}
       </Typography>
+      </div>
+      <div className='flex justify-start' style={{direction:'rtl'}}>
       {selectedOrder.shippingOption === 'dine-in' && (
         <Typography variant="body1" className='text-end' gutterBottom>
-          {selectedOrder.tableNumber}: رقم الطلولة
+          رقم الطلولة: {selectedOrder.tableNumber}
         </Typography>
       )}
-            <Typography variant="body1" className='text-end'>{formatDate(selectedOrder.orderTime)}: تم الطلب في</Typography>
-            {selectedOrder.products.map((product) => (
+            </div>
+            <div className='flex justify-start' style={{direction:'rtl'}}>
+            <Typography variant="body1" className='text-end'>تم الطلب في: {formatDate(selectedOrder.orderTime)}</Typography>
+            </div>
+            {/* {selectedOrder.products.map((product) => (
               <div key={product._id} className='mt-[4vh] text-end'>
+                <div className='flex items-center justify-end'>
+                <Avatar src={product.dishImage}/>
+                </div>
                 <Typography variant="body1">{product.orderFrom}: اسم المتجر</Typography>
                 <Typography component="span" variant="body2" >{product.name}: المنتج</Typography><br />
                 <Typography component="span" variant="body2" >{product.quantity}: العدد</Typography><br />
                 <Typography component="span" variant="body2" >₪{product.price}: السعر</Typography><br />
-                {/* <Typography component="span" variant="body2">Extras: {product.extras ? product.extras.map(extra => extra.name).join(', ') : 'None'}</Typography><br />
-                <Typography component="span" variant="body2">Extras Price: {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}</Typography><br /> */}
                 {product.extras && product.extras.length > 0 ? (
   <>
     <Typography component="span" variant="body2" >
@@ -399,7 +414,87 @@ const openWaze = (latitude, longitude) => {
                           )}
                         </div>
               </div>
-            ))}
+            ))} */}
+   {selectedOrder.products.map((product) => (
+  <div key={product._id} className='mt-[4vh] text-start'>
+    <div className='flex items-center justify-start !text-start' style={{direction:'rtl'}}>
+      <Avatar src={product.dishImage} variant='circular' size='lg' color='black' className='ml-4' />
+      <div className='text-end'>
+        <Typography component="span" variant="body2"> اسم المتجر: {product.orderFrom}</Typography><br/>
+        <Typography component="span" variant="body2"> المنتج: {product.name}</Typography><br />
+        <Typography component="span" variant="body2"> العدد: {product.quantity}</Typography><br />
+        <Typography component="span" variant="body2"> السعر: ₪ {product.price}</Typography><br />
+        {product.extras && product.extras.length > 0 ? (
+          <>
+            <Typography component="span" variant="body2">
+            اضافات: {product.extras.map(extra => extra.name).join(', ')}
+            </Typography><br />
+            <Typography component="span" variant="body2">
+            سعر الاضافات: ₪ {product.extras.reduce((acc, extra) => acc + extra.price, 0)} 
+            </Typography><br />
+          </>
+        ) : (
+          <>
+          <Typography component="span" variant="body2" className='text-end'>
+            لايوجد اضافات
+          </Typography><br />
+          </>
+        )}
+      </div>
+    </div>
+
+    <div className="status-info mt-[2vh] mb-[2vh]">
+      <Typography variant="body1" className='text-end'>حالة الطلب</Typography>
+      {selectedOrder.status === 'Approved' && (
+        <Paper elevation={3} className="status-card accepted" style={{ backgroundColor: 'green', textAlign: 'start' }}>
+          <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
+            تم قبول الطلب
+          </Typography><br />
+        </Paper>
+      )}
+      {selectedOrder.status === 'Completed' && (
+        <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'start' }}>
+          <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
+            الطلب جاهز
+          </Typography><br />
+        </Paper>
+      )}
+      {selectedOrder.status === 'Delivered' && (
+        <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'start' }}>
+          <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
+            تم الارسال
+          </Typography><br />
+        </Paper>
+      )}
+      {selectedOrder.status === 'Not Approved' && (
+        <Paper elevation={3} className="status-card declined" style={{ backgroundColor: 'red', textAlign: 'start' }}>
+          <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
+            طلب مرفوض
+          </Typography><br />
+        </Paper>
+      )}
+      {selectedOrder.status === 'Preparing' && selectedOrder.preparingStartedAt && (
+        <Paper elevation={3} className="status-card preparing" style={{ backgroundColor: 'yellow', textAlign: 'start' }}>
+          <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
+            طلب قيد التجهيز
+          </Typography><br />
+          <Typography component="span" variant="body2" className='text-end'>
+            Preparing Time Left: {calculateRemainingPreparingTime(selectedOrder)} minutes
+          </Typography>
+        </Paper>
+      )}
+      {!selectedOrder.status && (
+        <Paper elevation={3} className="status-card no-status text-end">
+          <Typography component="span" variant="body2" className='text-end'>
+            الطلب قيد الانتظار
+          </Typography><br />
+        </Paper>
+      )}
+    </div>
+  </div>
+))}
+
+
             <Typography variant="h6" className='text-center'>₪ {calculateTotalPrice(selectedOrder)}: السعر الإجمالي</Typography>
           </DialogContent>
         </Dialog>

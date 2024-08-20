@@ -5,9 +5,8 @@ import { IconButton } from '@mui/material';
 const BackToTopButton = () => {
   const [showButton, setShowButton] = useState(false);
 
-  // Logic to toggle the visibility of the button based on scroll position
   const handleScroll = () => {
-    if (window.pageYOffset > 300) { // Show after 300px of scrolling down
+    if (window.pageYOffset > 300) {
       setShowButton(true);
     } else {
       setShowButton(false);
@@ -21,7 +20,6 @@ const BackToTopButton = () => {
     };
   }, []);
 
-  // Scroll back to the top of the page when button is clicked
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -31,11 +29,8 @@ const BackToTopButton = () => {
       {showButton && (
         <IconButton
           onClick={scrollToTop}
-          className="fixed bottom-5 right-5 sm:bottom-10 sm:right-10 bg-black text-white p-3 hover:bg-gray-800 transition-all"
-          aria-label="back to top"
-          style={{
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-          }}
+        className="!fixed bottom-10 right-10 !bg-[#2196f3] text-white border-none rounded-full cursor-pointer text-2xl  shadow-md"
+        aria-label="back to top"
         >
           <ArrowUpwardIcon fontSize="large" />
         </IconButton>
@@ -43,5 +38,7 @@ const BackToTopButton = () => {
     </>
   );
 };
+
+
 
 export default BackToTopButton;

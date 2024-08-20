@@ -147,6 +147,7 @@ import AxiosRequest from '../Components/AxiosRequest';
 import { TextField, Button, Typography, Grid, Paper, Input } from '@mui/material';
 import { InsertPhotoOutlined } from '@mui/icons-material';
 import { toast } from 'react-toastify';
+import MapModal from '../views/checkout/Map/MapModal';
 
 export default function EditRestaurant() {
   const { resName } = useParams();
@@ -154,11 +155,14 @@ export default function EditRestaurant() {
   const [restaurant, setRestaurant] = useState(null);
   const [updatedName, setUpdatedName] = useState('');
   const [updatedContact, setUpdatedContact] = useState('');
+  const [updatedCoordinates, setUpdatedCoordinates] = useState({ lat: 31.7683, lng: 35.2137,address:'' });
   const [updatedLocation, setUpdatedLocation] = useState('');
   const [restaurantImage, setRestaurantImage] = useState(null);
   const token = localStorage.getItem('token');
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const isOwner = localStorage.getItem('isOwner') === 'true';
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [locationChanged, setLocationChanged] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -189,11 +193,29 @@ export default function EditRestaurant() {
     setRestaurantImage(e.target.files[0]);
   };
 
+  
+  const handleOpenMap = () => {
+    setIsMapOpen(true);
+  };
+
+  const handleCloseMap = () => {
+    setIsMapOpen(false);
+  };
+
+  const handleConfirmLocation = (selectedLocation) => {
+    setUpdatedCoordinates(selectedLocation); // Update location state with selected location
+    setLocationChanged(true); // Update locationChanged state to indicate that the location has been changed
+    setIsMapOpen(false);
+  };
+
   const handleUpdate = async () => {
     const formData = new FormData();
     formData.append('newRestaurantName', updatedName || '');
     formData.append('newLocation', updatedLocation || '');
     formData.append('newContact', updatedContact || '');
+    if(locationChanged){
+    formData.append("updatedCoordinates", JSON.stringify(updatedCoordinates)); // Save location as JSON string
+    }
     if (restaurantImage) {
       formData.append('restaurantImage', restaurantImage);
     }
@@ -238,6 +260,7 @@ export default function EditRestaurant() {
               label="اسم المتجر"
               variant="outlined"
               fullWidth
+              style={{direction:'rtl'}}
               sx={{
                 '& .MuiOutlinedInput-input:focus': {
                   outline: 'none', // Removes the focus ring
@@ -253,6 +276,7 @@ export default function EditRestaurant() {
               label="رقم الهاتف"
               variant="outlined"
               fullWidth
+              style={{direction:'rtl'}}
               sx={{
                 '& .MuiOutlinedInput-input:focus': {
                   outline: 'none', // Removes the focus ring
@@ -272,10 +296,11 @@ export default function EditRestaurant() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="الموقع على الخارطة"
+              label="الموقع"
               variant="outlined"
               fullWidth
               value={updatedLocation}
+              style={{direction:'rtl'}}
               sx={{
                 '& .MuiOutlinedInput-input:focus': {
                   outline: 'none', // Removes the focus ring
@@ -290,6 +315,7 @@ export default function EditRestaurant() {
                 type="file"
                 variant="outlined"
                 accept="image/*"
+                style={{direction:'rtl'}}
                 sx={{
                   '& .MuiOutlinedInput-input:focus': {
                     outline: 'none', // Removes the focus ring
@@ -301,7 +327,15 @@ export default function EditRestaurant() {
               />
           </Grid>
           <Grid item xs={12}>
-            <div className='flex items-center justify-center mt-4'>
+            <div className='flex flex-col items-center justify-center gap-2 mt-4'>
+            <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpenMap}
+        className="mb-4"
+      >
+        حدد الموقع على الخريطة
+      </Button>
             <Button variant="contained" color="primary" type="submit">
              تحديث
             </Button>
@@ -309,6 +343,12 @@ export default function EditRestaurant() {
           </Grid>
         </Grid>
       </form>
+      <MapModal
+      open={isMapOpen}
+      onClose={handleCloseMap}
+      location={updatedCoordinates}
+      onConfirm={handleConfirmLocation}
+    />
     </Paper>
   );
 }
