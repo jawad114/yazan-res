@@ -41,11 +41,11 @@ const RestaurantLocationModal = ({ open, onClose, location }) => {
 
   const handleShowOnGoogleMaps = () => {
 
-    window.open(`https://www.google.com/maps/search/?api=1&query=${longitude},${latitude}`, '_blank');
+    window.open(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`, '_blank');
   };
 
   const handleShowOnWaze = () => {
-    window.open(`https://www.waze.com/ul?ll=${longitude},${latitude}&navigate=yes`, '_blank');
+    window.open(`https://www.waze.com/ul?ll=${latitude},${longitude}&navigate=yes`, '_blank');
   };
 
 

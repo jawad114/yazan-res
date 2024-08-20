@@ -151,11 +151,11 @@ const Orders = () => {
   };
 
   const openGoogleMaps = (latitude, longitude) => {
-    window.open(`https://www.google.com/maps/search/?api=1&query=${longitude},${latitude}`, '_blank');
+    window.open(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`, '_blank');
 };
 
 const openWaze = (latitude, longitude) => {
-    window.open(`https://www.waze.com/ul?ll=${longitude},${latitude}&navigate=yes`, '_blank');
+    window.open(`https://www.waze.com/ul?ll=${latitude},${longitude}&navigate=yes`, '_blank');
 };
 
   const handleCloseDialog = () => {
@@ -442,8 +442,9 @@ const openWaze = (latitude, longitude) => {
         )}
       </div>
     </div>
-
-    <div className="status-info mt-[2vh] mb-[2vh]">
+  </div>
+))}
+  <div className="status-info mt-[2vh] mb-[2vh]">
       <Typography variant="body1" className='text-end'>حالة الطلب</Typography>
       {selectedOrder.status === 'Approved' && (
         <Paper elevation={3} className="status-card accepted" style={{ backgroundColor: 'green', textAlign: 'start' }}>
@@ -491,8 +492,6 @@ const openWaze = (latitude, longitude) => {
         </Paper>
       )}
     </div>
-  </div>
-))}
 
 
             <Typography variant="h6" className='text-center'>₪ {calculateTotalPrice(selectedOrder)}: السعر الإجمالي</Typography>
