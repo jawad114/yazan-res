@@ -558,8 +558,7 @@ useEffect(() => {
                                                             </>
                                                         )}
 
-                                                            طريقة الاستلام: {order.shippingOption}
-                                                            {order.shippingOption === 'dine-in' &&(
+                                                  طريقة الاستلام: {order.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}                                                    {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
                                                                 رقم الطاولة: {order.tableNumber}
                                                                 </Typography>
@@ -600,12 +599,12 @@ useEffect(() => {
                                     ) : (
                                         <>
                                             {order.status === 'Preparing' && order.preparingTime && (
-                                                <Typography variant="h6" gutterBottom>
+                                                <Typography variant="h6" gutterBottom className='bg-yellow-500'>
                                                 {order.preparingTime} :الوقت المقدر لتجهيز الطلبية
                                                 </Typography>
                                             )}
                                             {order.status === 'Preparing' && order.preparingStartedAt && (
-                                                <Typography variant="h6" gutterBottom>
+                                                <Typography variant="h6" gutterBottom >
                                                 {calculateRemainingPreparingTime(order)} :الوقت المتبقي للتحضير
                                                 </Typography>
                                             )}
@@ -642,7 +641,8 @@ useEffect(() => {
                                                             )}
                                                             </>
                                                         )}
-                                                            طريقة الاستلام: {order.shippingOption}
+                                                          طريقة الاستلام: {order.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}                                                    
+
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
                                                                 {order.tableNumber} :رقم الطاولة
@@ -727,7 +727,7 @@ useEffect(() => {
                     </Typography>
                 )}
                 <Button className="mt-4 mb-4" variant="contained" onClick={handleGoToRestaurantArea}>
-                انتقل إلى منطقة المطعم
+                انتقل الى الإعدادات
                 </Button>
             </Box>
         </Box>

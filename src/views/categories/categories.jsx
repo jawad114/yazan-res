@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Container, Typography,TextField, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import styles from './categories.module.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
@@ -24,8 +24,10 @@ export default function Categories() {
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const [imageLoading, setImageLoading] = useState(true);
   const isClient = localStorage.getItem('isClient') === 'true';
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const [open, setOpen] = useState(false);  // State for handling login dialog
   const [openingHours, setOpeningHours] = useState(null);
+  const [notFound, setNotFound] = useState(false);
   const [restaurantStatus, setRestaurantStatus] = useState('');
 
   const navigate = useNavigate();
@@ -56,47 +58,60 @@ export default function Categories() {
     navigate('/register-client'); // Replace with your account creation route
   };
 
+  const fetchCategories = async (searchTerm = '') => {
+    try {
+      let endpoint = `/restaurant-categories/${resName}`;
+if (searchTerm) {
+  endpoint = `/search-categories/${resName}?q=${encodeURIComponent(searchTerm)}`;
+}
+      const response = await AxiosRequest.get(endpoint);
+      console.log('Search Term',searchTerm);
+      console.log('API Response:', response.data.categories);
+      if (response.data.status === "ok") {
+        setCategories(response.data.categories);
+        setRestaurantImage(response.data.restaurantImage);
+        setRestaurantContact(response.data.contact);
+        setNotFound(false); // Reset not found status when data is retrieved
+      } else if (response.data.status === "notfound") {
+        setCategories([]); // Clear categories
+        setRestaurantImage(response.data.restaurantImage);
+        setNotFound(true); // Set not found status
+
+      }
+    } catch (error) {
+      console.log(error.message || "Internal Server Error");
+    } finally {
+      setLoading(false);
+      setImageLoading(false);
+    }
+  };
+
+  const fetchOpeningHoursAndStatus = async () => {
+    try {
+      const [hoursResponse, statusResponse] = await Promise.all([
+        AxiosRequest.get(`/opening-hours/${resName}`),
+        AxiosRequest.get(`/restaurant-status/${resName}`)
+      ]);
+
+      if (hoursResponse.status === 200) {
+        setOpeningHours(hoursResponse.data.openingHours);
+      }
+
+      if (statusResponse.status === 200) {
+        setRestaurantStatus(statusResponse.data.status);
+      }
+    } catch (error) {
+      console.error('Error fetching opening hours or status:', error);
+    }
+  };
+
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await AxiosRequest.get(`/restaurant-categories/${resName}`);
-        if (response.data.status === "ok") {
-          setCategories(response.data.categories);
-          setRestaurantImage(response.data.restaurantImage);
-          setRestaurantContact(response.data.contact);
-        } else if (response.data.status === "notfound") {
-          setRestaurantImage(response.data.restaurantImage);
-        }
-      } catch (error) {
-        console.log(error.message || "Internal Server Error");
-      } finally {
-        setLoading(false);
-        setImageLoading(false);
-      }
-    };
-
-    const fetchOpeningHoursAndStatus = async () => {
-      try {
-        const [hoursResponse, statusResponse] = await Promise.all([
-          AxiosRequest.get(`/opening-hours/${resName}`),
-          AxiosRequest.get(`/restaurant-status/${resName}`)
-        ]);
-
-        if (hoursResponse.status === 200) {
-          setOpeningHours(hoursResponse.data.openingHours);
-        }
-
-        if (statusResponse.status === 200) {
-          setRestaurantStatus(statusResponse.data.status);
-        }
-      } catch (error) {
-        console.error('Error fetching opening hours or status:', error);
-      }
-    };
-
     fetchCategories();
     fetchOpeningHoursAndStatus();
   }, [resName]);
+
+
 
 
   
@@ -171,6 +186,10 @@ export default function Categories() {
 
   const alt = `${resName}'s Image`;
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value); // Update search term state
+    fetchCategories(event.target.value);
+  };
 
   const getDayName = () => {
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -234,25 +253,6 @@ export default function Categories() {
     </Box>
   </Box>
 )}
-    {/* {restaurantContact && (
-      <Box 
-      className='relative flex justify-start items-center w-full  px-4 p-4 rounded-lg shadow-lg'
-      sx={{ 
-        mx: 'auto', 
-        border: '1px solid #ddd',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2,
-        background: 'linear-gradient(135deg, #ff7e5f, #feb47b)', // Gradient background
-        color: '#fff',
-      }}
-    >
-      <Phone className="h-6 w-6 text-white" />
-      <Typography variant="body1">
-        {restaurantContact}
-      </Typography>
-    </Box>
-)} */}
 {restaurantContact && (
         <div className="relative flex items-center justify-start w-full px-4 py-2 ">
           <a 
@@ -265,6 +265,20 @@ export default function Categories() {
           </a>
         </div>
       )}
+             <TextField
+            placeholder="ابحث عن فئة..."
+            style={{
+              textAlign: 'center', // محاذاة النص إلى المركز
+              direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+              width: '90%',      // لضمان ملء الحاوية
+              padding: '8px',    // ضبط الحشو حسب الحاجة
+            }}
+            value={searchTerm}
+            type="search"
+            variant="outlined"
+            onChange={handleSearchChange}
+            className="w-full sm:w-[70vw] mt-4 mb-4"
+          />
 
             <h1 className='py-4'>{resName} :الفئات الخاصة في</h1>
             { isAdmin && (
@@ -278,7 +292,7 @@ export default function Categories() {
                       </Button>
                       </div>
 )}
-            <div>
+            {/* <div>
               {categories.length === 0 ? (
                 <p className='font-bold'>الفئة غير موجودة</p>
               ) : (
@@ -296,9 +310,58 @@ export default function Categories() {
                       <Button
                         variant='contained'
                         className={styles.btn}
+                        style={{direction:'rtl'}}
                         onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
                       >
-                        {category.categoryName} عرض  فئة
+                        عرض  فئة: {category.categoryName}
+                      </Button>
+                      {(isAdmin || isOwner) && (
+                        <div className="flex space-x-2 mt-2">
+                          <Button
+                            variant='outlined'
+                            color='primary'
+                            onClick={() => handleEditCategory(category)}
+                          >
+                            تعديل
+                          </Button>
+                          <Button
+                            variant='outlined'
+                            color='secondary'
+                            onClick={() => handleDeleteCategory(category.categoryName)}
+                          >
+                            حذف
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div> */}
+            <div>
+              {categories.length === 0 ? (
+                <p className='font-bold'>الفئة غير موجودة</p>
+              ) : notFound ? (
+                <p className='font-bold'>الفئة غير موجودة</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[4vh]">
+                  {categories.map((category, index) => (
+                    <div className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white' key={index}>
+                      <img
+                        src={category.categoryImage}
+                        alt={`${category.categoryName}'s Image`}
+                        width={200}
+                        onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
+                        className='h-32 object-cover rounded-md hover:cursor-pointer'
+                      />
+                      <Typography className='text-lg font-semibold text-center'>{category.categoryName}</Typography>
+                      <Button
+                        variant='contained'
+                        className={styles.btn}
+                        style={{ direction: 'rtl' }}
+                        onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
+                      >
+                        عرض فئة: {category.categoryName}
                       </Button>
                       {(isAdmin || isOwner) && (
                         <div className="flex space-x-2 mt-2">
@@ -333,9 +396,9 @@ export default function Categories() {
       </div>
 
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
-        <DialogTitle>تعديل الفئة</DialogTitle>
+        <DialogTitle className='text-center'>تعديل الفئة</DialogTitle>
         <DialogContent className='space-y-10'>
-          <DialogContentText>
+          <DialogContentText className='text-end'>
           لتعديل هذه الفئة، يرجى تحديث الاسم أو الصورة ثم النقر على حفظ
           </DialogContentText>
           <input
@@ -343,10 +406,12 @@ export default function Categories() {
             value={currentCategory.categoryName}
             onChange={(e) => setCurrentCategory({ ...currentCategory, categoryName: e.target.value })}
             placeholder="اسم الفئة"
+            style={{direction:'rtl'}}
           />
           <input
             type="file"
             accept="image/*"
+            style={{direction:'rtl'}}
             onChange={(e) => handleImageUpload(e.target.files[0])}
           />
         </DialogContent>
@@ -363,7 +428,7 @@ export default function Categories() {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle className='text-center'>تنبية</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText className='text-end'>
           يجب أن تكون مسجلاً لاتمام عملية الشراء
           </DialogContentText>
         </DialogContent>

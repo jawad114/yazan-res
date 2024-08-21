@@ -222,7 +222,7 @@ const AddDish = () => {
 }, [isAdmin, isOwner, navigate]);
 
   const handleAddDish = async () => {
-    if (!name || !price || !dishImage || !description ) {
+    if (!name || !price || !dishImage ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -282,53 +282,57 @@ const AddDish = () => {
 
   return (
     <div className="flex flex-col p-4 md:p-8">
-      <Typography variant="h5" gutterBottom>
+      <Typography className="text-center" variant="h5" gutterBottom>
       اضف منتج
       </Typography>
-      <label htmlFor="dishImage" className="block mt-4">اضف صورة المنتج</label>
+      <label htmlFor="dishImage" className="block mt-4 text-end">اضف صورة المنتج</label>
       <input 
         id='dishImage' 
         type="file" 
+        style={{direction:'rtl'}}
         onChange={(e) => handleImageUpload(e.target.files[0])} 
         className="w-full h-[10vh] mt-2 p-2 rounded-lg border border-gray-300" 
       />
       {dishImage && <img className="mt-2" src={URL.createObjectURL(dishImage)} alt="Dish" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
 
-      <label htmlFor="name" className="block mt-4">اسم المنتج</label>
+      <label htmlFor="name" className="block mt-4 text-end">اسم المنتج</label>
       <input 
         id="name" 
         type="text" 
         value={name} 
         onChange={(e) => setName(e.target.value)} 
         placeholder="اسم المنتج" 
+        style={{direction:'rtl'}}
         className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
       />
 
-      <label htmlFor="price" className="block mt-4">سعر المنتج</label>
+      <label htmlFor="price" className="block mt-4 text-end">سعر المنتج</label>
       <input 
         id="price" 
         type="number" 
         value={price} 
         onChange={(e) => setPrice(e.target.value)} 
         placeholder="سعر المنتج" 
+        style={{direction:'rtl'}}
         className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
       />
 
-      <label htmlFor="description" className="block mt-4">وصف المنتج</label>
+      <label htmlFor="description" className="block mt-4 text-end">وصف المنتج</label>
       <TextField 
         id="description" 
         type="text" 
         value={description} 
         onChange={(e) => setDescription(e.target.value)} 
         placeholder="وصف المنتج" 
+        style={{direction:'rtl'}}
         className="w-full  mt-2 rounded-lg border border-gray-300" 
         rows={4} 
       />
 
-      <Typography variant="subtitle1">قم بزيادة اضافات اجبارية في حال توفرها</Typography>
+      <Typography variant="subtitle1" className="text-end">قم بزيادة اضافات اجبارية في حال توفرها</Typography>
       {requiredExtras.map((extra, index) => (
         <div key={index}>
-          <label htmlFor={`requiredExtraName${index}`} className="block mt-4">اسم الآضافة الاجبارية</label>
+          <label htmlFor={`requiredExtraName${index}`} className="block mt-4 text-end">اسم الآضافة الاجبارية</label>
           <input 
             id={`requiredExtraName${index}`} 
             type="text" 
@@ -338,11 +342,12 @@ const AddDish = () => {
               newExtras[index].name = e.target.value;
               setRequiredExtras(newExtras);
             }} 
+            style={{direction:'rtl'}}
             placeholder="اسم الآضافة الاجبارية" 
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
 
-          <label htmlFor={`requiredExtraPrice${index}`} className="block mt-4">سعر الآضافة الآجبارية</label>
+          <label htmlFor={`requiredExtraPrice${index}`} className="block mt-4 text-end">سعر الآضافة الآجبارية</label>
           <input 
             id={`requiredExtraPrice${index}`} 
             type="number" 
@@ -352,6 +357,7 @@ const AddDish = () => {
               newExtras[index].price = e.target.value;
               setRequiredExtras(newExtras);
             }} 
+            style={{direction:'rtl'}}
             placeholder="سعر الآضافة الآجبارية" 
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
@@ -359,14 +365,15 @@ const AddDish = () => {
       ))}
       <Button onClick={() => setRequiredExtras([...requiredExtras, { name: "", price: "" }])} className="mt-4">أضف خيارًا إضافيًا اجباري بحال توفره</Button>
 
-      <Typography variant="subtitle1" className="mt-8">قم بزيادة اضافات اختيارية بحال توفرها</Typography>
+      <Typography variant="subtitle1" className="mt-8 text-end">قم بزيادة اضافات اختيارية بحال توفرها</Typography>
       {optionalExtras.map((extra, index) => (
         <div key={index}>
-          <label htmlFor={`optionalExtraName${index}`} className="block mt-4">اسم الآضافة الاختيارية</label>
+          <label htmlFor={`optionalExtraName${index}`} className="block mt-4 text-end">اسم الآضافة الاختيارية</label>
           <input 
             id={`optionalExtraName${index}`} 
             type="text" 
             value={extra.name} 
+            style={{direction:'rtl'}}
             onChange={(e) => {
               const newExtras = [...optionalExtras];
               newExtras[index].name = e.target.value;
@@ -376,11 +383,12 @@ const AddDish = () => {
             className="w-full p-2 mt-2 rounded-lg border border-gray-300" 
           />
 
-          <label htmlFor={`optionalExtraPrice${index}`} className="block mt-4">سعر الآضافة الاختيارية</label>
+          <label htmlFor={`optionalExtraPrice${index}`} className="block mt-4 text-end">سعر الآضافة الاختيارية</label>
           <input 
             id={`optionalExtraPrice${index}`} 
             type="number" 
             value={extra.price} 
+            style={{direction:'rtl'}}
             onChange={(e) => {
               const newExtras = [...optionalExtras];
               newExtras[index].price = e.target.value;

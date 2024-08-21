@@ -1,137 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { useNavigate, useParams } from 'react-router-dom';
-// import AxiosRequest from '../Components/AxiosRequest';
-// import { toast } from 'react-toastify';
-
-// export default function EditRestaurant() {
-//   const { resName, categoryName, dishId } = useParams();
-//   const [loading, setLoading] = useState(true);
-//   const [dish, setDish] = useState(null);
-//   const [updatedDishName, setUpdatedDishName] = useState('');
-//   const [updatedPrice, setUpdatedPrice] = useState('');
-//   const [updatedDescription, setUpdatedDescription] = useState('');
-//   const [imageFile, setImageFile] = useState(null);
-//   const token = localStorage.getItem('token');
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     if (!localStorage.getItem('isAdmin') && !localStorage.getItem('isOwner')) {
-//       navigate('/forbidden'); // Replace with your target route
-//     }
-//   }, [navigate]);
-
-//   useEffect(() => {
-//     const fetchDish = async () => {
-//       try {
-//         let headers = {};
-//         if (token) {
-//           headers.Authorization = `Bearer ${token}`;
-//         }
-//         const response = await AxiosRequest.get(`/dishes/${dishId}`, { headers });
-//         setDish(response.data);
-//         setLoading(false);
-//       } catch (error) {
-//         console.error('Error fetching dish:', error);
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchDish();
-//   }, [dishId, token]);
-
-//   const handleUpdate = async () => {
-//     try {
-//       const formData = new FormData();
-//       formData.append('name', updatedDishName);
-//       formData.append('price', updatedPrice);
-//       formData.append('description', updatedDescription);
-//       if (imageFile) {
-//         formData.append('dishImage', imageFile);
-//       }
-
-//       let headers = {
-//         'Content-Type': 'multipart/form-data'
-//       };
-//       if (token) {
-//         headers.Authorization = `Bearer ${token}`;
-//       }
-
-//       const res = await AxiosRequest.put(`/update-dish/${resName}/${categoryName}/${dishId}`, formData, { headers });
-
-//       console.log(res.data);
-
-//       // Update the local state to reflect the changes
-//       setDish({
-//         ...dish,
-//         name: updatedDishName,
-//         price: updatedPrice,
-//         description: updatedDescription,
-//         dishImage: imageFile ? URL.createObjectURL(imageFile) : dish.dishImage
-//       });
-
-//       // Optional: Show a success message
-//       toast.success('Item updated successfully');
-//       navigate(-1);
-//     } catch (error) {
-//       console.error('Error updating item:', error);
-//       toast.error('Failed to update item');
-//     }
-//   };
-
-//   if (loading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (!dish) {
-//     return <div>Dish not found for ID: {dishId}</div>;
-//   }
-
-//   return (
-//     <div>
-//       <h2>Edit Dish</h2>
-//       <form onSubmit={(e) => {
-//         e.preventDefault();
-//         handleUpdate();
-//       }}>
-//         <label>
-//           Dish Name:
-//           <input
-//             type="text"
-//             value={updatedDishName}
-//             onChange={(e) => setUpdatedDishName(e.target.value)}
-//           />
-//         </label>
-//         <label>
-//           Price:
-//           <input
-//             type="number"
-//             value={updatedPrice}
-//             onChange={(e) => setUpdatedPrice(e.target.value)}
-//           />
-//         </label>
-//         <label>
-//           Description:
-//           <input
-//             type="text"
-//             value={updatedDescription}
-//             onChange={(e) => setUpdatedDescription(e.target.value)}
-//           />
-//         </label>
-//         <label>
-//           Dish Image:
-//           <input
-//             type="file"
-//             accept="image/*"
-//             onChange={(e) => setImageFile(e.target.files[0])}
-//           />
-//         </label>
-//         <button type="submit">Update</button>
-//       </form>
-//     </div>
-//   );
-// }
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AxiosRequest from '../Components/AxiosRequest';
@@ -164,7 +30,11 @@ export default function EditRestaurant() {
           headers.Authorization = `Bearer ${token}`;
         }
         const response = await AxiosRequest.get(`/dishes/${dishId}`, { headers });
-        setDish(response.data);
+        setDish(response.data.data);
+        setUpdatedDishName(response.data.data.name);
+        setUpdatedPrice(response.data.data.price);
+        setUpdatedDescription(response.data.data.description);
+        console.log('Dish',response.data.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching dish:', error);
@@ -300,6 +170,10 @@ export default function EditRestaurant() {
             type="file"
             accept="image/*"
             variant="outlined"
+            style={{
+              textAlign: 'center', // محاذاة النص إلى المركز
+              direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
+            }}
             onChange={(e) => setImageFile(e.target.files[0])}
             fullWidth
             sx={{

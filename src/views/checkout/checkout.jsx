@@ -52,7 +52,7 @@ const RestaurantLocationModal = ({ open, onClose, location }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%', maxWidth: 400, backgroundColor: '#fff', padding: 20, borderRadius: 8 }}>
-        <h2>موقع المتجر</h2>
+        <h5 className='text-center'>استخدم الخارطة للوصول السريع الينا</h5>
         {mapRef.current ? (
           <div ref={mapRef} style={{ width: '100%', height: 300, marginBottom: 20 }} />
         ) : null}
@@ -389,7 +389,7 @@ if (Array.isArray(details) && details.length > 0) {
         <Grid sx={{ p: 6 }} container spacing={2}>
           <Grid item xs={12}>
             <div className='flex flex-col items-center justify-center text-center mb-4'>
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{gap:1,display:'flex'}}>
               <Button
               onClick={() => {
                 setShippingOption('delivery');

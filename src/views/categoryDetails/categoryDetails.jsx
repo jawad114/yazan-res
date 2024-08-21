@@ -51,8 +51,8 @@ const CategoryDetails = () => {
   const customerId = localStorage.getItem('id');
   const token = localStorage.getItem('token');
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [triggerAddToCart, setTriggerAddToCart] = useState(null);
 const [openDialog, setOpenDialog] = useState(false);
-
   useEffect(() => {
       const fetchProducts = async () => {
         try {
@@ -196,8 +196,12 @@ const [openDialog, setOpenDialog] = useState(false);
       const resStatus = await AxiosRequest.get(`/restaurant-status/${resName}`);
       const { status, coordinates } = resStatus.data;
       console.log(status);
-      if (status === 'closed' || status === 'busy') {
-        toast.error(`Cannot add item to cart. Restaurant is ${status}.`);
+      if (status === 'closed') {
+        toast.error(<div style={{direction:'rtl'}}>لا يمكنك اضافة اغراض للسلة المتجر المطلوب مقفل حاليا</div>);
+        return;
+      }
+      if(status === 'busy'){
+       toast.error(<div style={{direction:'rtl'}}>لا يمكنك إضافة أغراض إلى السلة، المتجر مشغول حالياً</div>);
         return;
       }
       const quantity = quantities[productId];
@@ -221,13 +225,13 @@ const [openDialog, setOpenDialog] = useState(false);
       });
       handleCloseModal();
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.error) {
+      if (error.response && error.response.data && error.response.data.message) {
         if (!toast.isActive("errorToast")) {
-          toast.error(error.response.data.error, { toastId: "errorToast" });
+          toast.error(error.response.data.message, { toastId: "errorToast" });
         }
       } else {
         if (!toast.isActive("errorToast")) {
-          toast.error("An error occurred", { toastId: "errorToast" });
+          toast.error('Error Adding to cart', { toastId: "errorToast" });
         }
       }
     }
@@ -279,12 +283,52 @@ const [openDialog, setOpenDialog] = useState(false);
       });
     }
     setSelectedExtras(initialExtras);
+    setOpenM(true);
+  };
+
+  useEffect(() => {
+    if (triggerAddToCart) {
+      const { product, id, price, image, name, description } = triggerAddToCart;
+      handleAddToCart(id, price, image, name, description);
+      setTriggerAddToCart(null); // Reset trigger after handling
+    }
+  }, [triggerAddToCart]);
+  
+  const handleWithoutOpenModel = (product) => {
+    // Update state
+    setSelectedProduct(product);
+    setTotalPrice(product.price * quantities[product._id]); // Set initial total price
+    const initialExtras = {};
+  
+    if (product.extras.requiredExtras) {
+      product.extras.requiredExtras.forEach((extra) => {
+        initialExtras[extra._id] = true;
+      });
+    }
+    if (product.extras.optionalExtras) {
+      product.extras.optionalExtras.forEach((extra) => {
+        initialExtras[extra._id] = false;
+      });
+    }
+  
+    setSelectedExtras(initialExtras);
+  
+    // Set trigger for handleAddToCart
+    setTriggerAddToCart({
+      product,
+      id: product._id,
+      price: product.price,
+      image: product.dishImage,
+      name: product.name,
+      description: product.description
+    });
   };
 
   const handleCloseModal = () => {
     setSelectedProduct(null);
     setTotalPrice(0); // Reset total price when modal is closed
     setSelectedExtras({});
+    setOpenM(false);
   };
   const getTextDirection = (text) => {
     const rtlCharRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB1D-\uFB4F\uFE70-\uFEFF]/;
@@ -450,6 +494,16 @@ const [openDialog, setOpenDialog] = useState(false);
                       )}
             </div>
           )}
+         {isClient && (
+           <div
+           className="absolute top-2 right-2 cursor-pointer"
+           onClick={() => {
+            handleWithoutOpenModel(product);      
+          }}
+        >
+          <AddIcon fontSize="small" sx={{ color: 'blue' }} />
+        </div>
+        )}
         </div>
   <ListItemText
     primary={
@@ -516,7 +570,7 @@ const [openDialog, setOpenDialog] = useState(false);
       </div>
       )}
       <CustomModal
-        open={selectedProduct !== null}
+        open={openM}
         handleClose={handleCloseModal}
         body={
           selectedProduct && (

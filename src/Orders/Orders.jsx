@@ -323,7 +323,7 @@ const openWaze = (latitude, longitude) => {
       )}
         <div className='flex justify-start' style={{direction:'rtl'}}>
         <Typography variant="body1" className='text-start' gutterBottom>
-      طريقة استلام الطلب: {selectedOrder.shippingOption}
+      طريقة استلام الطلب : {selectedOrder.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}
       </Typography>
       </div>
       <div className='flex justify-start' style={{direction:'rtl'}}>

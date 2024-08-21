@@ -293,17 +293,19 @@ export default function AddCategory() {
       <div className="mt-6">
         {menu.map((category, categoryIndex) => (
           <div key={categoryIndex} className="mt-6 p-4 border border-gray-200 rounded">
-            <label className="block">:سجل اسم الفئة</label>
+            <label className="block" style={{direction:'rtl'}}>سجل اسم الفئة:</label>
             <input
               className="mt-1 block w-full"
               type="text"
               value={category.categoryName}
+              style={{direction:'rtl'}}
               onChange={(e) => handleInputChange(categoryIndex, 'categoryName', e.target.value)}
             />
-            <label className="block">:قم بتحميل صورة الفئة</label>
+            <label className="block" style={{direction:'rtl'}}>قم بتحميل صورة الفئة:</label>
             <input
               className="mt-1 block w-full"
               type="file"
+              style={{direction:'rtl'}}
               onChange={(e) => handleImageUpload(categoryIndex, e.target.files[0])}
             />
             {category.categoryImage && <img className="mt-2" src={URL.createObjectURL(category.categoryImage)} alt="Category" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
