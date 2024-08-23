@@ -7,11 +7,11 @@ export const WebSocketProvider = ({ children }) => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const socket = new WebSocket('wss://layla-marketplace.onrender.com');
+    const socket = new WebSocket('ws://api.laylamp.com:5000');
     
     // wss://layla-res.com
     // wss://yazan-layla.onrender.com
-    
+    // wss://layla-marketplace.onrender.com
     
     
     setWs(socket);

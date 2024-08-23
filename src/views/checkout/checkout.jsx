@@ -306,13 +306,13 @@ useEffect(() => {
       !shippingInfo.name || 
       (shippingOption !== 'dine-in' && (!shippingInfo.email || !shippingInfo.phoneNumber1))
     ) {
-      toast.error('Please fill all the fields');
+      toast.error(<div style={{direction:'rtl'}}>يرجى ملء جميع الحقول</div>);
       setShowRestaurantLocationModal(false);
       return;
     }
     
     if (shippingOption === 'delivery' && !currentLocation) {
-      toast.error('Please select your location for delivery.');
+      toast.error(<div style={{direction:'rtl'}}>يرجى اختيار موقعك للتوصيل</div>);
       return;
   }
     try {
@@ -324,7 +324,7 @@ useEffect(() => {
         ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }) // Conditionally add tableNumber
       };      
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
-      toast.success('Order created successfully');
+      toast.success(<div style={{direction:'rtl'}}>تم إنشاء الطلبية بنجاح</div>);
       if (selectedOption === 'self-pickup' ) {
         setShowRestaurantLocationModal(true);
       }

@@ -128,6 +128,8 @@ if (searchTerm) {
   };
 
   const handleDeleteCategory = async (categoryName) => {
+    const isConfirmed = window.confirm(`Are you sure you want to delete the category "${categoryName}"?`);
+    if (isConfirmed) {
     try {
       const response = await AxiosRequest.delete(`/delete-category/${resName}/${categoryName}`);
       if (response.data.status === 'ok') {
@@ -138,6 +140,7 @@ if (searchTerm) {
       console.error('Error deleting category:', error);
       toast.error('Failed to delete category');
     }
+  }
   };
 
   const handleImageUpload = (file) => {

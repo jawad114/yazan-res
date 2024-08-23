@@ -220,7 +220,7 @@ const [openDialog, setOpenDialog] = useState(false);
         orderFrom: resName,
         coordinates
       });
-      toast.success('Item added successfully', {
+      toast.success(<div style={{direction:'rtl'}}>تم إضافة المنتج إلى السلة</div>, {
         duration: 2000, 
       });
       handleCloseModal();
@@ -471,23 +471,17 @@ const [openDialog, setOpenDialog] = useState(false);
   className="mt-5 mb-5 p-0 bg-light rounded-5 shadow-lg d-flex flex-column"
 >
 <div className="relative">
-          <img
-          className="h-40 object-cover hover:cursor-pointer"
-          onClick={() => handleOpenModal(product)}
-            src={product.dishImage}
-            alt={product.name}
-          />
-          {(isAdmin || isOwner) && (
+{(isAdmin || isOwner) && (
             <div
-              className="absolute top-2 right-2 cursor-pointer"
+              className="absolute top-2 left-24 cursor-pointer z-10"
               onClick={() => toggleVisibility(product._id, product.visibility)}
             >
           {product.visibility === false ? (
-                        <VisibilityOff fontSize="small"  sx={{
+                        <VisibilityOff fontSize="medium"  sx={{
                           color:'blue'
                         }} />
                       ) : (
-                        <Visibility fontSize="small" sx={{
+                        <Visibility fontSize="medium" sx={{
                           color:'blue'
                         }}
                         />
@@ -496,15 +490,23 @@ const [openDialog, setOpenDialog] = useState(false);
           )}
          {isClient && (
            <div
-           className="absolute top-2 right-2 cursor-pointer"
+           className="absolute top-2 left-24 cursor-pointer z-10"
            onClick={() => {
             handleWithoutOpenModel(product);      
           }}
         >
-          <AddIcon fontSize="small" sx={{ color: 'blue' }} />
+          <AddIcon fontSize="medium" sx={{ color: 'blue' }} />
         </div>
         )}
+
         </div>
+<img
+          className="h-40 object-cover hover:cursor-pointer"
+          onClick={() => handleOpenModal(product)}
+            src={product.dishImage}
+            alt={product.name}
+          />
+
   <ListItemText
     primary={
       <div className="text-center">

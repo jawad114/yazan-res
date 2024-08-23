@@ -410,8 +410,9 @@ const showFallbackNotification = () => {
                     <div className='user-actions'>
                         {!isLoggedIn && (
                             <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>
-                                <PersonIcon /> تسجيل الدخول
-                            </button>)}
+                                <PersonIcon style={{ marginRight: '1rem' }}/> دخول
+                            </button>
+                        )}
                         <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
@@ -496,7 +497,7 @@ const showFallbackNotification = () => {
                                 )}
 
                                 <button className='action-btn' onClick={handleLogout}>
-                                    <ExitToApp style={{ marginRight: '0.5rem' }} /> تسحيل الخروج
+                                    <ExitToApp style={{ marginRight: '0.5rem' }} /> تسجيل خروج
                                 </button>
                             </>
                         )}

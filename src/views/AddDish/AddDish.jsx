@@ -281,7 +281,9 @@ const AddDish = () => {
   };
 
   return (
-    <div className="flex flex-col p-4 md:p-8">
+    <div>
+    <div className="max-w-xl flex flex-col mx-auto mt-8 p-6 bg-white shadow-lg mb-4 rounded-lg">
+    <form>
       <Typography className="text-center" variant="h5" gutterBottom>
       اضف منتج
       </Typography>
@@ -329,7 +331,7 @@ const AddDish = () => {
         rows={4} 
       />
 
-      <Typography variant="subtitle1" className="text-end">قم بزيادة اضافات اجبارية في حال توفرها</Typography>
+      <Typography variant="subtitle1" className="text-end !font-bold mt-4">قم بزيادة اضافات اجبارية في حال توفرها</Typography>
       {requiredExtras.map((extra, index) => (
         <div key={index}>
           <label htmlFor={`requiredExtraName${index}`} className="block mt-4 text-end">اسم الآضافة الاجبارية</label>
@@ -363,9 +365,10 @@ const AddDish = () => {
           />
         </div>
       ))}
-      <Button onClick={() => setRequiredExtras([...requiredExtras, { name: "", price: "" }])} className="mt-4">أضف خيارًا إضافيًا اجباري بحال توفره</Button>
-
-      <Typography variant="subtitle1" className="mt-8 text-end">قم بزيادة اضافات اختيارية بحال توفرها</Typography>
+      <div className="flex items-center justify-end">
+      <Button onClick={() => setRequiredExtras([...requiredExtras, { name: "", price: "" }])} className="mt-4 mb-4">أضف خيارًا إضافيًا اجباري بحال توفره</Button>
+      </div>
+      <Typography variant="subtitle1" className="text-end !font-bold mt-2">قم بزيادة اضافات اختيارية بحال توفرها</Typography>
       {optionalExtras.map((extra, index) => (
         <div key={index}>
           <label htmlFor={`optionalExtraName${index}`} className="block mt-4 text-end">اسم الآضافة الاختيارية</label>
@@ -399,10 +402,15 @@ const AddDish = () => {
           />
         </div>
       ))}
-      <Button onClick={() => setOptionalExtras([...optionalExtras, { name: "", price: "" }])} className="mt-4">أضف خيارًا إضافيًا</Button>
-
+            <div className="flex items-center justify-end">
+      <Button onClick={() => setOptionalExtras([...optionalExtras, { name: "", price: "" }])} className="mt-4 mb-4">أضف خيارًا إضافيًا</Button>
+           </div>
+           <div className="flex items-center justify-center">
       <Button onClick={handleAddDish} className="mt-8" variant="contained">اضف المنتج</Button>
+      </div>
       <ToastContainer className={toastStyle.container} toastClassName={toastStyle.toast} />
+      </form>
+    </div>
     </div>
   );
 };
