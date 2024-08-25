@@ -12,7 +12,7 @@ import {
   Grid,
   Box
 } from "@mui/material";
-import { Avatar } from "@material-tailwind/react";
+import { Avatar, Card } from "@material-tailwind/react";
 import { ClockIcon} from "@heroicons/react/20/solid";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
@@ -27,6 +27,8 @@ import Carousels from "../../Home/Carousels/Carousels";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import OldPhoneIcon from '../../assets/landline.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faMotorcycle, faShoppingBag, faTimes, faUtensils } from "@fortawesome/free-solid-svg-icons";
 
 const CategoryDetails = () => {
   const [products, setProducts] = useState([]);
@@ -50,9 +52,11 @@ const CategoryDetails = () => {
   const isClient = localStorage.getItem('isClient') === 'true';
   const customerId = localStorage.getItem('id');
   const token = localStorage.getItem('token');
+  const [availableOptions, setAvailableOptions] = useState([]);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [triggerAddToCart, setTriggerAddToCart] = useState(null);
 const [openDialog, setOpenDialog] = useState(false);
+
   useEffect(() => {
       const fetchProducts = async () => {
         try {
@@ -98,24 +102,25 @@ const [openDialog, setOpenDialog] = useState(false);
           setImageLoading(false);
         }
       };
-    const fetchOpeningHoursAndStatus = async () => {
-      try {
-        const [hoursResponse, statusResponse] = await Promise.all([
-          AxiosRequest.get(`/opening-hours/${resName}`),
-          AxiosRequest.get(`/restaurant-status/${resName}`)
-        ]);
 
-        if (hoursResponse.status === 200) {
-          setOpeningHours(hoursResponse.data.openingHours);
+      const fetchOpeningHoursAndStatus = async () => {
+        try {
+          const [hoursResponse, statusResponse] = await Promise.all([
+            AxiosRequest.get(`/opening-hours/${resName}`),
+            AxiosRequest.get(`/restaurant-status/${resName}`)
+          ]);
+    
+          if (hoursResponse.status === 200) {
+            setOpeningHours(hoursResponse.data.openingHours);
+          }
+    
+          if (statusResponse.status === 200) {
+            setRestaurantStatus(statusResponse.data.status);
+          }
+        } catch (error) {
+          console.error('Error fetching opening hours or status:', error);
         }
-
-        if (statusResponse.status === 200) {
-          setRestaurantStatus(statusResponse.data.status);
-        }
-      } catch (error) {
-        console.error('Error fetching opening hours or status:', error);
-      }
-    };
+      };
    fetchProducts();
    fetchOpeningHoursAndStatus();
   }, [resName, categoryName,isOwner,isAdmin]);
@@ -388,6 +393,7 @@ const [openDialog, setOpenDialog] = useState(false);
       }
     }
   };
+
   
 
   return (
@@ -445,7 +451,7 @@ const [openDialog, setOpenDialog] = useState(false);
 )} */}
 
 {restaurantContact && (
-        <div className="relative flex items-center justify-start w-full px-4 py-2 ">
+        <div className="relative flex items-center mt-2 p-4 justify-start w-full">
           <a 
             href={`tel:${restaurantContact}`} 
             className="flex items-center space-x-3 hover:bg-blue-100 p-2 rounded-lg transition-colors duration-300"
@@ -456,6 +462,7 @@ const [openDialog, setOpenDialog] = useState(false);
           </a>
         </div>
       )}
+
 
  <div className="flex flex-col w-full p-5">
 <div className="flex flex-col gap-4 items-center justify-center mb-2">
@@ -473,12 +480,12 @@ const [openDialog, setOpenDialog] = useState(false);
       ) : products.length === 0 ? (
         <Typography className="my-4">لم تُضاف أي منتجات بعد في هذه الفئة</Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className="mt-2">
           {errors && <p style={{ color: 'red' }}>{errors}</p>}
           {products.map((product, index) => (
 <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
 <ListItem
-  className="mt-5 mb-5 p-0 bg-light rounded-5 shadow-lg d-flex flex-column"
+  className="p-0 bg-light rounded-5 shadow-lg flex-column"
 >
 <div className="relative">
 {(isAdmin || isOwner) && (

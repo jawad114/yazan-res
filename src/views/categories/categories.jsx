@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography,TextField, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Container, Typography,TextField, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid,Avatar } from '@mui/material';
 import styles from './categories.module.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
-import { Avatar } from "@material-tailwind/react";
+import { Card } from "@material-tailwind/react";
 import { ClockIcon} from '@heroicons/react/20/solid';
 import OldPhoneIcon from '../../assets/landline.png';
+import { faCheck, faMotorcycle, faShoppingBag, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 export default function Categories() {
@@ -28,6 +30,7 @@ export default function Categories() {
   const [open, setOpen] = useState(false);  // State for handling login dialog
   const [openingHours, setOpeningHours] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [availableOptions, setAvailableOptions] = useState([]);
   const [restaurantStatus, setRestaurantStatus] = useState('');
 
   const navigate = useNavigate();
@@ -86,11 +89,12 @@ if (searchTerm) {
     }
   };
 
-  const fetchOpeningHoursAndStatus = async () => {
+  const fetchOpeningHoursStatusAndAvailability = async () => {
     try {
-      const [hoursResponse, statusResponse] = await Promise.all([
+      const [hoursResponse, statusResponse, availableOptionsResponse] = await Promise.all([
         AxiosRequest.get(`/opening-hours/${resName}`),
-        AxiosRequest.get(`/restaurant-status/${resName}`)
+        AxiosRequest.get(`/restaurant-status/${resName}`),
+        AxiosRequest.get(`/available-options/${resName}`)
       ]);
 
       if (hoursResponse.status === 200) {
@@ -100,21 +104,18 @@ if (searchTerm) {
       if (statusResponse.status === 200) {
         setRestaurantStatus(statusResponse.data.status);
       }
+      if (availableOptionsResponse.status === 200) {
+        setAvailableOptions(availableOptionsResponse.data.availableOptions);
+      }
     } catch (error) {
       console.error('Error fetching opening hours or status:', error);
     }
   };
-
-
   useEffect(() => {
     fetchCategories();
-    fetchOpeningHoursAndStatus();
+    fetchOpeningHoursStatusAndAvailability();
   }, [resName]);
 
-
-
-
-  
 
   const handleAddCategory = () => {
     navigate(`/add-category/${resName}`);
@@ -206,6 +207,32 @@ if (searchTerm) {
     fetchCategories(event.target.value);
   };
 
+  const renderOptionButton = (optionKey, icon) => (
+    <Grid item xs={12} sm={6} className="flex justify-center gap-2">
+<div className='relative rounded-full p-2 flex flex-col items-center'>
+ <Avatar
+      sx={{
+        width: 48,
+        height: 48,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+          <FontAwesomeIcon icon={icon} className='text-black'/>
+        </Avatar>
+        <div className='absolute bottom-0 z-50'>
+          <Avatar className='bg-white !border-black border-1' sx={{width:20,height:20}}>
+          <FontAwesomeIcon
+            icon={availableOptions[optionKey] ? faCheck : faTimes}
+            className={`text-sm ${availableOptions[optionKey] ? 'text-green-500' : 'text-red-500'}`}
+          />
+          </Avatar>
+          </div>
+      </div>  
+      </Grid>
+  );
+
   const getDayName = () => {
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const today = new Date().getDay();
@@ -245,7 +272,13 @@ if (searchTerm) {
     <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
       <Avatar
         src={restaurantImage} // Replace with dynamic category image if needed
-        className="w-32 h-32 border-4 border-white"
+        sx={{
+          width: '8rem', 
+          height: '8rem', 
+          borderWidth: '4px', 
+          borderColor: 'white', 
+          borderStyle: 'solid'
+        }}        
       />
     </div>
     <Box className='flex flex-col justify-center'>
@@ -268,8 +301,10 @@ if (searchTerm) {
     </Box>
   </Box>
 )}
-{restaurantContact && (
-        <div className="relative flex items-center justify-start w-full px-4 py-2 ">
+{/* {restaurantContact && (
+  <> 
+       <div>
+        <div className="relative flex items-center  w-full px-4 py-2 ">
           <a 
             href={`tel:${restaurantContact}`} 
             className="flex items-center space-x-3 hover:bg-blue-100 p-2 rounded-lg transition-colors duration-300"
@@ -278,8 +313,38 @@ if (searchTerm) {
             <img src={OldPhoneIcon} width={30}/>
             </div>
           </a>
+          </div>
+          <Card className='flex flex-row bg-white gap-4 shadow-md shadow-black rounded-full'>
+        {renderOptionButton('delivery', faMotorcycle)}
+        {renderOptionButton('self-pickup', faShoppingBag)}
+        {renderOptionButton('dine-in', faUtensils)}
+        </Card>
         </div>
+        </>
+      )} */}
+
+{restaurantContact  && (
+  <> 
+    <div className="flex items-center mt-2 p-4 justify-between w-full">
+      <a 
+        href={`tel:${restaurantContact}`} 
+        className="flex items-center space-x-4 hover:bg-blue-100 rounded-lg transition-colors duration-300"
+      >
+        <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+          <img src={OldPhoneIcon} width={30}/>
+        </div>
+      </a>
+      {availableOptions &&(
+      <Card className="flex flex-row bg-white shadow-md shadow-black rounded-full mx-auto">
+        {renderOptionButton('delivery', faMotorcycle)}
+        {renderOptionButton('self-pickup', faShoppingBag)}
+        {renderOptionButton('dine-in', faUtensils)}
+      </Card>
       )}
+    </div>
+  </>
+)}
+
              <TextField
             placeholder="ابحث عن فئة..."
             style={{
@@ -353,6 +418,9 @@ if (searchTerm) {
                 </div>
               )}
             </div> */}
+
+
+
             <div>
               {categories.length === 0 ? (
                 <p className='font-bold'>الفئة غير موجودة</p>
