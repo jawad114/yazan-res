@@ -9,12 +9,14 @@ import {
 } from "@material-tailwind/react";
 
 const fields = [
-  { name: "firstname", label: "الاسم", type: "text" },
-  { name: "lastname", label: "اسم العائلة", type: "text" },
-  { name: "email", label: "البريد الإلكتروني: يرجى إدخال عنوان بريد إلكتروني صحيح", type: "email" },
-  { name: "password", label: "انشاء كلمة مرور", type: "password" },
-  { name: "confirmPassword", label: "تأكيد كلمة المرور", type: "password" },
+  { name: "firstname", placeholder: "الاسم", type: "text" },
+  { name: "lastname", placeholder: "اسم العائلة", type: "text" },
+  { name: "email", placeholder: "البريد الإلكتروني", type: "email" },
+  { name: "password", placeholder: "انشاء كلمة مرور", type: "password" },
+  { name: "confirmPassword", placeholder: "تأكيد كلمة المرور", type: "password" },
 ];
+
+// : يرجى إدخال عنوان بريد إلكتروني صحيح
 
 const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -70,7 +72,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
   return (
     <Card className="registration-card">
       <CardContent>
-        <form onSubmit={handleFormSubmit} >
+        <form onSubmit={handleFormSubmit} autocomplete="off" >
           {fields.map((field, index) => {
             if (field.type === "password") {
               return (
@@ -78,6 +80,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
                   key={index}
                   name={field.name}
                   label={field.label}
+                  placeholder={field.placeholder}
                   type={showPassword ? "text" : "password"}
                   value={formData[field.name]}
                   onChange={handleInputChange}
@@ -110,7 +113,7 @@ const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {
                 <TextField
                   key={index}
                   name={field.name}
-                  label={field.label}
+                  placeholder={field.placeholder}
                   type={field.type}
                   style={{
                     textAlign: 'start', // محاذاة النص إلى المركز

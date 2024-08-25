@@ -83,7 +83,7 @@ const Verify = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={onSubmit} className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
-        <h1 className="text-3xl font-bold mb-6 text-center">Verify Account</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">التحقق من حسابك</h1>
         <div className="mb-4">
           <input
             name="email"
@@ -107,11 +107,11 @@ const Verify = () => {
             type="submit"
             variant="filled"
             disabled={loading}
-            color="black"
-            size='md'
+            color="blue"
+            size='lg'
             className="mt-2"
           >
-            {loading ? <CircularProgress size={24} /> : 'Verify Code'}
+            {loading ? <CircularProgress size={24} /> : 'تاكيد'}
           </Button>
           <Button
             onClick={handleResendCode}
@@ -120,7 +120,7 @@ const Verify = () => {
             size='md'
             className="mt-2"
           >
-            {loading ? <CircularProgress size={24} /> : canResend ? 'Send Verification Code' : `Resend Verification Code (${resendCountdown})`}
+            {loading ? <CircularProgress size={24} /> : canResend ? 'ارسل رمز تحقق الى البريد الإلكتروني' : `Resend Verification Code (${resendCountdown})`}
           </Button>
           {error && <p className="text-red-500 mt-2">{error}</p>}
           {success && <p className="text-green-500 mt-2">{success}</p>}

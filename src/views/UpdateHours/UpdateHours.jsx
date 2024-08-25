@@ -125,6 +125,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate, useParams } from "react-router-dom";
 import AxiosRequest from '../../Components/AxiosRequest';
+import './update.css'
 
 const UpdateHours = () => {
   const [day, setDay] = useState('');
@@ -218,7 +219,7 @@ const UpdateHours = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className='mt-4'>{isOwner ? resName : restaurantName} :تحديث ساعات العمل لـ</h1>
+      <h1 className='mt-4'>{isOwner ? resName : restaurantName} :تحديث ساعات العمل</h1>
       
       <div className='mt-4'>
         <Typography variant="h6">Opening Hours for {day.charAt(0).toUpperCase() + day.slice(1)}</Typography>
@@ -244,7 +245,7 @@ const UpdateHours = () => {
             </Button>
           ))}
         </div>
-        <div className='flex flex-col justify-center items-center'>
+        <div className='flex flex-col justify-center items-center datepicker-container'>
           <h4 className='mt-4'>اختر وقت الفتح</h4>
           <DatePicker
             selected={open ? new Date(open) : null}

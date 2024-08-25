@@ -4,7 +4,7 @@ const fields = [
   { name: "firstname", label: "الاسم", type: "text" },
   { name: "lastname", label: "اسم العائلة", type: "text" },
   { name: "password", label: "انشاء كلمة مرور", type: "password" },
-  { name: "email", label: "البريد الإلكتروني: يرجى إدخال عنوان بريد إلكتروني صحيح", type: "email" },
+  { name: "email", label: "يرجى إدخال عنوان بريد إلكتروني صحيح", type: "email" },
 ];
 
 const RegistrationForm = ({ formData, handleInputChange, handleSubmit }) => {

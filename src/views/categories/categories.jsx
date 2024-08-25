@@ -128,6 +128,18 @@ if (searchTerm) {
   };
 
   const handleDeleteCategory = async (categoryName) => {
+    if (isOwner) {
+      const enteredPassword = prompt('يرجى إدخال كلمة المرور لتأكيد الحذف:');
+      
+      if (enteredPassword === null) {
+        return;
+      }
+
+      if (enteredPassword !== '11111111') {
+        toast.error(<div style={{direction:'rtl'}}>كلمة المرور غير صحيحة</div>);
+        return;
+      }
+    }
     const isConfirmed = window.confirm(`Are you sure you want to delete the category "${categoryName}"?`);
     if (isConfirmed) {
     try {

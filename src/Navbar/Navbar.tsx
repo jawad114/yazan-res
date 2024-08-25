@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -235,7 +235,6 @@ useEffect(() => {
                     if (isOwner && data.type === 'newOrderReceived') {
                         if (data.restaurantName === ownerRestaurantName) {
                             console.log('New order received for your restaurant');
-
                             const currentTime = Date.now();
                             if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
                                 // Show a modal or toast asking the user to interact with the page
@@ -293,7 +292,7 @@ const playNotificationSound = () => {
 
     const id = toast.success(
         <div className="toast-custom">
-            <div>{ownerRestaurantName} تم استلام طلب جديد لـ</div>
+            <div>{ownerRestaurantName} تم استلام طلب جديد</div>
             <button
                 onClick={() => {
                     toast.dismiss(id);
@@ -334,6 +333,7 @@ const showFallbackNotification = () => {
     toast.warn('New Order Received for your restaurant. Please check your dashboard for details.', {
         autoClose: 5000,
     });
+    window.location.reload();
 };
 
     const fetchCart = async (customerId: string | null) => {
@@ -421,12 +421,12 @@ const showFallbackNotification = () => {
                             {(!isLoggedIn || !isClient) && (
                                 <MenuItem onClick={() => handleLoginRedirect('/login-client', 'isClient')}>عميل</MenuItem>
                             )}
-                            {(!isLoggedIn || !isOwner) && (
+                            {/* {(!isLoggedIn || !isOwner) && (
                                 <MenuItem onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>شركاء</MenuItem>
                             )}
                             {!isLoggedIn && (
                                 <MenuItem onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>ادارة</MenuItem>
-                            )}
+                            )} */}
                         </Menu>
                         {!isAdmin &&(
                         <Link to={`/contact-us`} className="action-btn">
@@ -440,11 +440,21 @@ const showFallbackNotification = () => {
                           )}
 
                         {/* Conditionally render the button based on the logged-in restaurant name */}
-                        {isOwner && (
+                        {/* {isOwner && (
                             <Link to={`/owner`} className="action-btn">
                                 <ListAlt style={{ marginRight: '0.5rem' }}/> الطلبات                            
                                 </Link>
+                        )} */}
+                        {isOwner && (
+                            <Link to={`/delivery-charges`} className="action-btn">
+                                <DeliveryDiningSharp style={{ marginRight: '0.5rem' }}/> رسوم
+                            </Link>
                         )}
+                                                {isAdmin && (
+                            <Link to={`/delivery-charges`} className="action-btn">
+                                <DeliveryDiningSharp style={{ marginRight: '0.5rem' }}/> رسوم
+                            </Link>
+                                                )}
                         {/* {isAdmin && (
                             <Link to={`/all-orders`} className="action-btn">
                                 <ListAlt style={{ marginRight: '0.5rem' }}/> الطلبات
@@ -552,30 +562,30 @@ const showFallbackNotification = () => {
         <h3 id='SideTextNav' className="text-2xl font-bold mb-4 text-gray-800">Layla</h3>
         <div className="space-y-2">
           {/* Conditional rendering based on auth state */}
-          {!isLoggedIn && !isAdmin && (
+          {/* {!isLoggedIn && !isAdmin && (
             <MenuItem
               className="hover:bg-gray-200 text-white rounded-md p-2 transition-colors duration-200"
               onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}
             >
               <Person style={{ marginRight: '0.2rem' }}/> ادارة
             </MenuItem>
-          )}
+          )} */}
           {!isLoggedIn && !isClient && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => handleLoginRedirect('/login-client', 'isClient')}
             >
-              <Person style={{ marginRight: '0.2rem' }}/> عميل
+              <Person style={{ marginRight: '0.2rem' }}/> تسجيل الدخول
             </MenuItem>
           )}
-          {!isLoggedIn && !isOwner && (
+          {/* {!isLoggedIn && !isOwner && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}
             >
               <Person style={{ marginRight: '0.2rem' }}/> شركاء
             </MenuItem>
-          )}
+          )} */}
           {isLoggedIn && (isAdmin || isOwner) && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
@@ -609,13 +619,22 @@ const showFallbackNotification = () => {
                             </>
                         )}
           {isOwner  && (
+            <>
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
               onClick={() => navigate(`/`)}
             >
              <SettingsIcon style={{ marginRight: '0.2rem' }}/> الإعدادات
             </MenuItem>
+            <MenuItem
+             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+             onClick={() => navigate(`/delivery-charges`)}
+                >
+            <DeliveryDiningSharp style={{ marginRight: '0.2rem' }}/> رسوم
+            </MenuItem>
+            </>
           )}
+
 
                           {isAdmin &&(
                             <>
@@ -625,6 +644,12 @@ const showFallbackNotification = () => {
                             <MenuItem onClick={() => navigate('/filter-list')} className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200">
                             <FilterList style={{ marginRight: '0.2rem' }}/> فلاتر                            
                             </MenuItem>
+                            <MenuItem
+             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+             onClick={() => navigate(`/delivery-charges`)}
+                >
+            <DeliveryDiningSharp style={{ marginRight: '0.2rem' }}/> رسوم
+            </MenuItem>
                             </>
                           )}
         {!isAdmin &&(                  

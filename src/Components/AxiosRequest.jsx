@@ -3,12 +3,9 @@
 import axios from 'axios';
 
 const AxiosRequest = axios.create({
-  baseURL: 'http://api.laylamp.com:5000'
+  baseURL: 'https://api.laylamp.com'
 });
 
-// https://layla-res.com 
-// https://yazan-layla.onrender.com
 // https://layla-marketplace.onrender.com
-
  
 export default AxiosRequest;

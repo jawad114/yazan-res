@@ -49,6 +49,8 @@ import AddFilterPage from './views/AddFilterPage/AddFilterPage';
 import FilterList from './views/FilterList/FilterList';
 import ScrollToTopButton from './Components/scrollToTopButton';
 import BackToTopButton from './Components/BackToTopButton';
+import DeliveryCharges from './views/DeliveryCharges/DeliveryCharges';
+import AccessibilityButton from './Components/AccessibilityButton';
 
 const theme = createTheme();
 
@@ -57,7 +59,11 @@ const toastStyle = {
   toast: "bg-red-500 text-white font-bold",
 };
 
+
+
 const App = () => {
+  // const sitekey= "a830c94e1fa10dbd322863db50ac9ea1"
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -76,6 +82,7 @@ const App = () => {
         pauseOnHover
         style={toastStyle}
       />
+      {/* <AccessibilityButton sitekey={sitekey}/> */}
           <div className='main-container'>
             <Routes>
               <Route path='/' element={<HomeComponent />} />
@@ -96,6 +103,7 @@ const App = () => {
               <Route path='/favorites' element={<Favorites />} />
               <Route path='/request-credentials' element={<Ownerform />} />
               <Route path='/edit/:resName' element={<EditRestaurant />} />
+              <Route path='/delivery-charges' element={<DeliveryCharges />} />
               <Route path='/owner' element={<Ownerdashboard />} />
               <Route path='/forbidden' element={<InvalidAccessPage />} />
               <Route path='/orders' element={<Orders />} />

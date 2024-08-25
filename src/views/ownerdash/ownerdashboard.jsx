@@ -13,8 +13,10 @@ import {
     Menu,
     MenuItem,
     TextField,
+    IconButton,
 } from '@mui/material';
-import { CheckCircle, Cancel, Delete, LocalShipping, Timelapse } from '@mui/icons-material';
+import { CheckCircle, Cancel, Delete, LocalShipping, Timelapse,Share, ShareOutlined, ShareRounded } from '@mui/icons-material';
+import ShareIcon from '@mui/icons-material/Share';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../../Components/AxiosRequest';
@@ -39,7 +41,6 @@ export default function OwnerDashboard() {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-
 
     const [totalOrders, setTotalOrders] = useState({
         'All orders': 0,
@@ -69,6 +70,19 @@ export default function OwnerDashboard() {
             navigate('/forbidden'); // Replace with your target route
         }
     }, [resName, navigate]);
+
+    useEffect(() => {
+        // Function to reload the page
+        const reloadPage = () => {
+          window.location.reload();
+        };
+    
+        // Set an interval to reload the page every 5 minutes (300000 ms)
+        const intervalId = setInterval(reloadPage, 300000); // 300000 ms = 5 minutes
+    
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
+      }, []);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -194,23 +208,79 @@ useEffect(() => {
 
 }, [searchTerm, orders, statusFilter]);
 
+// const getUniqueProductNames = (products) => {
+//     const uniqueNames = new Set();
+//     products.forEach(product => uniqueNames.add(product.name));
+//     return Array.from(uniqueNames);
+// };
+
+const groupProductsByNameAndExtras = (products) => {
+    const grouped = {};
+console.log('Products in group',products);
+    products.forEach(product => {
+        const productKey = `${product.name}-${product.extras ? product.extras.map(extra => extra.name).join(',') : ''}`;
+
+        if (!grouped[productKey]) {
+            grouped[productKey] = {
+                quantity: 0,
+                extras: new Set()
+            };
+        }
+        grouped[productKey].quantity += product.quantity;
+        if (product.extras) {
+            product.extras.forEach(extra => grouped[productKey].extras.add(extra.name));
+        }
+    });
+
+    return grouped;
+};
+
+const formatProductDetails = (groupedProducts) => {
+    return Object.keys(groupedProducts).map(key => {
+        const [productName] = key.split('-');
+        const { quantity, extras } = groupedProducts[key];
+        const extrasList = Array.from(extras).join(', ');
+
+        return `\nالمنتجات:${productName}\nعدد: ${quantity}${extrasList ? `\nاضافات:${extrasList}` : ''}\n`;
+    }).join('\n');
+};
 
 
-    // const calculateTotalOrders = useMemo(() => {
-    //     const total = Object.keys(totalOrders).reduce((acc, key) => acc + totalOrders[key], 0);
-    //     return total;
-    // }, [totalOrders]);
-
-    // const OrderStatusFilter = ({ statusFilter, totalOrders }) => {
-    //     return (
-    //         <div>
-    //             <Typography variant="h6" align="center">
-    //                 Total {statusFilter} Orders: {totalOrders}
-    //             </Typography>
-    //         </div>
-    //     );
-    // };
-
+    const handleShare = async (order) => {
+        if (navigator.share) {
+            const groupedProducts = groupProductsByNameAndExtras(order.products);
+            const productDetails = formatProductDetails(groupedProducts);
+            // const test = `\nتفاصيل الطلب\n\nرقم الطلبية: ${order.orderId}\nالعميل: ${order.shippingInfo.name}\nهاتف:${order.shippingInfo.phoneNumber1}${order.shippingInfo.phoneNumber2 ? `\n2 هاتف: ${order.shippingInfo.phoneNumber2}` : ''}\n${productDetails}\nاجمالي المبلغ: ₪ ${calculateOrderTotal(order)}${order.shippingInfo.address ? `\nالعنوان التفصيلي: ${order.shippingInfo.address}` : ''}${order.orderLocation.formatted_address ? `\nالعنوان:${order.orderLocation.formatted_address}` : ''}${order.shippingInfo.note ? `\nطلبات خاصة:${order.shippingInfo.note}` : ''}`
+            const test = `
+            تفاصيل الطلب
+            
+            رقم الطلبية: ${order.orderId}
+            العميل: ${order.shippingInfo.name}
+            هاتف: ${order.shippingInfo.phoneNumber1}${order.shippingInfo.phoneNumber2 ? `\n2 هاتف: ${order.shippingInfo.phoneNumber2}` : ''}
+            
+            ${productDetails}
+            
+            اجمالي المبلغ: ₪ ${calculateOrderTotal(order)}
+            
+            ${order.shippingInfo.address ? `\nالعنوان التفصيلي: ${order.shippingInfo.address}` : ''}
+            ${order.orderLocation.formatted_address ? `\nالعنوان: ${order.orderLocation.formatted_address}` : ''}
+            ${order.shippingInfo.note ? `\nطلبات خاصة: ${order.shippingInfo.note}` : ''}
+            `;
+                console.log(test);
+            console.log(test);
+            try {
+                await navigator.share({
+                    text: test
+                });
+                console.log('Share successful');
+            } catch (error) {
+                console.error('Share failed', error);
+            }
+        } else {
+            console.warn('Web Share API not supported');
+        }
+    };
+    
 
     const updateOrderStatus = async (orderId, status, preparingTime = null) => {
         try {
@@ -236,13 +306,37 @@ useEffect(() => {
         updateOrderStatus(orderId, 'Not Approved');
     };
 
+    // const calculateTotalPrice = product => {
+    //     let totalPrice = product.quantity * product.price;
+    //     if (product.extras && product.extras.length > 0) {
+    //         totalPrice += product.quantity * product.extras.reduce((acc, extra) => acc + extra.price, 0);
+    //     }
+    //     return totalPrice.toFixed(2);
+    // };
+
     const calculateTotalPrice = product => {
         let totalPrice = product.quantity * product.price;
         if (product.extras && product.extras.length > 0) {
             totalPrice += product.quantity * product.extras.reduce((acc, extra) => acc + extra.price, 0);
         }
-        return totalPrice.toFixed(2);
+        
+        return parseFloat(totalPrice.toFixed(2)); // Convert to float for accurate summation
     };
+    
+    // Function to calculate the order total
+    function calculateOrderTotal(order) {
+        let orderTotal = 0;
+        
+        // Iterate over each product and sum up the total price
+        order.products.forEach(product => {
+            orderTotal += calculateTotalPrice(product);
+        });
+        if (order.deliveryCharges && typeof order.deliveryCharges === 'number') {
+            orderTotal += order.deliveryCharges;
+          }
+        
+        return parseFloat(orderTotal.toFixed(2)); // Ensure the total is formatted to 2 decimal places
+    }
 
     // const handleDelete = async (orderId) => {
     //     try {
@@ -498,7 +592,16 @@ useEffect(() => {
         ) :filteredOrders.length > 0 ? (
                     <Paper elevation={3} className="md:w-full  p-6 border border-gray-300 rounded-lg">
                         {filteredOrders.map(order => (
-                            <Card key={order._id} className="md:min-w-screen mb-4">
+                            <Card key={order._id} className="md:min-w-screen mb-4 relative">
+                                {order.shippingOption === 'delivery' && (
+                                    <IconButton
+                onClick={() => handleShare(order)}
+                style={{ position: 'absolute', top: 8, right: 8 }}
+                color="primary"
+            >
+                <ShareRounded />
+            </IconButton>
+                                )}
                                 <CardContent className="flex flex-col gap-4">
                                     {order.status === '' || order.status === 'Not Approved' ? (
                                         <>
@@ -509,6 +612,9 @@ useEffect(() => {
                                             )}
                                             <Typography variant="h6" gutterBottom>
                                                 {order.orderId} :رقم الطلبية
+                                            </Typography>
+                                            <Typography variant='h6'>
+                                            {order.status ? order.status : 'قيد الانتضار'} :حالة الطلب<br />
                                             </Typography>
                                             {order.orderLocation && order.shippingOption === 'delivery' && (
                                                 <div className="flex justify-center mb-2 space-x-4">
@@ -545,6 +651,16 @@ useEffect(() => {
                                                             العنوان: {order.orderLocation.formatted_address}<br />
                                                             </Typography>
                                                             )}
+                                                            {order?.deliveryCity &&(
+                                                   <Typography variant="body2" gutterBottom>
+                                                            مدينة التسليم: {order.deliveryCity}<br/>
+                                                              </Typography>
+                                                                    )}
+                                                            {order?.deliveryCharges && (
+                                                              <Typography variant="body2">
+                                                            رسوم التوصيل: ₪ {order.deliveryCharges}<br />
+                                                            </Typography>
+                                                            )}
                                                              {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
                                                             العنوان التفصيلي: {order.shippingInfo.address}<br />
@@ -558,11 +674,14 @@ useEffect(() => {
                                                             </>
                                                         )}
 
-                                                  طريقة الاستلام: {order.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}                                                    {order.shippingOption === 'dine-in' &&(
+                                                  طريقة الاستلام: {order.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}<br/>  
+                                                                {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
-                                                                رقم الطاولة: {order.tableNumber}
+                                                                رقم الطاولة: {order.tableNumber}<br/>
                                                                 </Typography>
                                                             )}
+                                                        تم الطلب في: {formatDate(order.orderTime)}<br/>
+                                                        اجمالي المبلغ: ₪ {calculateOrderTotal(order)}<br />
                                                         </Typography>
                                                     </div>
                                                 </div>
@@ -576,13 +695,21 @@ useEffect(() => {
                                                         </div>
                                                         <Typography variant="body2" className='text-end' style={{direction:'rtl'}}>
                                                         المنتج: {product.name}<br />
+                                                        {product.description && (
+                                                            <>
+                                                    وصف: {product.description}<br/>
+                                                    </>
+                                                          )}
                                                         العدد: {product.quantity}<br />
                                                         السعر: ₪ {product.price}<br />
-                                                        اضافات: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
-                                                        سعر الاضافات: {product.extras && product.extras.length > 0 ? ' ₪ '+product.extras.map(extra => extra.price).join(' ,₪  ') : 'None'}<br />
-                                                        اجمالي المبلغ: ₪ {calculateTotalPrice(product)}<br />
-                                                        حالة الطلب: {order.status ? order.status : 'قيد الانتضار'}<br />
-                                                        تم الطلب في: {formatDate(order.orderTime)}
+                                                        {product.extras && product.extras.length > 0 ? (
+                                                       <>
+                                        اضافات: {product.extras.map(extra => extra.name).join(', ')}
+                                                   <br />
+                                    سعر الاضافات: ₪ {product.extras.map(extra => extra.price).join(' ,₪  ')}
+                                                  <br />
+                                             </>
+                                                   ) : null}
                                                         </Typography>
                                                     </div>
                                                 ))}
@@ -595,6 +722,7 @@ useEffect(() => {
                                                     <Button variant="contained" startIcon={<Cancel />} onClick={() => handleNotApproved(order.orderId)}>رفض الطلب</Button>
                                                 </Grid>
                                             </Grid>
+
                                         </>
                                     ) : (
                                         <>
@@ -610,6 +738,9 @@ useEffect(() => {
                                             )}
                                             <Typography variant="h6" gutterBottom>
                                             {order.orderId} :رقم الطلب
+                                            </Typography>
+                                            <Typography variant="h6" gutterBottom>
+                                            {order.status ? order.status : 'قيد الانتضار'} :حالة الطلب<br />
                                             </Typography>
                                             <div className="flex flex-col gap-2">
                                                 <Typography variant="body2" className="font-bold">:تفاصيل الشحن</Typography>
@@ -629,6 +760,17 @@ useEffect(() => {
                                                             العنوان: {order.orderLocation.formatted_address}<br />
                                                             </Typography>
                                                             )}
+                                                   {order?.deliveryCity &&(
+                                                   <Typography variant="body1" gutterBottom>
+                                                            مدينة التسليم: {order.deliveryCity}<br/>
+                                                              </Typography>
+                                                                    )}
+            
+                                                            {order?.deliveryCharges && (
+                                                              <Typography variant="body2">
+                                                            رسوم التوصيل: ₪ {order.deliveryCharges}<br />
+                                                            </Typography>
+                                                            )}
                                                              {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
                                                             العنوان التفصيلي: {order.shippingInfo.address}<br />
@@ -641,13 +783,16 @@ useEffect(() => {
                                                             )}
                                                             </>
                                                         )}
-                                                          طريقة الاستلام: {order.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}                                                    
+                                                          طريقة الاستلام: {order.shippingOption === 'self-pickup' ? 'استلام ذاتي' : 'ارساليات'}<br/>                                                    
 
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
                                                                 {order.tableNumber} :رقم الطاولة
+                                                                <br/>
                                                                 </Typography>
                                                             )}
+                                                            تم الطلب في: {formatDate(order.orderTime)}<br/>
+                                                          اجمالي المبلغ: ₪ {calculateOrderTotal(order)}<br />
                                                     </Typography>
                                                 </div>
                                             </div>
@@ -660,21 +805,33 @@ useEffect(() => {
                                                         </div>
                                                         <Typography variant="body2" className='text-end' style={{direction:'rtl'}}>
                                                         المنتج: {product.name}<br />
+                                                        {product.description && (
+                                                            <>
+                                                    وصف: {product.description}<br/>
+                                                    </>
+                                                          )}
                                                         العدد: {product.quantity}<br />
                                                         السعر: ₪ {product.price}<br />
-                                                        اضافات: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
-                                                        سعر الاضافات: {product.extras && product.extras.length > 0 ? ' ₪ '+product.extras.map(extra => extra.price).join(' ,₪  ') : 'None'}<br />
-                                                        اجمالي المبلغ: ₪ {calculateTotalPrice(product)}<br />
-                                                        حالة الطلب: {order.status ? order.status : 'قيد الانتضار'}<br />
-                                                        تم الطلب في: {formatDate(order.orderTime)}
+                                                        {product.extras && product.extras.length > 0 ? (
+                                                       <>
+                                        اضافات: {product.extras.map(extra => extra.name).join(', ')}
+                                                   <br />
+                                    سعر الاضافات: ₪ {product.extras.map(extra => extra.price).join(' ,₪  ')}
+                                                  <br />
+                                             </>
+                                                   ) : null}
+                                                        {/* حالة الطلب: {order.status ? order.status : 'قيد الانتضار'}<br />
+                                                        تم الطلب في: {formatDate(order.orderTime)} */}
                                                         </Typography>
                                                     </div>
                                                 ))}
                                             </div>
                                             <Grid container classes={{ root: 'grid grid-cols-1 md:grid-rows-1' }} className='mb-4' spacing={2} justifyContent="center">
+                                               {order.status !== 'Completed' && ( 
                                                 <Grid item>
                                                     <Button variant="contained" startIcon={<Timelapse />} onClick={() => handlePreparing(order.orderId)}>البدء بالتحضير</Button>
                                                 </Grid>
+                                                )}
                                                 {/* <Grid item>
                                                     <Button variant="contained" startIcon={<Delete />} onClick={() => handleDelete(order.orderId)}>Delete</Button>
                                                 </Grid>

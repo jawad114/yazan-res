@@ -202,14 +202,15 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { FavoriteBorder, Favorite } from '@mui/icons-material';
+import { FavoriteBorder, Favorite, DeliveryDining, Restaurant, NoMeals, RestaurantRounded, RestaurantSharp, DeliveryDiningOutlined, RestartAltOutlined, RestaurantOutlined, RestaurantMenu, RestaurantMenuOutlined } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faMotorcycle,faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './card.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
+import { Avatar } from '@mui/material';
 
 const Status = ({ status }) => {
   let backgroundColor;
@@ -250,7 +251,7 @@ const Status = ({ status }) => {
 };
 
 export default function Card({ product }) {
-  const { picture, status, restaurantName, location } = product;
+  const { picture, status, restaurantName, location, availableOptions } = product;
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAddingToFavorites, setIsAddingToFavorites] = useState(false);
   const [isRemovingFromFavorites, setIsRemovingFromFavorites] = useState(false);
@@ -346,6 +347,44 @@ export default function Card({ product }) {
     }
   };
 
+  const handleUpdateDelivery = async (isDeliveryAvailable) => {
+    try {
+      toast.info(`Updating Delivery Availability`);
+      const response = await AxiosRequest.put(`/update-available-options/${restaurantName}`, {
+        availableOptions: {
+          ...availableOptions,
+          delivery: isDeliveryAvailable,
+        },
+      });
+      if (response.status === 200) {
+        toast.success('Delivery availability updated successfully');
+        window.location.reload(); // Reload to reflect changes
+      }
+    } catch (error) {
+      console.error('Error updating delivery availability:', error);
+      toast.error('Failed to update delivery availability');
+    }
+  };
+
+  const handleUpdateDineIn = async (isDineInAvailable) => {
+    try {
+      toast.info(`Updating Dine-in Availability`);
+      const response = await AxiosRequest.put(`/update-available-options/${restaurantName}`, {
+        availableOptions: {
+          ...availableOptions,
+          'dine-in': isDineInAvailable,
+        },
+      });
+      if (response.status === 200) {
+        toast.success('Dine-in availability updated successfully');
+        window.location.reload(); // Reload to reflect changes
+      }
+    } catch (error) {
+      console.error('Error updating dine-in availability:', error);
+      toast.error('Failed to update dine-in availability');
+    }
+  };
+
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const isOwner = localStorage.getItem('isOwner') === 'true';
   const isClient = localStorage.getItem('isClient') === 'true';
@@ -362,7 +401,30 @@ export default function Card({ product }) {
               </span>
             </div>
           )}
-        </div>
+           {(isOwner || isAdmin) && (  
+            <>       
+  <div className="absolute top-2 right-2">
+        <Avatar onClick={() => handleUpdateDelivery(!availableOptions['delivery'])} className='cursor-pointer' sx={{ bgcolor:'white',width: 32, height: 32 }}>
+        {availableOptions['delivery'] ? (
+      <DeliveryDining sx={{color:'green'}} />
+    ) : (
+      <DeliveryDiningOutlined sx={{color:'red'}}/>
+    )}
+    </Avatar>
+  </div>
+  
+  <div className="absolute top-12 right-2">
+    <Avatar onClick={() => handleUpdateDineIn(!availableOptions['dine-in'])} className='cursor-pointer' sx={{ bgcolor:'white',width: 32, height: 32 }}>
+    {availableOptions['dine-in'] ? (
+      <RestaurantMenu sx={{color:'green'}} />
+    ) : (
+      <RestaurantMenuOutlined sx={{color:'red'}} />
+    )}
+    </Avatar>
+  </div>
+  </>
+           )}
+  </div>
 
         <div className="flex flex-col justify-start items-center p-4">
           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mt-2">{restaurantName}</div>

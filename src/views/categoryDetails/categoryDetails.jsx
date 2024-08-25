@@ -13,7 +13,7 @@ import {
   Box
 } from "@mui/material";
 import { Avatar } from "@material-tailwind/react";
-import { ClockIcon, PhoneArrowDownLeftIcon, PhoneArrowUpRightIcon, PhoneIcon } from "@heroicons/react/20/solid";
+import { ClockIcon} from "@heroicons/react/20/solid";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -246,7 +246,18 @@ const [openDialog, setOpenDialog] = useState(false);
 
   const handleDelete = async (productId) => {
     // Delete the product if user is admin or owner
-    if (isAdmin || isOwner) {
+    if (isOwner) {
+      const enteredPassword = prompt('يرجى إدخال كلمة المرور لتأكيد الحذف:');
+      
+      if (enteredPassword === null) {
+        return;
+      }
+
+      if (enteredPassword !== '11111111') {
+        toast.error(<div style={{direction:'rtl'}}>كلمة المرور غير صحيحة</div>);
+        return;
+      }
+    }
       // Ask for confirmation before deleting
       const confirmed = window.confirm('Are you sure you want to delete this product?');
 
@@ -265,7 +276,6 @@ const [openDialog, setOpenDialog] = useState(false);
         // If user cancels deletion
         console.log('Deletion canceled.');
       }
-    }
   };
 
   const handleOpenModal = (product) => {

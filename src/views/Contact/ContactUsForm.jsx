@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Dialog, Typography } from "@mui/material";
 import CustomModal from "../modal/modal";
 import "./ContactUs.css";
 import { useRef, useState } from "react";
@@ -84,19 +84,37 @@ const ContactForm = () => {
       />
       <Button className="btn-global text-light w-100" type="submit">ارسل</Button>
     </form>
-    <CustomModal handleClose={handleCloseContact} open={openContact} body={
+    {/* <CustomModal handleClose={handleCloseContact} open={openContact} body={
           <div >
-        <Typography className='text-center fs-4'>! لقد استلمنا رسالتك
-          
-
-
-        "احصل على ردود أذكى، قم بتحميل الملفات والصور، وأكثر."
-
-
+        <Typography className='text-end fs-4'>! لقد استلمنا رسالتك
+          <br/>
+        "احصل على ردود أذكى، قم بتحميل الملفات والصور، وأكثر"
+        <br/>
                اشترك    </Typography>  
-          <Button onClick={()=>{window.location.replace('/')}} className='btn-global fs-5 w-100 mt-5 text-light'>Continue Shopping </Button>
+          <Button onClick={()=>{window.location.replace('/')}} className='btn-global fs-5 w-100 mt-5 text-light'>أستمر بالتسوق</Button>
           </div>
-          }/>      
+          }/>       */}
+          <Dialog
+      open={openContact}
+      onClose={handleCloseContact}
+      PaperProps={{
+        className: 'bg-white p-6 rounded-lg shadow-lg'
+      }}
+    >
+      <div className="p-2"style={{direction:'rtl'}}>
+        <Typography variant="h6" className="!font-semibold text-end mb-4">
+        شكرًا لك على رسالتك! لقد استلمناها وسنقوم بالرد عليك في أقرب وقت ممكن
+        </Typography>
+        <Button
+          onClick={() => { window.location.replace('/'); }}
+          variant="contained"
+          color="primary"
+          className="w-full mt-4 text-lg bg-blue-500 hover:bg-blue-600"
+        >
+          أستمر بالتسوق
+        </Button>
+      </div>
+    </Dialog>
     </>
   );
 };

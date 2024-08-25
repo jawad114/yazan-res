@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { TextField, Modal, Button, Grid, Typography, TextareaAutosize } from '@mui/material';
+import { TextField, Modal, Button, Grid, Typography, TextareaAutosize, MenuItem, Avatar } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMotorcycle, faPersonWalking } from '@fortawesome/free-solid-svg-icons'; // Import FontAwesome icons
+import { faCheck, faMotorcycle, faPersonWalking, faShoppingBag, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons'; // Import FontAwesome icons
 import MapModal from './Map/MapModal';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {  toast } from "react-toastify";
+import { Card } from '@material-tailwind/react';
 
 
 const RestaurantLocationModal = ({ open, onClose, location }) => {
@@ -83,16 +84,22 @@ const Checkout = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [resName, setResName] = useState('');
   const customerId = localStorage.getItem('id');
-  const [shippingOption, setShippingOption] = useState('');
+  const [shippingOption, setShippingOption] = useState('self-pickup');
   const [location, setLocation] = useState({ lat: 31.7683, lng: 35.2137,address:''});
   const token = localStorage.getItem('token');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState('self-pickup');
+  const [availableOptions, setAvailableOptions] = useState({});
   const [showMap, setShowMap] = useState(false);
   const locationData = useLocation();
   const cartReceived = locationData.state?.cart;
   const [showRestaurantLocationModal, setShowRestaurantLocationModal] = useState(false);
   const [resLocation, setResLocation] = useState(null);
+  const [selectedDeliveryCharge, setSelectedDeliveryCharge] = useState('free');
+
+  
+  const [deliveryCharges, setDeliveryCharges] = useState({});
   const navigate = useNavigate();
+  console.log('cartDATA received: ' + JSON.stringify(cartReceived));
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
     email: '',
@@ -101,19 +108,129 @@ const Checkout = () => {
     note:'',
     address:''
   });
-console.log('Cart Data received',cartReceived);
+
+// useEffect(() => {
+//   const fetchCart = async () => {
+//     try {
+//       // Assuming cartReceived is provided as a prop or from some context
+//       console.log('Cart Data received', cartReceived);
+
+
+//       // Set the cart
+//       setCart(cartReceived);
+
+//       // If cartReceived is an array and you need to extract location and products
+//       if (Array.isArray(cartReceived)) {
+//         // Map through the array to get the unique restaurant names and products
+//         const productsByRestaurant = cartReceived.reduce((acc, item) => {
+//           const resName = item.orderFrom;
+//           if (!acc[resName]) {
+//             acc[resName] = [];
+//           }
+//           acc[resName].push(item);
+//           return acc;
+//         }, {});
+
+//         // Extract a location from the first item or as per your logic
+//         const firstItem = cartReceived[0];
+//         const location = firstItem ? firstItem.coordinates : null;
+
+//         // Update state
+//         setResLocation(location);
+//         setProducts(productsByRestaurant);
+//         console.log('Products From Restaurant: ', productsByRestaurant);
+//       } else {
+//         console.error('cartReceived is not an array');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching cart:', error);
+//     }
+//   };
+
+//   fetchCart();
+// }, [customerId, token, cartReceived]);
+
+
+// useEffect(() => {
+//   const fetchCart = async () => {
+//     try {
+//       // Assuming cartReceived is provided as a prop or from some context
+//       console.log('Cart Data received', cartReceived);
+
+//       // Ensure cartReceived is not empty and is an array
+//       if (Array.isArray(cartReceived) && cartReceived.length > 0) {
+//         const restaurantName = cartReceived[0].products[0].orderFrom;
+//         console.log('Res Name', restaurantName);
+
+//         // Fetch delivery charges based on restaurantName
+//         try {
+//           setLoading(true);
+//           const response = await AxiosRequest.get(`/restaurants/${restaurantName}/charges`);
+//           setDeliveryCharges(response.data.deliveryCharges || {});
+//           console.log('Delivery charges received', response.data.deliveryCharges);
+//         } catch (error) {
+//           console.error('Error fetching delivery charges', error);
+//           setError('Error fetching delivery charges');
+//         } finally {
+//           setLoading(false);
+//         }
+
+//         // Set the cart
+//         setCart(cartReceived);
+
+//         // Map through the array to get the unique restaurant names and products
+//         const productsByRestaurant = cartReceived.reduce((acc, item) => {
+//           const resName = item.orderFrom;
+//           if (!acc[resName]) {
+//             acc[resName] = [];
+//           }
+//           acc[resName].push(item);
+//           return acc;
+//         }, {});
+
+//         // Extract location from the first item or as per your logic
+//         const firstItem = cartReceived[0];
+//         const location = firstItem ? firstItem.coordinates : null;
+
+//         // Update state
+//         setResLocation(location);
+//         setProducts(productsByRestaurant);
+//         console.log('Products From Restaurant: ', productsByRestaurant);
+//       } else {
+//         console.error('cartReceived is not a valid array or is empty');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching cart:', error);
+//     }
+//   };
+
+//   fetchCart();
+// }, [customerId, token, cartReceived]);
 
 useEffect(() => {
   const fetchCart = async () => {
-    try {
-      // Assuming cartReceived is provided as a prop or from some context
-      console.log('Cart Data received', cartReceived);
+    if (Array.isArray(cartReceived) && cartReceived.length > 0) {
+      const restaurantName = cartReceived[0].products[0].orderFrom;
 
-      // Set the cart
-      setCart(cartReceived);
+      try {
+        // Fetch delivery charges based on restaurantName
+        setLoading(true);
+        const deliveryResponse = await AxiosRequest.get(`/restaurants/${restaurantName}/charges`);
+        setDeliveryCharges(deliveryResponse.data.deliveryCharges || {});
+        console.log('Delivery charges received', deliveryResponse.data.deliveryCharges);
 
-      // If cartReceived is an array and you need to extract location and products
-      if (Array.isArray(cartReceived)) {
+        // Fetch available options based on restaurantName
+        const optionsResponse = await AxiosRequest.get(`/available-options/${restaurantName}`);
+        if (optionsResponse.data.status === 'ok') {
+          setAvailableOptions(optionsResponse.data.availableOptions);
+        } else {
+          console.error('Failed to fetch available options');
+        }
+        console.log('Available options received', optionsResponse.data.availableOptions);
+
+        // Set the cart
+        setCart(cartReceived);
+
         // Map through the array to get the unique restaurant names and products
         const productsByRestaurant = cartReceived.reduce((acc, item) => {
           const resName = item.orderFrom;
@@ -124,7 +241,7 @@ useEffect(() => {
           return acc;
         }, {});
 
-        // Extract a location from the first item or as per your logic
+        // Extract location from the first item or as per your logic
         const firstItem = cartReceived[0];
         const location = firstItem ? firstItem.coordinates : null;
 
@@ -132,16 +249,21 @@ useEffect(() => {
         setResLocation(location);
         setProducts(productsByRestaurant);
         console.log('Products From Restaurant: ', productsByRestaurant);
-      } else {
-        console.error('cartReceived is not an array');
+
+      } catch (error) {
+        console.error('Error fetching cart or options:', error);
+        setError('Error fetching data');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching cart:', error);
+    } else {
+      console.error('cartReceived is not a valid array or is empty');
+      setLoading(false);
     }
   };
 
   fetchCart();
-}, [customerId, token, cartReceived]);
+}, [cartReceived, customerId, token]);
 
 
 
@@ -215,6 +337,46 @@ useEffect(() => {
 
 
 
+  const renderOptionButton = (optionKey, icon) => (
+    <Grid item xs={12} sm={6} className="flex justify-center gap-2">
+      <div
+        onClick={() => {
+          if (availableOptions[optionKey]) {
+          setSelectedOption(optionKey);
+          setShippingOption(optionKey);
+          }
+        }}
+        className='cursor-pointer relative rounded-full p-2 flex flex-col items-center'
+      >
+ <Avatar
+      sx={{
+        width: 48,
+        height: 48,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: selectedOption === optionKey ? '#3B92D6' : 'lightgray',
+        color: availableOptions[optionKey] ? '#fff' : '#9e9e9e',
+      }}
+    >
+          <FontAwesomeIcon icon={icon} className='text-black'/>
+        </Avatar>
+        <div className='absolute bottom-0 z-50'>
+          <Avatar className='bg-white !border-black border-1' sx={{width:20,height:20}}>
+          <FontAwesomeIcon
+            icon={availableOptions[optionKey] ? faCheck : faTimes}
+            className={`text-sm ${availableOptions[optionKey] ? 'text-green-500' : 'text-red-500'}`}
+          />
+          </Avatar>
+          </div>
+      </div>
+    </Grid>
+  );
+
+  const handleDeliveryChargeChange = (event) => {
+    console.log('in handle delivery charge change',event.target.value);
+    setSelectedDeliveryCharge(event.target.value);
+  };
   
 
   const handleCreateOrderButtonClick = async () => {
@@ -240,22 +402,44 @@ useEffect(() => {
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
-    if (cart && cart.products) {
-      cart.products.forEach((product) => {
-        if (product.dishDetails && product.dishDetails.price) {
-          totalPrice += product.quantity * product.dishDetails.price;
-        }
-        if (product.dishDetails && product.dishDetails.extras && product.dishDetails.extras.length > 0) {
-          product.dishDetails.extras.forEach((extra) => {
-            if (extra.price) {
-              totalPrice += extra.price * product.quantity;
+  
+    // Check if cart is an array and has elements
+    if (Array.isArray(cart) && cart.length > 0) {
+      cart.forEach((cartItem) => {
+        // Ensure each cart item has products
+        if (cartItem.products && Array.isArray(cartItem.products)) {
+          cartItem.products.forEach((product) => {
+            // Add product price based on quantity
+            if (product.price) {
+              totalPrice += product.quantity * product.price;
+            }
+  
+            // Add extras price based on quantity
+            if (product.extras && Array.isArray(product.extras)) {
+              product.extras.forEach((extra) => {
+                if (extra.price) {
+                  totalPrice += extra.price * product.quantity;
+                }
+              });
             }
           });
         }
       });
+  
+      // Add delivery charges if delivery is selected
+      if (selectedOption === 'delivery' && selectedDeliveryCharge !== 'free') {
+        const deliveryCharge = deliveryCharges[selectedDeliveryCharge];
+        if (deliveryCharge) {
+          totalPrice += deliveryCharge;
+        }
+      }
     }
+  
+    console.log('Total Price:', totalPrice);
     return totalPrice;
   };
+  
+  
 
 
   const handleQuantityChange = (productId, action) => {
@@ -274,30 +458,12 @@ useEffect(() => {
     setCart(updatedCart);
   };
 
-  // const handleGetCurrentLocation = () => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         setLocation({
-  //           lat: position.coords.latitude,
-  //           lng: position.coords.longitude,
-  //         });
-  //       },
-  //       (error) => {
-  //         console.error('Error getting current location:', error);
-  //       },
-  //       { enableHighAccuracy: true }
-  //     );
-  //   } else {
-  //     console.error('Geolocation is not supported by this browser.');
-  //   }
-  // };
-
 
   const handleCloseModal = () => {
     setShowRestaurantLocationModal(false); // Close the modal
     navigate('/'); // Navigate to the desired route
   };
+
 
 
 
@@ -315,13 +481,18 @@ useEffect(() => {
       toast.error(<div style={{direction:'rtl'}}>يرجى اختيار موقعك للتوصيل</div>);
       return;
   }
+  if (shippingOption === 'delivery' && !deliveryCharges[selectedDeliveryCharge]) {
+    toast.error(<div style={{direction: 'rtl'}}>يرجى إدخال رسوم التوصيل</div>);
+    return;
+  }
     try {
       const orderData = {
         products: products,
         shippingInfo:shippingInfo,
         shippingOption: shippingOption,
         userLocation: currentLocation,
-        ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }) // Conditionally add tableNumber
+        ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }), // Conditionally add tableNumber
+        ...(shippingOption === 'delivery' && deliveryCharges && { deliveryCharges: deliveryCharges[selectedDeliveryCharge],deliveryCity:selectedDeliveryCharge }) // Conditionally add deliveryCharges
       };      
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
       toast.success(<div style={{direction:'rtl'}}>تم إنشاء الطلبية بنجاح</div>);
@@ -389,55 +560,12 @@ if (Array.isArray(details) && details.length > 0) {
         <Grid sx={{ p: 6 }} container spacing={2}>
           <Grid item xs={12}>
             <div className='flex flex-col items-center justify-center text-center mb-4'>
-              <Grid item xs={12} sx={{gap:1,display:'flex'}}>
-              <Button
-              onClick={() => {
-                setShippingOption('delivery');
-                setSelectedOption('delivery');
-              }}
-              sx={{
-                backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : 'lightgray',
-                color: selectedOption === 'delivery' ? '#fff' : '#000',
-                '&:hover': {
-                  backgroundColor: selectedOption === 'delivery' ? '#3B92D6' : '#fff',
-                },
-              }}
-              startIcon={<FontAwesomeIcon icon={faMotorcycle} />} // Motorcycle icon for delivery
-            >
-              توصيل
-            </Button>
-            <Button
-              onClick={() => {
-                setShippingOption('self-pickup');
-                setSelectedOption('self-pickup');
-              }}
-              sx={{
-                backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : 'lightgray',
-                color: selectedOption === 'self-pickup' ? '#fff' : '#000',
-                '&:hover': {
-                  backgroundColor: selectedOption === 'self-pickup' ? '#3B92D6' : '#fff',
-                },
-              }}
-              startIcon={<FontAwesomeIcon icon={faPersonWalking} />} // Motorcycle icon for delivery
-            >
-              استلام ذاتي
-            </Button>
-                {/* <Button
-                  onClick={() => {
-                    setShippingOption('dine-in')
-                    setSelectedOption('dine-in')
-                  }}
-                  sx={{
-                    backgroundColor: selectedOption === 'dine-in' ? '#4caf50' : 'transparent',
-                    color: selectedOption === 'dine-in' ? '#fff' : '#000',
-                    '&:hover': {
-                      backgroundColor: selectedOption === 'dine-in' ? '#4caf50' : '#f1f1f1',
-                    },
-                  }}
-                >
-                  Dine In
-                </Button> */}
-              </Grid>
+              {/* <Grid item xs={12} sx={{gap:1,display:'flex'}}> */}
+              <Card className='flex flex-row bg-white gap-4 shadow-md shadow-black rounded-full'>
+          {renderOptionButton('delivery', faMotorcycle)}
+          {renderOptionButton('self-pickup', faShoppingBag)}
+          {renderOptionButton('dine-in', faUtensils)}
+          </Card>
             </div>
             <TextField
               label="الاسم"
@@ -571,7 +699,7 @@ if (Array.isArray(details) && details.length > 0) {
   <>
             <Grid item xs={12}>
             <TextField
-  label="في حال حدوث عطل في الخارطة التلقائية، يرجى استخدام هذا المربع لإدخال بياناتك يدويًا"
+  label="أدخل عنوانك الكامل يدويًا في حال فشل الخريطة"
   type="text"
   variant="outlined"
   value={shippingInfo.address}
@@ -613,9 +741,41 @@ if (Array.isArray(details) && details.length > 0) {
   }}
 />
           </Grid>
+          <Grid item xs={12}>
+        <TextField
+          select
+          fullWidth
+          style={{
+            textAlign: 'start', // Align text to start
+            direction: 'rtl',   // Set text direction to right-to-left
+          }}
+          variant="outlined"
+          sx={{
+            '& .MuiOutlinedInput-input:focus': {
+              outline: 'none', // Removes the focus ring
+              boxShadow: 'none',
+            },
+          }}
+          label="اختر رسوم التوصيل"
+          value={selectedDeliveryCharge}
+          onChange={handleDeliveryChargeChange}
+        >
+          {Object.keys(deliveryCharges).length === 0 ? (
+            <MenuItem value="free" sx={{ direction: 'rtl', textAlign: 'start' }}>
+              مجاني
+            </MenuItem>
+          ) : (
+            Object.entries(deliveryCharges).map(([city, charge]) => (
+              <MenuItem key={city} value={city} sx={{ direction: 'rtl', textAlign: 'start' }}>
+                <span>{city}</span>: {`₪ ${charge.toFixed(2)}`}
+              </MenuItem>
+            ))
+          )}
+        </TextField>
+      </Grid>
             </>
         )}
-{/* {selectedOption === 'dine-in' && (
+{selectedOption === 'dine-in' && (
           <Grid item xs={12}>
             <TextField
               label="Table Number"
@@ -627,7 +787,13 @@ if (Array.isArray(details) && details.length > 0) {
               required
             />
           </Grid>
-        )} */}
+        )}
+
+<Grid item xs={12}>
+        <Typography variant='h6' className='text-black text-center !font-bold'>
+        ₪ {calculateTotalPrice()} : السعر الإجمالي
+        </Typography>
+      </Grid>
 
           <Grid item xs={12} >
             <div className='flex items-center justify-center mt-4'>

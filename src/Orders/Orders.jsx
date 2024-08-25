@@ -221,7 +221,7 @@ const openWaze = (latitude, longitude) => {
         {loading ? (
           <CircularProgress className="loading-spinner mt-8" />
         ) : filteredOrders.length > 0 ? (
-          <Paper elevation={3} className="w-full md:w-[80vw] flex rounded-lg border overflow-y-auto border-gray-300 mt-2">
+          <Paper elevation={3} className="w-full md:w-[80vw] p-0 flex rounded-lg border overflow-y-auto border-gray-300 mt-2">
             <List>
               {filteredOrders.map((order) => {
                 // Extract orderFrom from the first product or a relevant logic
@@ -316,6 +316,20 @@ const openWaze = (latitude, longitude) => {
         {selectedOrder.shippingInfo?.note &&(
           <Typography variant="body1" className='text-start' gutterBottom>
             طلبات خاصة: {selectedOrder.shippingInfo.note}
+          </Typography>
+        )}
+        </div>
+        <div className='flex justify-start' style={{direction:'rtl'}}>
+        {selectedOrder?.deliveryCity &&(
+          <Typography variant="body1" className='text-start' gutterBottom>
+            مدينة التسليم: {selectedOrder.deliveryCity}
+          </Typography>
+        )}
+        </div>
+        <div className='flex justify-start' style={{direction:'rtl'}}>
+        {selectedOrder?.deliveryCharges &&(
+          <Typography variant="body1" className='text-start' gutterBottom>
+            رسوم التوصيل: ₪ {selectedOrder.deliveryCharges}
           </Typography>
         )}
         </div>
@@ -513,6 +527,9 @@ const openWaze = (latitude, longitude) => {
         });
       }
     });
+    if (order.deliveryCharges && typeof order.deliveryCharges === 'number') {
+      totalPrice += order.deliveryCharges;
+    }
 
     return totalPrice.toFixed(2);
   }

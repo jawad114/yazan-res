@@ -497,9 +497,19 @@ export default function AdminOrder() {
                                                             Address: {order.orderLocation.formatted_address}<br />
                                                             </Typography>
                                                             )}
+                                                        {order?.deliveryCity &&(
+                                                   <Typography variant="body2" gutterBottom>
+                                                               City of Delivery:{order.deliveryCity}<br/>
+                                                              </Typography>
+                                                                    )}
+                                                            {order?.deliveryCharges && (
+                                                              <Typography variant="body2">
+                                                            Delivery Charges: {order.deliveryCharges}<br />
+                                                            </Typography>
+                                                            )}
                                                               {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
-                                                            Detailed Address: {order.shippingInfo.address}<br />
+                                                            Detailed Address: {order.shippingInfo.address} ₪<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.note && (
@@ -581,6 +591,16 @@ export default function AdminOrder() {
                                             {order.orderLocation?.formatted_address && (
                                                               <Typography variant="body2">
                                                             Address: {order.orderLocation.formatted_address}<br />
+                                                            </Typography>
+                                                            )}
+                                                       {order?.deliveryCity &&(
+                                                   <Typography variant="body2" gutterBottom>
+                                                               City of Delivery:{order.deliveryCity}<br/>
+                                                              </Typography>
+                                                                    )}
+                                                            {order?.deliveryCharges && (
+                                                              <Typography variant="body2">
+                                                            Delivery Charges: {order.deliveryCharges} ₪<br />
                                                             </Typography>
                                                             )}
                                                               {order.shippingInfo?.address && (

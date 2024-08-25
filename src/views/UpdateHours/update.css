@@ -1,0 +1,6 @@
+.datepicker-container {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+    touch-action: manipulation;
+    scroll-behavior: smooth;
+}
