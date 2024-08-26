@@ -508,7 +508,7 @@ const openWaze = (latitude, longitude) => {
     </div>
 
 
-            <Typography variant="h6" className='text-center'>₪ {calculateTotalPrice(selectedOrder)}: السعر الإجمالي</Typography>
+            <Typography variant="body2" className='text-center !font-bold'>السعر الإجمالي: ₪ {calculateTotalPrice(selectedOrder)}</Typography>
           </DialogContent>
         </Dialog>
       )}

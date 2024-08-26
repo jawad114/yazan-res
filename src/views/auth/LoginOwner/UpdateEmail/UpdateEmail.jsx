@@ -28,8 +28,8 @@ const UpdateEmail = () => {
         newEmail
       });
       if (response.data.status === "ok") {
-        setSuccess('Email updated successfully!');
-        toast.success('Email updated successfully!');
+        setSuccess('!تم تحديث البريد الإلكتروني بنجاح');
+        toast.success(<div style={{direction:'rtl'}}>!تم تحديث البريد الإلكتروني بنجاح</div>);
         navigate('/login-owner');
       } else {
         setError(response.data.error || 'Failed to update email');

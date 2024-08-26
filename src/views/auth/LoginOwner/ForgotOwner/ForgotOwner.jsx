@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import AxiosRequest from '../../../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotOwner = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,9 +26,9 @@ const ForgotOwner = () => {
       }
       const response = await AxiosRequest.post('/forgot-password-owner', { email });
       setVerificationCode(response.data.verificationCode);
-      setSuccessMessage('Verification code sent successfully') && setError(null);
-      toast.success('Verification code sent successfully');
-      window.location.replace("/reset-password-owner");
+      setSuccessMessage('تم إرسال رمز التحقق بنجاح') && setError(null);
+      toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
+      navigate("/reset-password-owner",{state:{email}});
 
     } catch (err) {
       setError('Failed to send verification code. Please try again.');

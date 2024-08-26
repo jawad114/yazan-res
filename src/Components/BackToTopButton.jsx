@@ -29,10 +29,10 @@ const BackToTopButton = () => {
       {showButton && (
         <IconButton
           onClick={scrollToTop}
-        className="!fixed bottom-10 right-10 !bg-[#2196f3] text-white border-none rounded-full cursor-pointer text-2xl  shadow-md"
+        className="!fixed bottom-10 right-10 !bg-[#33CCF9] text-white border-none rounded-full cursor-pointer text-2xl  shadow-md"
         aria-label="back to top"
         >
-          <ArrowUpwardIcon fontSize="large" />
+          <ArrowUpwardIcon fontSize='large' />
         </IconButton>
       )}
     </>

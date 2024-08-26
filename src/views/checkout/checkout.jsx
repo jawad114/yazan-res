@@ -355,7 +355,7 @@ useEffect(() => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: selectedOption === optionKey ? '#3B92D6' : 'lightgray',
+        backgroundColor: selectedOption === optionKey ? '#33CCF9' : 'lightgray',
         color: availableOptions[optionKey] ? '#fff' : '#9e9e9e',
       }}
     >

@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import AxiosRequest from '../../../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 const ResetOwner = () => {
+    const location = useLocation();
     const [state, setState] = useState({
-        email: '',
+        email: location.state?.email,
         verificationCode: '',
         newPassword: '',
     });
@@ -24,17 +26,17 @@ const ResetOwner = () => {
         e.preventDefault();
         try {
             if(!state.email){
-                setError('Please provide an email');
+                setError('يرجى تقديم بريد إلكتروني');
                 setSuccess(null)
                 return;
             }
             if(!state.verificationCode){
-                setError('Please provide a verification code');
+                setError('يرجى تقديم رمز التحقق');
                 setSuccess(null)
                 return;
             }
             if(!state.newPassword){
-                setError('Please provide a new password');
+                setError('يرجى تقديم كلمة مرور جديدة');
                 setSuccess(null)
                 return;
             }

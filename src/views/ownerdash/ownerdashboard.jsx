@@ -37,7 +37,7 @@ export default function OwnerDashboard() {
     const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [approvedOrders, setApprovedOrders] = useState([]); // State to track approved orders
     const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('All orders');
+    const [statusFilter, setStatusFilter] = useState('New orders');
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);

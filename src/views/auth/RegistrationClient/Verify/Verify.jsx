@@ -3,9 +3,12 @@ import axios from 'axios';
 import { CircularProgress } from '@mui/material';
 import { Button } from '@material-tailwind/react';
 import AxiosRequest from '../../../../Components/AxiosRequest';
+import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 const Verify = () => {
-  const [email, setEmail] = useState('');
+  const location = useLocation();
+  const [email, setEmail] = useState(location.state?.email);
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -46,12 +49,12 @@ const Verify = () => {
         verificationCode: verificationCode
       });
       if (response.data.status === "ok") {
-        setSuccess('Verification successful!');
+        setSuccess('!تم التحقق بنجاح');
         window.location.replace('/login-client');
       }
     } catch (err) {
       if (error.response && error.response.status === 402) {
-        setError('Verification code has expired');
+        setError('رمز التحقق قد انتهت صلاحيته');
       } else {
         setError(err.response.data.error || 'An error occurred');
       }
@@ -66,6 +69,7 @@ const Verify = () => {
       const response = await AxiosRequest.post(`/resend-verification-code`, { email });
       if (response.data.message) {
         setSuccess(response.data.message);
+        toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
         setCanResend(false);
         // Set a 30-second cooldown before allowing resend again
         const timeout = setTimeout(() => {

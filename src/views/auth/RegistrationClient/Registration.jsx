@@ -76,7 +76,8 @@ import { useState } from "react";
 import AxiosRequest from "../../../Components/AxiosRequest";
 import RegistrationForm from "./RegistrationForm";
 import registerImage from "../../../assets/register.svg";
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom for navigation
+import { Link, useNavigate } from 'react-router-dom'; // Import Link from react-router-dom for navigation
+import { toast } from "react-toastify";
 
 
 
@@ -87,6 +88,7 @@ const Registration = () => {
     password: "",
     email: "",
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -102,8 +104,9 @@ const Registration = () => {
       .then((response) => {
         if (response.data.status === "ok") {
           alert("Registration successful");
+          toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
         }
-        window.location.replace('/verify');
+        navigate('/verify',{state:{email:formData.email}});
       })
       .catch((error) => {
         console.error(error);

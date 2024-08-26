@@ -6,17 +6,21 @@ import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import Carousels from '../../Home/Carousels/Carousels';
-import { Card } from "@material-tailwind/react";
+import { Card, Spinner } from "@material-tailwind/react";
 import { ClockIcon} from '@heroicons/react/20/solid';
 import OldPhoneIcon from '../../assets/landline.png';
-import { faCheck, faMotorcycle, faShoppingBag, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import Phone from '../../assets/PhoneNew.jpeg';
+import LocationIcon from '../../assets/Waze.jpeg';
+import { faCheck, faMotorcycle, faPhone, faShoppingBag, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PhoneOutlined } from '@mui/icons-material';
 
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [restaurantImage, setRestaurantImage] = useState('');
   const [restaurantContact, setRestaurantContact] = useState('');
+  const [resLocation, setResLocation] = useState({});
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentCategory, setCurrentCategory] = useState({});
@@ -89,31 +93,26 @@ if (searchTerm) {
     }
   };
 
-  const fetchOpeningHoursStatusAndAvailability = async () => {
-    try {
-      const [hoursResponse, statusResponse, availableOptionsResponse] = await Promise.all([
-        AxiosRequest.get(`/opening-hours/${resName}`),
-        AxiosRequest.get(`/restaurant-status/${resName}`),
-        AxiosRequest.get(`/available-options/${resName}`)
-      ]);
+  const fetchResData = async () => {
+    setLoading(true); // Set loading to true before fetching
+    try {     
+      const response = await AxiosRequest.get(`/get-one-res/${resName}`)
 
-      if (hoursResponse.status === 200) {
-        setOpeningHours(hoursResponse.data.openingHours);
-      }
-
-      if (statusResponse.status === 200) {
-        setRestaurantStatus(statusResponse.data.status);
-      }
-      if (availableOptionsResponse.status === 200) {
-        setAvailableOptions(availableOptionsResponse.data.availableOptions);
+      if (response.status === 200) {
+        setOpeningHours(response.data.data.openingHours);
+        setRestaurantStatus(response.data.data.status);
+        setAvailableOptions(response.data.data.availableOptions);
+        setResLocation(response.data.data.coordinates);
       }
     } catch (error) {
       console.error('Error fetching opening hours or status:', error);
+    } finally{
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchCategories();
-    fetchOpeningHoursStatusAndAvailability();
+    fetchResData();
   }, [resName]);
 
 
@@ -208,7 +207,7 @@ if (searchTerm) {
   };
 
   const renderOptionButton = (optionKey, icon) => (
-    <Grid item xs={12} sm={6} className="flex justify-center gap-2">
+<Grid item xs={12} sm={6}  className="flex justify-center gap-2">
 <div className='relative rounded-full p-2 flex flex-col items-center'>
  <Avatar
       sx={{
@@ -217,6 +216,7 @@ if (searchTerm) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        bgcolor:'#33CCF9'
       }}
     >
           <FontAwesomeIcon icon={icon} className='text-black'/>
@@ -248,7 +248,7 @@ if (searchTerm) {
       <div className='flex flex-col w-full items-center text-center justify-center'>
         {loading ? (
           <div className='flex justify-center items-center h-screen'>
-            <CircularProgress />
+            <Spinner className="h-12 w-12 text-black" />
           </div>
         ) : (
           <>
@@ -301,31 +301,10 @@ if (searchTerm) {
     </Box>
   </Box>
 )}
-{/* {restaurantContact && (
-  <> 
-       <div>
-        <div className="relative flex items-center  w-full px-4 py-2 ">
-          <a 
-            href={`tel:${restaurantContact}`} 
-            className="flex items-center space-x-3 hover:bg-blue-100 p-2 rounded-lg transition-colors duration-300"
-          >
-            <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-            <img src={OldPhoneIcon} width={30}/>
-            </div>
-          </a>
-          </div>
-          <Card className='flex flex-row bg-white gap-4 shadow-md shadow-black rounded-full'>
-        {renderOptionButton('delivery', faMotorcycle)}
-        {renderOptionButton('self-pickup', faShoppingBag)}
-        {renderOptionButton('dine-in', faUtensils)}
-        </Card>
-        </div>
-        </>
-      )} */}
 
-{restaurantContact  && (
-  <> 
-    <div className="flex items-center mt-2 p-4 justify-between w-full">
+  {/* <> 
+    <div className="flex relative mt-2 p-4 justify-between w-full">
+      {restaurantContact && (
       <a 
         href={`tel:${restaurantContact}`} 
         className="flex items-center space-x-4 hover:bg-blue-100 rounded-lg transition-colors duration-300"
@@ -334,16 +313,50 @@ if (searchTerm) {
           <img src={OldPhoneIcon} width={30}/>
         </div>
       </a>
-      {availableOptions &&(
+      )}
+
+    </div>
+  </> */}
+
+<> 
+  <div className="flex items-center mt-2 p-4 justify-between w-full">
+    {restaurantContact && (
+      <a 
+        href={`tel:${restaurantContact}`} 
+        className="flex items-center justify-center"
+      >
+          <div className="flex items-center bg-[#33CCF9] justify-center w-12 h-12 rounded-full">
+          <PhoneOutlined fontSize="large" className="text-white" />
+          </div>
+      </a>
+    )}
+    <div className="flex-1 text-center">
+      <span><Typography variant='h4' className="!font-bold">{resName}</Typography></span> {/* Replace with actual name */}
+    </div>
+    {resLocation && (
+      <>
+      <a
+        href={`https://waze.com/ul?ll=${resLocation.latitude},${resLocation.longitude}&navigate=yes`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center"
+      >
+          <div className="flex items-center justify-center w-12 h-12 rounded-full">
+        <img src={LocationIcon} width={50} />
+        </div>
+      </a>
+      </>
+    )}
+  </div>
+</>
+{availableOptions &&(
       <Card className="flex flex-row bg-white shadow-md shadow-black rounded-full mx-auto">
         {renderOptionButton('delivery', faMotorcycle)}
         {renderOptionButton('self-pickup', faShoppingBag)}
         {renderOptionButton('dine-in', faUtensils)}
       </Card>
       )}
-    </div>
-  </>
-)}
+
 
              <TextField
             placeholder="ابحث عن فئة..."
@@ -360,7 +373,6 @@ if (searchTerm) {
             className="w-full sm:w-[70vw] mt-4 mb-4"
           />
 
-            <h1 className='py-4'>{resName} :الفئات الخاصة في</h1>
             { isAdmin && (
             <div className='flex  items-center mt-[2vh] mb-[4vh] justify-center'>
              <Button

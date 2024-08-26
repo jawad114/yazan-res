@@ -12,7 +12,7 @@ import {
   Grid,
   Box
 } from "@mui/material";
-import { Avatar, Card } from "@material-tailwind/react";
+import { Avatar, Card, Spinner } from "@material-tailwind/react";
 import { ClockIcon} from "@heroicons/react/20/solid";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
@@ -26,9 +26,11 @@ import "./categoryDetails.module..css"
 import Carousels from "../../Home/Carousels/Carousels";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LocationIcon from '../../assets/Waze.jpeg';
 import OldPhoneIcon from '../../assets/landline.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faMotorcycle, faShoppingBag, faTimes, faUtensils } from "@fortawesome/free-solid-svg-icons";
+import { PhoneOutlined } from "@mui/icons-material";
 
 const CategoryDetails = () => {
   const [products, setProducts] = useState([]);
@@ -39,6 +41,7 @@ const CategoryDetails = () => {
   const [openM, setOpenM] = useState(false);
   const [errors, setErrors] = useState([]);
   const [imageLoading, setImageLoading] = useState(true);
+  const [resLocation, setResLocation] = useState({});
   const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState(0); // State to keep track of total price
   const [selectedExtras, setSelectedExtras] = useState({}); // State to keep track of selected extras
@@ -74,19 +77,12 @@ const [openDialog, setOpenDialog] = useState(false);
             setProducts(filteredProducts);
             setRestaurantImage(response.data.restaurantImage);
             setRestaurantContact(response.data.contact);
-            setCategoryImage(response.data.categoryImage);
-            setLoading(false);
-            setImageLoading(false);
-    
+            setCategoryImage(response.data.categoryImage);    
             const initialQuantities = {};
             filteredProducts.forEach((product) => {
               initialQuantities[product._id] = 1;
             });
             setQuantities(initialQuantities);
-          } else {
-            setRestaurantImage(response.data.restaurantImage);
-            setLoading(false);
-            setImageLoading(false);
           }
         } catch (error) {
           if (error.response && error.response.data && error.response.data.error) {
@@ -98,31 +94,31 @@ const [openDialog, setOpenDialog] = useState(false);
               toast.error("An error occurred", { toastId: "errorToast" });
             }
           }
+        }finally{
           setLoading(false);
           setImageLoading(false);
         }
       };
 
-      const fetchOpeningHoursAndStatus = async () => {
-        try {
-          const [hoursResponse, statusResponse] = await Promise.all([
-            AxiosRequest.get(`/opening-hours/${resName}`),
-            AxiosRequest.get(`/restaurant-status/${resName}`)
-          ]);
+      const fetchResData = async () => {
+        setLoading(true);
+        try {     
+          const response = await AxiosRequest.get(`/get-one-res/${resName}`)
     
-          if (hoursResponse.status === 200) {
-            setOpeningHours(hoursResponse.data.openingHours);
-          }
-    
-          if (statusResponse.status === 200) {
-            setRestaurantStatus(statusResponse.data.status);
+          if (response.status === 200) {
+            setOpeningHours(response.data.data.openingHours);
+            setRestaurantStatus(response.data.data.status);
+            setAvailableOptions(response.data.data.availableOptions);
+            setResLocation(response.data.data.coordinates);
           }
         } catch (error) {
           console.error('Error fetching opening hours or status:', error);
+        } finally{
+          setLoading(false);
         }
       };
    fetchProducts();
-   fetchOpeningHoursAndStatus();
+   fetchResData();
   }, [resName, categoryName,isOwner,isAdmin]);
 
   useEffect(() => {
@@ -231,7 +227,9 @@ const [openDialog, setOpenDialog] = useState(false);
       handleCloseModal();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
-        if (!toast.isActive("errorToast")) {
+        if (error.response.data.message === 'Cannot Add Items From Multiple Market Place.') {
+          toast.error(<div style={{direction:'rtl'}}>لا يمكن إضافة عناصر من أكثر من سوق</div>, { toastId: "errorToast" });
+        }else{
           toast.error(error.response.data.message, { toastId: "errorToast" });
         }
       } else {
@@ -240,6 +238,7 @@ const [openDialog, setOpenDialog] = useState(false);
         }
       }
     }
+    
   };
 
   const handleEdit = (product) => {
@@ -450,18 +449,37 @@ const [openDialog, setOpenDialog] = useState(false);
 </div>
 )} */}
 
-{restaurantContact && (
-        <div className="relative flex items-center mt-2 p-4 justify-start w-full">
-          <a 
-            href={`tel:${restaurantContact}`} 
-            className="flex items-center space-x-3 hover:bg-blue-100 p-2 rounded-lg transition-colors duration-300"
-          >
-            <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-            <img src={OldPhoneIcon} width={30}/>
-            </div>
-          </a>
+<> 
+  <div className="flex items-center mt-2 p-4 justify-between w-full">
+    {restaurantContact && (
+      <a 
+        href={`tel:${restaurantContact}`} 
+        className="flex items-center justify-center"
+      >
+          <div className="flex items-center bg-[#33CCF9] justify-center w-12 h-12 rounded-full">
+          <PhoneOutlined fontSize="large" className="text-white" />
+          </div>
+      </a>
+    )}
+    <div className="flex-1 text-center">
+      <Typography variant='h4' className="!font-bold">{resName}</Typography> {/* Replace with actual name */}
+    </div>
+    {resLocation && (
+      <>
+      <a
+        href={`https://waze.com/ul?ll=${resLocation.latitude},${resLocation.longitude}&navigate=yes`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center"
+      >
+          <div className="flex items-center justify-center w-12 h-12 rounded-full">
+        <img src={LocationIcon} width={50} />
         </div>
-      )}
+      </a>
+      </>
+    )}
+  </div>
+</>
 
 
  <div className="flex flex-col w-full p-5">
@@ -475,8 +493,8 @@ const [openDialog, setOpenDialog] = useState(false);
 </div>
       {loading ? (
         <div className='flex items-center justify-center mx-auto'>
-          <CircularProgress />
-        </div>
+            <Spinner className="h-12 w-12 text-black" />
+            </div>
       ) : products.length === 0 ? (
         <Typography className="my-4">لم تُضاف أي منتجات بعد في هذه الفئة</Typography>
       ) : (

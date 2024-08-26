@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from "../../../Components/AxiosRequest";
 import { Button } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 
 const LoginClient = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     password: "",
     email: "",
@@ -48,8 +50,8 @@ const LoginClient = () => {
       .catch((error) => {
           if(error.response.data.error === "Verification code is not verified. Please verify your code first.")
           {
-            toast.error("Verification code is not verified. Please verify your code first.");
-            window.location.replace('/verify');
+            toast.error(<div style={{direction:'rtl'}}>رمز التحقق غير مفعل. يرجى التحقق من رمزك أولاً</div>);
+            navigate('/verify',{state:{email:state.email}});
           }
           else {
             toast.error(error.response.data.error);

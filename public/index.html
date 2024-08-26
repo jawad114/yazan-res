@@ -38,6 +38,31 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
+  <!-- Accessibility Code for "www.laylamp.com" --> <script> 
+  /* Want to customize your button? visit our documentation page: https://login.equalweb.com/custom-button.taf */ 
+  window.interdeal = {
+   "sitekey": "b5a1e229789519db0507a9526e2590ef", 
+  "Position": "Left", 
+  "domains": { "js": "https://cdn.equalweb.com/", "acc": "https://access.equalweb.com/" }, 
+  "Menulang": "EN", 
+  "btnStyle": {
+  "vPosition": [ "100%", "20%" ],
+  "scale": [ "0.5", "0.5" ], 
+  "color": { "main": "#33CCF9", "second": "#ffffff" }, 
+  "icon": { "type": 1, "shape": "circle" } 
+  } }; 
+  (function(doc, head, body)
+  { 
+    var coreCall = doc.createElement('script'); 
+    coreCall.src = interdeal.domains.js + 'core/5.0.4/accessibility.js'; 
+    coreCall.defer = true; 
+    coreCall.integrity = 'sha512-eTUQWRddyiuveqEbmMAHQ8v9FzTkrdWz0Tyr2rbZSUC6JOsmhmyQMXGo1lANZnpINLB1IFuN3u6s7FM296qwYA=='; 
+    coreCall.crossOrigin = 'anonymous'; 
+    coreCall.setAttribute('data-cfasync', true ); 
+    body? body.appendChild(coreCall) : head.appendChild(coreCall); 
+    })
+  (document, document.head, document.body); 
+  </script>
 
  
   <!-- <div id="google_translate_element"></div>
