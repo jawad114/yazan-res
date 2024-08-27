@@ -104,9 +104,9 @@ const Registration = () => {
       .then((response) => {
         if (response.data.status === "ok") {
           alert("Registration successful");
-          toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
+          // toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
         }
-        navigate('/verify',{state:{email:formData.email}});
+        navigate('/login-client')
       })
       .catch((error) => {
         console.error(error);
