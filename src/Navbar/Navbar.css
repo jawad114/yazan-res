@@ -179,7 +179,7 @@ li {
 }
 
 /* Show mobile view when max width is reached */
-@media (max-width: 768px) {
+@media (max-width: 1277px) {
     .navbar.desktop-view {
         display: none;
     }

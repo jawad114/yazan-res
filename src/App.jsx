@@ -126,7 +126,7 @@ const App = () => {
               <Route path='*' element={<NotFound />} />
             </Routes>
           </div>
-          <BackToTopButton /> {/* Add ScrollToTopButton here */}
+          <BackToTopButton />
         </FavoriteProvider>
       </Router>
     </ThemeProvider>

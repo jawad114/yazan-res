@@ -72,12 +72,13 @@
 // export default Registration;
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AxiosRequest from "../../../Components/AxiosRequest";
 import RegistrationForm from "./RegistrationForm";
 import registerImage from "../../../assets/register.svg";
 import { Link, useNavigate } from 'react-router-dom'; // Import Link from react-router-dom for navigation
 import { toast } from "react-toastify";
+import { requestFCMToken } from "../../../Firebase";
 
 
 
@@ -87,31 +88,119 @@ const Registration = () => {
     lastname: "",
     password: "",
     email: "",
+    phoneNumber:"",
+    fcmToken:null
   });
+  const [isReadyToSubmit, setIsReadyToSubmit] = useState(false); // State to control when to submit the form
   const navigate = useNavigate();
+  const [fcmToken, setFcmToken] = useState(null); // Separate state for FCM token
+
+
+  // const handleRequestToken = async () => {
+  //   try {
+  //     const token = await requestFCMToken();
+  //     if (token) {
+  //       setFormData((prevData) => ({
+  //         ...prevData,
+  //         fcmToken: token
+  //       }));
+  //       console.log('FCM Token:', token);
+  //       // Optionally, send this token to your backend server for storage
+  //     }
+  //   } catch (error) {
+  //     console.error('Error requesting FCM token:', error);
+  //   }
+  // };
+
+  // const handleInputChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value,
+  //   });
+  // };
+
+
+  // const handleSubmit = () => {
+  //   AxiosRequest
+  //     .post("/register-client", formData)
+  //     .then((response) => {
+  //       if (response.data.status === "ok") {
+  //         alert("Registration successful");
+  //         // toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
+  //       }
+  //       // navigate('/login-client')
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       alert("Registration failed");
+  //     });
+  // };
+
+  // const handleFormSubmit = async (event) => {
+    // if (event) {
+    //   event.preventDefault();
+    // }
+
+  //   try {
+  //     await handleRequestToken();
+  //     const emailExistsResponse = await AxiosRequest.post("/check-email-exists", { email: formData.email });
+  //     if (emailExistsResponse.data.exists) {
+  //       alert("This email is already registered. Please use a different email.");
+  //     } else {
+  //       handleSubmit();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Error checking email availability");
+  //   }
+  // };
+
+  const handleRequestToken = async () => {
+    try {
+      const token = await requestFCMToken();
+      if (token) {
+        setFcmToken(token); // Set the FCM token in separate state
+        console.log('FCM Token:', token);
+      }
+    } catch (error) {
+      console.error('Error requesting FCM token:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (fcmToken) {
+      setFormData((prevData) => ({
+        ...prevData,
+        fcmToken: fcmToken,
+      }));
+    }
+
+    // Check if ready to submit after fcmToken is set
+    if (isReadyToSubmit && fcmToken) {
+      handleSubmit(); // Call handleSubmit when conditions are met
+    }
+  }, [fcmToken, isReadyToSubmit]); 
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
-  const handleSubmit = () => {
-    AxiosRequest
-      .post("/register-client", formData)
-      .then((response) => {
-        if (response.data.status === "ok") {
-          alert("Registration successful");
-          // toast.info(<div style={{direction:'rtl'}}>قد تم ارسال رمز الى بريدك الإلكتروني إذا لم يصلك رمز التحقق، يرجى الانتظار لمدة 1 إلى 2 دقيقة حتى يصل إلى بريدك الإلكتروني تأكد من فحص صندوق الوارد</div>,{autoClose:7000});
-        }
-        navigate('/login-client')
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("Registration failed");
-      });
+  const handleSubmit = async () => {
+    try {
+      const response = await AxiosRequest.post("/register-client", formData);
+      if (response.data.status === "ok") {
+        alert("Registration successful");
+        navigate('/login-client');
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Registration failed");
+    }
   };
 
   const handleFormSubmit = async (event) => {
@@ -120,11 +209,16 @@ const Registration = () => {
     }
 
     try {
+      // Ensure the FCM token request completes before proceeding
+      await handleRequestToken();
+
+      // Check if the email already exists in the backend
       const emailExistsResponse = await AxiosRequest.post("/check-email-exists", { email: formData.email });
+
       if (emailExistsResponse.data.exists) {
         alert("This email is already registered. Please use a different email.");
       } else {
-        handleSubmit();
+        setIsReadyToSubmit(true);
       }
     } catch (error) {
       console.error(error);

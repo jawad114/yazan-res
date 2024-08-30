@@ -12,8 +12,9 @@ const fields = [
   { name: "firstname", placeholder: "الاسم", type: "text" },
   { name: "lastname", placeholder: "اسم العائلة", type: "text" },
   { name: "email", placeholder: "البريد الإلكتروني", type: "email" },
+  { name: "phoneNumber", placeholder: "رقم الهاتف", type: "number" },
   { name: "password", placeholder: "انشاء كلمة مرور", type: "password" },
-  { name: "confirmPassword", placeholder: "تأكيد كلمة المرور", type: "password" },
+  { name: "confirmPassword", placeholder: "تأكيد كلمة المرور", type: "password" }
 ];
 
 // : يرجى إدخال عنوان بريد إلكتروني صحيح

@@ -84,19 +84,17 @@ const Checkout = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [resName, setResName] = useState('');
   const customerId = localStorage.getItem('id');
-  const [shippingOption, setShippingOption] = useState('self-pickup');
   const [location, setLocation] = useState({ lat: 31.7683, lng: 35.2137,address:''});
   const token = localStorage.getItem('token');
-  const [selectedOption, setSelectedOption] = useState('self-pickup');
   const [availableOptions, setAvailableOptions] = useState({});
+  const [shippingOption, setShippingOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
   const [showMap, setShowMap] = useState(false);
   const locationData = useLocation();
   const cartReceived = locationData.state?.cart;
   const [showRestaurantLocationModal, setShowRestaurantLocationModal] = useState(false);
   const [resLocation, setResLocation] = useState(null);
   const [selectedDeliveryCharge, setSelectedDeliveryCharge] = useState('free');
-
-  
   const [deliveryCharges, setDeliveryCharges] = useState({});
   const navigate = useNavigate();
   console.log('cartDATA received: ' + JSON.stringify(cartReceived));
@@ -109,6 +107,15 @@ const Checkout = () => {
     address:''
   });
 
+
+  useEffect(() => {
+    const defaultOption = availableOptions['delivery'] ? 'delivery' : 'self-pickup';
+    setShippingOption(defaultOption);
+    setSelectedOption(defaultOption);
+  }, [availableOptions]);
+  
+
+  
 // useEffect(() => {
 //   const fetchCart = async () => {
 //     try {
@@ -559,14 +566,43 @@ if (Array.isArray(details) && details.length > 0) {
         <h1 className='text-center mt-4'>معلومات التوصيل</h1>
         <Grid sx={{ p: 6 }} container spacing={2}>
           <Grid item xs={12}>
+          <div className='flex items-center justify-center text-center'>
+        <Typography variant='subtitle1' className='!font-bold'>اضغط على وسيلة الاستلام المناسبة لك أدناه لجعل لونها ازرق</Typography>
+        </div>
+          </Grid>
+          <Grid item xs={12}>
             <div className='flex flex-col items-center justify-center text-center mb-4'>
-              {/* <Grid item xs={12} sx={{gap:1,display:'flex'}}> */}
               <Card className='flex flex-row bg-white gap-4 shadow-md shadow-black rounded-full'>
           {renderOptionButton('delivery', faMotorcycle)}
           {renderOptionButton('self-pickup', faShoppingBag)}
           {renderOptionButton('dine-in', faUtensils)}
           </Card>
             </div>
+            </Grid>
+            <Grid item xs={12}>
+              {(selectedOption === 'delivery' && shippingOption === 'delivery') && (
+                  <div className='flex items-center justify-center text-center'>
+                 <Typography variant='h6' className='!font-bold'>
+                  خدمة توصيل
+                </Typography>
+                </div>
+              )}
+                {(selectedOption === 'self-pickup' && shippingOption === 'self-pickup') && (
+                  <div className='flex items-center justify-center text-center'>
+                 <Typography variant='h6' className='!font-bold'>
+                  أستلام ذاتي
+                </Typography>
+                </div>
+              )}
+                 {(selectedOption === 'dine-in' && shippingOption === 'dine-in') && (
+                <div className='flex items-center justify-center text-center'>
+                 <Typography variant='h6' className='!font-bold'>
+                  العشاء داخل المطعم
+                </Typography>
+                </div>
+              )}
+          </Grid>
+            <Grid item xs={12}>
             <TextField
               label="الاسم"
               variant="outlined"

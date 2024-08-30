@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -12,7 +12,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { toast } from 'react-toastify';
 import AxiosRequest from '../Components/AxiosRequest';
-import BackToTopButton from '../Components/BackToTopButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { ShoppingCartIcon } from '@heroicons/react/20/solid';
 
 
 const Navbar: React.FC = () => {
@@ -396,7 +398,6 @@ const showFallbackNotification = () => {
     return (
         <>
             {/* Desktop View */}
-            <BackToTopButton/>
             <nav className={`navbar desktop-view ${scrolling ? 'scrolling' : ''}`}>
                 <div className='navbar-container'>
                         <div onClick={handleLogoClick} className='logo-container hover:cursor-pointer'>
@@ -533,19 +534,13 @@ const showFallbackNotification = () => {
                     <div className='user-actions gap-2'>
                         {isLoggedIn && (
                             <div className='flex space-x-4'>
-
-<div onClick={handleFavClick} className='action-btn cursor-pointer'>
-                                    <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
-                                        {favoriteUpdate ? <Favorite style={{ color: 'red' , fontSize: 18 }} /> : <FavoriteBorder style={{ color: 'black' , fontSize: 18 }} />}
-                                    </div>
+                            <div onClick={handleFavClick} className='action-btn flex items-center justify-center cursor-pointer'>
+                                        {favoriteUpdate ? <Favorite sx={{color:'red'}} fontSize='medium'  /> : <FavoriteBorder fontSize='medium' sx={{ color: 'black'}} />}
                                 </div>
-
-
-                                <div onClick={handleCartClick} className='action-btn cursor-pointer'>
-                                <div className="cart-icon-container">
-                                        <img src={cartIcon} alt="Cart" className="cart-icon" />
+                                <div onClick={handleCartClick} className='action-btn flex items-center justify-center cursor-pointer'>
+                                        {/* <img src={cartIcon} alt="Cart" className='w-full object-cover'/> */}
+                                        <ShoppingCartOutlined fontSize='medium'/>
                                         {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-                                    </div>
                                 </div>
                             </div>
                         )}

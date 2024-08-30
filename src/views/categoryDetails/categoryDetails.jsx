@@ -704,10 +704,20 @@ const [openDialog, setOpenDialog] = useState(false);
                       )}
 
                 <div className="flex flex-col gap-4 justify-center items-center mt-4 w-full">
+                  {(!isClient && !isAdmin && !isOwner) && (
+                     <Button
+                     color="primary"
+                     variant="contained"
+                     onClick={() => navigate('/login-client')}
+                   >
+                     سجل دخول لأتمام الطلب
+                   </Button>
+                  )}
                 {(isClient) && (
                   <>
                   <Button
-                    className="btn"
+                    variant="contained"
+                    color="primary"
                     onClick={() =>
                       handleAddToCart(
                         selectedProduct._id,
@@ -721,7 +731,7 @@ const [openDialog, setOpenDialog] = useState(false);
                     أضف إلى السلة
                   </Button>
                   <Button
-                        className="btn"
+                        color="secondary"
                         variant="contained"
                         onClick={() => navigate('/cart')}
                       >
