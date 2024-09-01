@@ -1,84 +1,10 @@
-// import { useState } from "react";
-// import axios from "axios";
-// import RegistrationForm from "./RegistrationForm";
-// import registerImage from "../../../assets/register.svg";
-// import AxiosRequest from "../../../Components/AxiosRequest";
-
-// const Registration = () => {
-//   const [formData, setFormData] = useState({
-//     firstname: "",
-//     lastname: "",
-//     password: "",
-//     email: "",
-//   });
-
-//   const handleInputChange = (event) => {
-//     const { name, value } = event.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-
-//   const handleSubmit = () => {
-//     AxiosRequest
-//       .post("/register-client", formData)
-//       .then((response) => {
-//         if (response.data.status === "ok") {
-//           alert("Registration successful");
-//         }
-//         window.location.replace('/verify');
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//         alert("Registration failed");
-//       });
-//   };
-
-//   const handleFormSubmit = async (event) => {
-//     if (event) {
-//       event.preventDefault();
-//     }
-
-//     try {
-//       const emailExistsResponse = await AxiosRequest.post("/check-email-exists", { email: formData.email });
-//       if (emailExistsResponse.data.exists) {
-//         alert("This email is already registered. Please use a different email.");
-//       } else {
-//         handleSubmit();
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       alert("Error checking email availability");
-//     }
-//   };
-
-//   return (
-//     <div className="p-5">
-//       <div>
-//         <div>
-//           <h3 className="mb-5">Create your account!</h3>
-//           <RegistrationForm
-//             formData={formData}
-//             handleInputChange={handleInputChange}
-//             handleSubmit={handleFormSubmit} // Pass handleFormSubmit instead of handleSubmit
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Registration;
-
-
 import { useEffect, useState } from "react";
 import AxiosRequest from "../../../Components/AxiosRequest";
 import RegistrationForm from "./RegistrationForm";
 import registerImage from "../../../assets/register.svg";
 import { Link, useNavigate } from 'react-router-dom'; // Import Link from react-router-dom for navigation
 import { toast } from "react-toastify";
-import { requestFCMToken } from "../../../Firebase";
+// import { requestFCMToken } from "../../../Firebase";
 
 
 
@@ -89,11 +15,11 @@ const Registration = () => {
     password: "",
     email: "",
     phoneNumber:"",
-    fcmToken:null
+    // fcmToken:null
   });
-  const [isReadyToSubmit, setIsReadyToSubmit] = useState(false); // State to control when to submit the form
+  // const [isReadyToSubmit, setIsReadyToSubmit] = useState(false);
   const navigate = useNavigate();
-  const [fcmToken, setFcmToken] = useState(null); // Separate state for FCM token
+  // const [fcmToken, setFcmToken] = useState(null); 
 
 
   // const handleRequestToken = async () => {
@@ -156,31 +82,31 @@ const Registration = () => {
   //   }
   // };
 
-  const handleRequestToken = async () => {
-    try {
-      const token = await requestFCMToken();
-      if (token) {
-        setFcmToken(token); // Set the FCM token in separate state
-        console.log('FCM Token:', token);
-      }
-    } catch (error) {
-      console.error('Error requesting FCM token:', error);
-    }
-  };
+  // const handleRequestToken = async () => {
+  //   try {
+  //     const token = await requestFCMToken();
+  //     if (token) {
+  //       setFcmToken(token); // Set the FCM token in separate state
+  //       console.log('FCM Token:', token);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error requesting FCM token:', error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (fcmToken) {
-      setFormData((prevData) => ({
-        ...prevData,
-        fcmToken: fcmToken,
-      }));
-    }
+  // useEffect(() => {
+  //   if (fcmToken) {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       fcmToken: fcmToken,
+  //     }));
+  //   }
 
-    // Check if ready to submit after fcmToken is set
-    if (isReadyToSubmit && fcmToken) {
-      handleSubmit(); // Call handleSubmit when conditions are met
-    }
-  }, [fcmToken, isReadyToSubmit]); 
+  //   // Check if ready to submit after fcmToken is set
+  //   if (isReadyToSubmit && fcmToken) {
+  //     handleSubmit(); // Call handleSubmit when conditions are met
+  //   }
+  // }, [fcmToken, isReadyToSubmit]); 
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -210,7 +136,7 @@ const Registration = () => {
 
     try {
       // Ensure the FCM token request completes before proceeding
-      await handleRequestToken();
+      // await handleRequestToken();
 
       // Check if the email already exists in the backend
       const emailExistsResponse = await AxiosRequest.post("/check-email-exists", { email: formData.email });
@@ -218,7 +144,8 @@ const Registration = () => {
       if (emailExistsResponse.data.exists) {
         alert("This email is already registered. Please use a different email.");
       } else {
-        setIsReadyToSubmit(true);
+        // setIsReadyToSubmit(true);
+        await handleSubmit();
       }
     } catch (error) {
       console.error(error);

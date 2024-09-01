@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined, Receipt, PasswordOutlined } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
   const [cartCount, setCartCount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState('');
-  const [favoriteUpdate, setFavoritesUpdated] = useState(false);
+  const [favoriteUpdate, setFavoritesUpdated] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -366,6 +366,7 @@ const showFallbackNotification = () => {
         localStorage.removeItem('isOwner');
         localStorage.removeItem('isClient');
         localStorage.removeItem('resName');
+        localStorage.removeItem('email');
         localStorage.removeItem('name');
         alert('تم تسجيل خروجك بنجاح');
         setIsLoggedIn(false);
@@ -483,14 +484,14 @@ const showFallbackNotification = () => {
 
                         {isLoggedIn && (
                             <>
-
+{isClient &&(
 <div onClick={handleFavClick} className='action-btn cursor-pointer'>
 <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
                                         {favoriteUpdate ? <Favorite  style={{ color: 'red',marginRight: '0.5rem' }} /> : <FavoriteBorder style={{ color: 'black',marginRight: '0.5rem' }} />}
                                         المفضل
                                     </div>
                                 </div>
-
+)}
                                 {isLoggedIn && (isAdmin || isOwner) && (
                                     <Link to="/finance" className='action-btn'>
                                         <div className='cart-icon-container'>
@@ -532,7 +533,7 @@ const showFallbackNotification = () => {
                     </Link>
 
                     <div className='user-actions gap-2'>
-                        {isLoggedIn && (
+                        {isClient && (
                             <div className='flex space-x-4'>
                             <div onClick={handleFavClick} className='action-btn flex items-center justify-center cursor-pointer'>
                                         {favoriteUpdate ? <Favorite sx={{color:'red'}} fontSize='medium'  /> : <FavoriteBorder fontSize='medium' sx={{ color: 'black'}} />}
@@ -647,6 +648,34 @@ const showFallbackNotification = () => {
             </MenuItem>
                             </>
                           )}
+                {isClient &&(    
+                    <>              
+          <MenuItem
+            className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+            onClick={() => navigate('/orders')}
+          >
+           <Receipt style={{ marginRight: '0.2rem' }}/> طلباتي
+          </MenuItem>
+                    <MenuItem
+                    className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+                    onClick={() => navigate('/cart')}
+                  >
+                   <ShoppingCartOutlined style={{ marginRight: '0.2rem' }}/> سلتي
+                  </MenuItem>
+                  <MenuItem
+                    className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+                    onClick={() => navigate('/change-password')}
+                  >
+                   <PasswordOutlined style={{ marginRight: '0.2rem' }}/> تغير الرقم السري
+                  </MenuItem>
+                  <MenuItem
+                    className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+                    onClick={() => navigate('/favorites')}
+                  >
+                   <Favorite style={{ marginRight: '0.2rem',color:'red' }}/> المفضلة
+                  </MenuItem>
+                  </>
+        )}                  
         {!isAdmin &&(                  
           <MenuItem
             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"

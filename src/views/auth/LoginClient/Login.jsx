@@ -39,6 +39,7 @@ const LoginClient = () => {
           localStorage.setItem('token', data.data.token); // Assuming your token is received as 'token' in response
           localStorage.setItem('name', data.data.name);
           localStorage.setItem('isClient', 'true');
+          localStorage.setItem('email',state.email);
           localStorage.removeItem('isAdmin');
           localStorage.removeItem('isOwner');
 

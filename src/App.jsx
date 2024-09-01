@@ -51,6 +51,7 @@ import ScrollToTopButton from './Components/scrollToTopButton';
 import BackToTopButton from './Components/BackToTopButton';
 import DeliveryCharges from './views/DeliveryCharges/DeliveryCharges';
 import AccessibilityButton from './Components/AccessibilityButton';
+import ChangePassword from './views/ChangePassword/ChangePassword';
 
 const theme = createTheme();
 
@@ -62,7 +63,6 @@ const toastStyle = {
 
 
 const App = () => {
-  // const sitekey= "a830c94e1fa10dbd322863db50ac9ea1"
 
   return (
     <ThemeProvider theme={theme}>
@@ -102,6 +102,7 @@ const App = () => {
               <Route path='/owner-email-update' element={<UpdateEmail />} />
               <Route path='/favorites' element={<Favorites />} />
               <Route path='/request-credentials' element={<Ownerform />} />
+              <Route path='/change-password' element={<ChangePassword />} />
               <Route path='/edit/:resName' element={<EditRestaurant />} />
               <Route path='/delivery-charges' element={<DeliveryCharges />} />
               <Route path='/owner' element={<Ownerdashboard />} />

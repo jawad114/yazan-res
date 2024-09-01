@@ -7,6 +7,8 @@ import AxiosRequest from '../../Components/AxiosRequest';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {  toast } from "react-toastify";
 import { Card } from '@material-tailwind/react';
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+
 
 
 const RestaurantLocationModal = ({ open, onClose, location }) => {
@@ -331,7 +333,11 @@ useEffect(() => {
   }
 
   if (!cart) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner width="200" height="200" />
+      </div>
+    );
   }
 
   // const handleMapClick = (event) => {
@@ -563,7 +569,7 @@ if (Array.isArray(details) && details.length > 0) {
   else {
     return (
       <div className='bg-white'>
-        <h1 className='text-center mt-4'>معلومات التوصيل</h1>
+        <h1 className='text-center mt-4'>اختار طريقة الأستلام</h1>
         <Grid sx={{ p: 6 }} container spacing={2}>
           <Grid item xs={12}>
           <div className='flex items-center justify-center text-center'>
@@ -814,13 +820,23 @@ if (Array.isArray(details) && details.length > 0) {
 {selectedOption === 'dine-in' && (
           <Grid item xs={12}>
             <TextField
-              label="Table Number"
+              label="ادخل رقم الطاولة"
               type="number"
               variant="outlined"
               fullWidth
+              style={{
+                textAlign: 'start', // Align text to start
+                direction: 'rtl',   // Set text direction to right-to-left
+              }}
               value={tableNumber}
               onChange={(e) => setTableNumber(e.target.value)}
               required
+              sx={{
+                '& .MuiOutlinedInput-input:focus': {
+                  outline: 'none', // Removes the focus ring
+                  boxShadow: 'none',
+                },
+              }}
             />
           </Grid>
         )}

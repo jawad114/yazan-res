@@ -36,6 +36,7 @@ export default function Categories() {
   const [notFound, setNotFound] = useState(false);
   const [availableOptions, setAvailableOptions] = useState([]);
   const [restaurantStatus, setRestaurantStatus] = useState('');
+  const restaurantReceived = localStorage.getItem('resName');
 
   const navigate = useNavigate();
 
@@ -458,7 +459,7 @@ if (searchTerm) {
                       >
                         عرض فئة: {category.categoryName}
                       </Button>
-                      {(isAdmin || isOwner) && (
+                      {(isAdmin || (isOwner && resName === restaurantReceived)) && (
                         <div className="flex space-x-2 mt-2">
                           <Button
                             variant='outlined'
@@ -481,7 +482,7 @@ if (searchTerm) {
                 </div>
               )}
             </div>
-            {(isAdmin || isOwner) && (
+            {(isAdmin || (isOwner && resName === restaurantReceived)) && (
               <div className='flex w-[24vw] mb-4 items-center justify-center'>
                 <Button variant="contained" className='btn-global' onClick={handleAddCategory}>اضف فئة</Button>
               </div>

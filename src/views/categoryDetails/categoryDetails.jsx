@@ -38,6 +38,7 @@ const CategoryDetails = () => {
   const [quantities, setQuantities] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { resName, categoryName } = useParams();
+  const restaurantReceived = localStorage.getItem('resName');
   const [openM, setOpenM] = useState(false);
   const [errors, setErrors] = useState([]);
   const [imageLoading, setImageLoading] = useState(true);
@@ -243,7 +244,7 @@ const [openDialog, setOpenDialog] = useState(false);
 
   const handleEdit = (product) => {
     // Navigate to the edit screen if user is admin or owner
-    if (isAdmin || isOwner) {
+    if (isAdmin || (isOwner && resName === restaurantReceived)) {
       navigate(`/edit/${resName}/${categoryName}/${product._id}`);
     }
   };
@@ -506,7 +507,7 @@ const [openDialog, setOpenDialog] = useState(false);
   className="p-0 bg-light rounded-5 shadow-lg flex-column"
 >
 <div className="relative">
-{(isAdmin || isOwner) && (
+{(isAdmin || (isOwner && resName === restaurantReceived)) && (
             <div
               className="absolute top-2 left-24 cursor-pointer z-10"
               onClick={() => toggleVisibility(product._id, product.visibility)}
@@ -599,7 +600,7 @@ const [openDialog, setOpenDialog] = useState(false);
           ))}
         </Grid>
       )}
-      {(isAdmin || isOwner) &&(
+      {(isAdmin || (isOwner && resName === restaurantReceived)) &&(
         <div className="flex items-center justify-center">
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
       اضافة منتجات جديدة
@@ -739,7 +740,7 @@ const [openDialog, setOpenDialog] = useState(false);
                       </Button>
                       </>
                       )}
-                  {(isAdmin || isOwner) && (
+                  {(isAdmin || (isOwner && resName === restaurantReceived)) && (
                     <div className="flex flex-col justify-center md:flex-row md:justify-between md:space-x-[8vw] gap-4 md:gap-0  mt-4">
                       <Button
                         variant="outlined"
