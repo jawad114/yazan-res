@@ -14,6 +14,7 @@ import LocationIcon from '../../assets/Waze.jpeg';
 import { faCheck, faMotorcycle, faPhone, faShoppingBag, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { PhoneOutlined } from '@mui/icons-material';
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
 
 
 export default function Categories() {
@@ -248,9 +249,9 @@ if (searchTerm) {
 <Carousels/>
       <div className='flex flex-col w-full items-center text-center justify-center'>
         {loading ? (
-          <div className='flex justify-center items-center h-screen'>
-            <Spinner className="h-12 w-12 text-black" />
-          </div>
+           <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+           <LoadingSpinner width="200" height="200" />
+         </div>
         ) : (
           <>
     {openingHours && (

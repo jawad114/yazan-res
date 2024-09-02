@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined, Receipt, PasswordOutlined } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined, Receipt, PasswordOutlined, PrivacyTip, PrivacyTipOutlined } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -411,11 +411,12 @@ const showFallbackNotification = () => {
                         </div>
                     <div className='user-actions'>
                         {!isLoggedIn && (
-                            <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>
+                            // <button className="action-btn" onClick={(event) => setAnchorEl(event.currentTarget)}>
+                            <button className="action-btn" onClick={() => handleLoginRedirect('/login-client', 'isClient')}>
                                 <PersonIcon style={{ marginRight: '1rem' }}/> دخول
                             </button>
                         )}
-                        <Menu
+                        {/* <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
                             onClose={handleMenuClose}
@@ -423,13 +424,13 @@ const showFallbackNotification = () => {
                             {(!isLoggedIn || !isClient) && (
                                 <MenuItem onClick={() => handleLoginRedirect('/login-client', 'isClient')}>عميل</MenuItem>
                             )}
-                            {/* {(!isLoggedIn || !isOwner) && (
+                            {(!isLoggedIn || !isOwner) && (
                                 <MenuItem onClick={() => handleLoginRedirect('/login-owner', 'isOwner')}>شركاء</MenuItem>
                             )}
                             {!isLoggedIn && (
                                 <MenuItem onClick={() => handleLoginRedirect('/admin-login', 'isAdmin')}>ادارة</MenuItem>
-                            )} */}
-                        </Menu>
+                            )}
+                        </Menu> */}
                         {!isAdmin &&(
                         <Link to={`/contact-us`} className="action-btn">
                         <Phone style={{ marginRight: '0.5rem' }} /> تواصل معنا
@@ -474,16 +475,29 @@ const showFallbackNotification = () => {
                                 </Link>
                         )}
                         {isClient && (
-      <div onClick={handleCartClick} className='action-btn cursor-pointer'>
-        <div className="cart-icon-container">
-          <img src={cartIcon} width={20} alt="Cart" className="cart-icon" />
-          {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-        </div>
-      </div>
+    //   <div onClick={handleCartClick} className='action-btn cursor-pointer'>
+    //     <div className="cart-icon-container">
+    //         <div className='flex flex-row'>
+    //       <img src={cartIcon} width={20} alt="Cart" className="cart-icon mr-[0.5]" /> سلتي
+    //      </div>
+    //       {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+    //     </div>
+    //   </div>
+    <>
+    <Link to={`/change-password`} className="action-btn">
+    <PasswordOutlined style={{ marginRight: '0.5rem' }}/> تغير الرقم السري                           
+    </Link>
+    <div onClick={handleCartClick} className='action-btn cursor-pointer'>
+  <div className="cart-icon-container relative flex items-center">
+    <img src={cartIcon} width={20} alt="Cart" className="cart-icon mr-2" />
+    <span>سلتي</span>
+    {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+  </div>
+</div>
+</>
     )}
 
-                        {isLoggedIn && (
-                            <>
+
 {isClient &&(
 <div onClick={handleFavClick} className='action-btn cursor-pointer'>
 <div className={`cart-icon-container ${favoriteUpdate ? 'text-red-600' : ''}`}>
@@ -507,7 +521,11 @@ const showFallbackNotification = () => {
                                         </div>
                                     </Link>
                                 )}
-
+                            <Link to={`/privacy-policy`} className="action-btn">
+                                <PrivacyTipOutlined style={{ marginRight: '0.5rem' }}/> سياسة الخصوصية                           
+                                </Link>
+                                {isLoggedIn && (
+                            <>
                                 <button className='action-btn' onClick={handleLogout}>
                                     <ExitToApp style={{ marginRight: '0.5rem' }} /> تسجيل خروج
                                 </button>
@@ -541,7 +559,7 @@ const showFallbackNotification = () => {
                                 <div onClick={handleCartClick} className='action-btn flex items-center justify-center cursor-pointer'>
                                         {/* <img src={cartIcon} alt="Cart" className='w-full object-cover'/> */}
                                         <ShoppingCartOutlined fontSize='medium'/>
-                                        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+                                        {cartCount > 0 && <span className="cart-count-mobile">{cartCount}</span>}
                                 </div>
                             </div>
                         )}
@@ -684,6 +702,12 @@ const showFallbackNotification = () => {
            <Phone style={{ marginRight: '0.2rem' }}/> تواصل معنا
           </MenuItem>
         )}
+                  <MenuItem
+            className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+            onClick={() => navigate('/privacy-policy')}
+          >
+           <PrivacyTipOutlined style={{ marginRight: '0.2rem' }}/> سياسة الخصوصية
+          </MenuItem>
           {isLoggedIn && (
             <MenuItem
               className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"

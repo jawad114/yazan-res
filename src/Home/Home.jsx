@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faShoppingBasket, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import './customScrollbar.css'
+import { ReactComponent as LoadingSpinner } from '../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
 
 // Styled card for filters
 const FilterCard = styled(MuiCard)(({ theme, selected }) => ({
@@ -209,12 +210,13 @@ const HomeComponent = () => {
         onClick={() => handleFilterSelect(filter)}
         className="flex flex-col shadow-lg bg-white rounded-lg items-center justify-center w-[20vw] min-w-[20vw] max-w-[20vw]"
       >
-        <CardMedia
+        {/* <CardMedia
           component="img"
           image={filterImages[filter]}
           alt={filter}
           className="w-full h-[10vh] md:h-[20vh] object-cover"
-        />
+        /> */}
+        <img src={filterImages[filter]} width={100}/>
         <div className="flex items-start justify-start text-start">
           <Typography className="font-bold text-black" component="div">
             {filter}
@@ -235,9 +237,9 @@ const HomeComponent = () => {
 </Typography>
 <div className={`grid ${isOwner ? 'grid-cols-1 md:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'} gap-4 w-full`}>
 {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <CircularProgress />
-            </div>
+            <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+            <LoadingSpinner width="200" height="200" />
+          </div>
           ) : isOwner ? (
             <>
               {products.length !== 0 && (

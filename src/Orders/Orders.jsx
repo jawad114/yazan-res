@@ -29,6 +29,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AxiosRequest from '../Components/AxiosRequest';
 import Carousels from '../Home/Carousels/Carousels';
+import { ReactComponent as LoadingSpinner } from '../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+
 
 const Orders = () => {
   const [loading, setLoading] = useState(true);
@@ -219,7 +221,9 @@ const openWaze = (latitude, longitude) => {
       />
       <div className="w-full items-center flex flex-col  justify-center overflow-auto max-h-[70vh] mb-4">
         {loading ? (
-          <CircularProgress className="loading-spinner mt-8" />
+                <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+                  <LoadingSpinner width="200" height="200" />
+          </div>
         ) : filteredOrders.length > 0 ? (
           <Paper elevation={3} className="w-full md:w-[80vw] p-0 flex rounded-lg border overflow-y-auto border-gray-300 mt-2">
             <List>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { CircularProgress, Grid, Card, CardContent, Typography } from '@mui/material';
 import AxiosRequest from '../../Components/AxiosRequest';
 import Carousels from '../../Home/Carousels/Carousels';
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -62,7 +64,9 @@ const Favorites = () => {
           المتاجر المفضلة
           </Typography>
           {loading ? (
-            <CircularProgress className="mt-8" />
+                  <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+                  <LoadingSpinner width="200" height="200" />
+                </div>
           ) : (
             <>
               {favorites.length === 0 ? (

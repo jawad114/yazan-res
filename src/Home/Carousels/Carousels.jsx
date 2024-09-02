@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Carousel,Spinner } from "@material-tailwind/react";
 import AxiosRequest from '../../Components/AxiosRequest'
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
 
 const Carousels = () => {
   const [sliderImages, setSliderImages] = useState([]);
@@ -23,14 +24,14 @@ const Carousels = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F6F1EE] font-poppins">
-        <Spinner className="h-12 w-12 text-black" />
+      <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+        <LoadingSpinner width="200" height="200" />
       </div>
     );
   }
 
   return (
-    <div className="w-full h-[36vh] md:h-[70vh] mx-auto">
+    <div className="w-full h-[36vh] md:h-[56vh] mx-auto">
       <Carousel
         autoplay
         loop
@@ -54,7 +55,7 @@ const Carousels = () => {
             key={index}
             src={image.imageUrl}
             alt={`image ${index + 1}`}
-            className="h-full w-full object-cover"
+            className="h-full w-full"
           />
           </a>
         ))}

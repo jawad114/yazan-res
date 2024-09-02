@@ -1,28 +1,32 @@
 .custom-scrollbar {
-    scrollbar-width:thin; /* Firefox */
-    scrollbar-color: black #f3f4f6; /* Firefox */
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 0.2rem;
-    height: 0.2rem;
-    background: black;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: black;
-    border-radius: 4vw;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #ffffff;
-    border-radius: 4vw;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+  overflow: scroll; /* Ensure scrolling is enabled */
+}
 
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: transparent transparent; /* Hide the scrollbar */
+}
+
+/* WebKit browsers (Chrome, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0.2rem; /* Width of the scrollbar */
+  height: 0.2rem; /* Height of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Transparent background */
+  border-radius: 4vw;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent; /* Transparent thumb */
+  border-radius: 4vw;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: transparent; /* Transparent thumb on hover */
+}
 
 
   

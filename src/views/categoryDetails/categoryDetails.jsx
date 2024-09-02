@@ -31,6 +31,8 @@ import OldPhoneIcon from '../../assets/landline.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faMotorcycle, faShoppingBag, faTimes, faUtensils } from "@fortawesome/free-solid-svg-icons";
 import { PhoneOutlined } from "@mui/icons-material";
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+
 
 const CategoryDetails = () => {
   const [products, setProducts] = useState([]);
@@ -493,9 +495,9 @@ const [openDialog, setOpenDialog] = useState(false);
   </Typography>
 </div>
       {loading ? (
-        <div className='flex items-center justify-center mx-auto'>
-            <Spinner className="h-12 w-12 text-black" />
-            </div>
+      <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+      <LoadingSpinner width="200" height="200" />
+    </div>
       ) : products.length === 0 ? (
         <Typography className="my-4">لم تُضاف أي منتجات بعد في هذه الفئة</Typography>
       ) : (

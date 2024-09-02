@@ -4,6 +4,7 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } f
 import AxiosRequest from '../../Components/AxiosRequest'; // Ensure this path is correct
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
 
 
 const SliderImageList = () => {
@@ -95,8 +96,8 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F6F1EE] font-poppins">
-        <Spinner className="h-12 w-12 text-black" />
+      <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+        <LoadingSpinner width="200" height="200" />
       </div>
     );
   }

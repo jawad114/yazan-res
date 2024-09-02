@@ -75,8 +75,12 @@ li {
     @apply flex justify-end items-center absolute right-4 bottom-4 flex-row items-center mt-10;
 }
 
-.action-btn {
+/* .action-btn {
     @apply bg-white w-[10vw] text-blue-500 font-bold px-3 py-2 ml-10 border-none rounded cursor-pointer text-sm;
+} */
+.action-btn {
+    @apply bg-white text-blue-500 font-bold px-3 py-2 ml-10 border-none rounded cursor-pointer text-sm;
+    text-align: right; /* Aligns the text to the right */
 }
 
 .action-btn1 {
@@ -142,9 +146,21 @@ li {
     @apply w-6 mr-2;
 }
 
-.cart-count {
-    @apply absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs px-2 py-1;
+.cart-icon-container {
+    position: relative; /* Make the container a reference for positioning the badge */
+    display: flex;
+    align-items: center;
+  }
+
+.cart-count-mobile {
+    @apply absolute top-0 right-1 bg-red-500 text-white rounded-full text-xs px-2 py-1;
 }
+
+  /* styles.css or another CSS file */
+.cart-count {
+    @apply absolute top-[-5px] left-[10px] bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs;
+  }
+  
 
 #Fav {
     @apply bg-white text-black;

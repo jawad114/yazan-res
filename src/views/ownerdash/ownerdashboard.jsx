@@ -23,6 +23,7 @@ import AxiosRequest from '../../Components/AxiosRequest';
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Avatar } from '@material-tailwind/react';
+import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
 
 
 export default function OwnerDashboard() {
@@ -588,7 +589,9 @@ const formatProductDetails = (groupedProducts) => {
                 </div>
 
                 {loading ? (
-          <CircularProgress className="loading-spinner mt-8" />
+                <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+                <LoadingSpinner width="200" height="200" />
+              </div>
         ) :filteredOrders.length > 0 ? (
                     <Paper elevation={3} className="md:w-full  p-6 border border-gray-300 rounded-lg">
                         {filteredOrders.map(order => (

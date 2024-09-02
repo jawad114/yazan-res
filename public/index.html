@@ -21,10 +21,15 @@
   <meta property="fb:app_id" content="1447986159222600" />
   
   <!-- Mobile Web App Meta -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
 
   <!-- Manifest for PWA -->
   <link rel="manifest" href="https://laylamp.com/manifest.json" />
+
+   <!-- No-Cache Meta Tags -->
+   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+   <meta http-equiv="Pragma" content="no-cache" />
+   <meta http-equiv="Expires" content="0" />
 
   <!-- Page Title -->
   <title>Laylamp</title>
@@ -60,25 +65,8 @@
   </script>
 
   <!-- Google Maps API (ensure async loading) -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3sYiLZxlLVObHv7zP2Rrdcz3T2Sc6Vs&libraries=places&callback=initMap"
-    async
-  ></script>
-
-  <!-- Initialize Google Map -->
-  <script>
-    function initMap() {
-      // Define map options
-      const mapOptions = {
-        center: { lat: 31.7683, lng: 35.2137 },
-        zoom: 8,
-      };
-
-      // Create the map object
-      const map = new google.maps.Map(document.getElementById("root"), mapOptions);
-    }
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3sYiLZxlLVObHv7zP2Rrdcz3T2Sc6Vs&loading=async&libraries=places&callback=initMap">
   </script>
-
 </body>
-
 </html>
