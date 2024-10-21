@@ -62,7 +62,7 @@ const UpdateEmail = () => {
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
             placeholder="New Email"
-            className="mb-4 border-2 border-black rounded"
+            className="mb-4 border-2 w-full border-black rounded"
             required
           />
         </div>

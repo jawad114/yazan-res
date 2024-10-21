@@ -332,6 +332,11 @@ const formatProductDetails = (groupedProducts) => {
         order.products.forEach(product => {
             orderTotal += calculateTotalPrice(product);
         });
+         // Apply discount if applicable
+         if (order.discountApplied && order.discount) {
+            const discountAmount = (orderTotal * order.discount) / 100;
+            orderTotal -= discountAmount;
+        }
         if (order.deliveryCharges && typeof order.deliveryCharges === 'number') {
             orderTotal += order.deliveryCharges;
           }
@@ -664,6 +669,11 @@ const formatProductDetails = (groupedProducts) => {
                                                             رسوم التوصيل: ₪ {order.deliveryCharges}<br />
                                                             </Typography>
                                                             )}
+                                                             {order?.discountApplied && (
+                                                              <Typography variant="body2">
+                                                            خصم: % {order.discount}<br />
+                                                            </Typography>
+                                                            )}
                                                              {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
                                                             العنوان التفصيلي: {order.shippingInfo.address}<br />
@@ -772,6 +782,11 @@ const formatProductDetails = (groupedProducts) => {
                                                             {order?.deliveryCharges && (
                                                               <Typography variant="body2">
                                                             رسوم التوصيل: ₪ {order.deliveryCharges}<br />
+                                                            </Typography>
+                                                            )}
+                                                            {order?.discountApplied && (
+                                                              <Typography variant="body2">
+                                                            خصم: % {order.discount}<br />
                                                             </Typography>
                                                             )}
                                                              {order.shippingInfo?.address && (

@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="https://laylamp.com/newLogo.ico" />
-  <link rel="apple-touch-icon" href="https://laylamp.com/newLogo.ico" />
+  <link rel="icon" href="https://www.laylamp.com/newLogo.ico" />
+  <link rel="apple-touch-icon" href="https://www.laylamp.com/newLogo.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="Discover the best marketplace on Laylamp!" />
@@ -12,11 +12,11 @@
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="Laylamp" />
   <meta property="og:description" content="Discover the best marketplace on Laylamp!" />
-  <meta property="og:image" content="https://laylamp.com/newLogo.jpeg" />
+  <meta property="og:image" content="https://www.laylamp.com/newLogo.jpeg" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://laylamp.com" />
+  <meta property="og:url" content="https://www.laylamp.com" />
   <meta property="og:type" content="website" />
   <meta property="fb:app_id" content="1447986159222600" />
   
@@ -24,7 +24,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
 
   <!-- Manifest for PWA -->
-  <link rel="manifest" href="https://laylamp.com/manifest.json" />
+  <link rel="manifest" href="https://www.laylamp.com/manifest.json" />
 
    <!-- No-Cache Meta Tags -->
    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -33,6 +33,32 @@
 
   <!-- Page Title -->
   <title>Laylamp</title>
+
+        <!-- Google Maps API (ensure async loading) -->
+<!-- <script async
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3sYiLZxlLVObHv7zP2Rrdcz3T2Sc6Vs&loading=async&libraries=places&callback=initMap">
+</script> -->
+
+ <!-- Google Maps API (ensure async loading) -->
+ <script>
+  function initMap() {
+    // Check if the map div exists
+    const mapDiv = document.getElementById("map");
+    if (mapDiv) {
+      const map = new google.maps.Map(mapDiv, {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+      });
+    } else {
+      console.error("Map div not found");
+    }
+  }
+</script>
+<script 
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3sYiLZxlLVObHv7zP2Rrdcz3T2Sc6Vs&libraries=places&callback=initMap"
+  async
+  defer
+></script>
 </head>
 
 <body>
@@ -62,11 +88,6 @@
       coreCall.setAttribute('data-cfasync', true);
       body ? body.appendChild(coreCall) : head.appendChild(coreCall);
     })(document, document.head, document.body);
-  </script>
-
-  <!-- Google Maps API (ensure async loading) -->
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3sYiLZxlLVObHv7zP2Rrdcz3T2Sc6Vs&loading=async&libraries=places&callback=initMap">
   </script>
 </body>
 </html>

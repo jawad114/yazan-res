@@ -51,7 +51,7 @@ const Forgot = () => {
             direction: 'rtl',   // تحديد اتجاه الكتابة من اليمين لليسار
           }}
           size={'medium'}
-          className="border-2 border-black rounded"
+          className="border-2 w-full border-black rounded"
         />
         <div className='flex items-center text-center justify-center'>
           <Button

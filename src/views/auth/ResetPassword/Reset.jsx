@@ -66,7 +66,7 @@ const Reset = () => {
                           }}
                         onChange={handleChange}
                         placeholder="البريد الإلكتروني"
-                        className="mb-4 border-2 border-black rounded"
+                        className="mb-4 border-2 w-full border-black rounded"
                         />
                     <input
                         type="text"
@@ -78,7 +78,7 @@ const Reset = () => {
                           }}
                         onChange={handleChange}
                         placeholder="الرجاء ادخال رمز التحقق المرسل الى بريدك الإلكتروني"
-                        className="mb-4 border-2 border-black rounded"
+                        className="mb-4 border-2 w-full border-black rounded"
                         />
                     <input
                         type="password"
@@ -90,7 +90,7 @@ const Reset = () => {
                           }}
                         onChange={handleChange}
                         placeholder="كلمة مرور جديدة"
-                        className="mb-4 border-2 border-black rounded"
+                        className="mb-4 border-2 w-full border-black rounded"
                         />
                 </div>
                 <div className="flex flex-col items-center justify-between">

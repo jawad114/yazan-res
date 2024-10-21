@@ -1,12 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Home/Home';
 import Navbar from './Navbar/Navbar';
-import MapComponent from './Components/MapComponent';
-import { FavoriteProvider } from './Favorite/FavoriteContext';
 import LoginClient from './views/auth/LoginClient/Login';
 import LoginOwner from './views/auth/LoginOwner/Login';
-import RegistrationOwner from './views/auth/RegistrationOwner/Registration';
 import Registration from './views/auth/RegistrationClient/Registration';
 import AdminLogin from './views/auth/adminLogin';
 import NotFound from './views/404';
@@ -27,7 +23,6 @@ import Checkout from './views/checkout/checkout';
 import EditRestaurant from './EditRestaurant/EditRestaurant';
 import EditDish from './EditDish/EditDish';
 import Orders from './Orders/Orders';
-import FavoritePage from './Favorite/FavoritePage';
 import Favorites from './views/Favorites/Favorites';
 import Finance from './views/Finance/Finance';
 import Forgot from './views/auth/ForgotPassword/Forgot';
@@ -47,11 +42,11 @@ import SliderImageList from './views/SliderImageList/SliderImageList';
 import AddImagePage from './views/AddImagePage/AddImagePage';
 import AddFilterPage from './views/AddFilterPage/AddFilterPage';
 import FilterList from './views/FilterList/FilterList';
-import ScrollToTopButton from './Components/scrollToTopButton';
 import BackToTopButton from './Components/BackToTopButton';
 import DeliveryCharges from './views/DeliveryCharges/DeliveryCharges';
-import AccessibilityButton from './Components/AccessibilityButton';
 import ChangePassword from './views/ChangePassword/ChangePassword';
+import CouponForm from './views/CouponManagement/CouponForm';
+import CouponList from './views/CouponManagement/CouponList';
 
 const theme = createTheme();
 
@@ -67,7 +62,6 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <FavoriteProvider>
           <Navbar />
           <ToastContainer
         position="top-right"
@@ -91,6 +85,8 @@ const App = () => {
               <Route path='/login-client' element={<LoginClient />} />
               <Route path='/register-client' element={<Registration />} />
               <Route path='/admin-login' element={<AdminLogin />} />
+              <Route path='/create-coupon' element={<CouponForm />} />
+              <Route path='/coupon-list' element={<CouponList />} />
               <Route path='/admin-dashboard' element={<AdminDashboard />} />
               <Route path='/contact-us' element={<ContactUs />} />
               <Route path='/privacy-policy' element={<PrivacyPolicy />} />
@@ -110,7 +106,6 @@ const App = () => {
               <Route path='/orders' element={<Orders />} />
               <Route path='/all-orders' element={<AdminOrder />} />
               <Route path='/checkout' element={<Checkout />} />
-              <Route path='/favorite' element={<FavoritePage />} />
               <Route path='/finance' element={<Finance />} />
               <Route path='/forgot-password' element={<Forgot />} />
               <Route path='/reset-password' element={<Reset />} />
@@ -128,7 +123,6 @@ const App = () => {
             </Routes>
           </div>
           <BackToTopButton />
-        </FavoriteProvider>
       </Router>
     </ThemeProvider>
   );

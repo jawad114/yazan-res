@@ -3,22 +3,22 @@
   "name": "Laylamp Marketplace",
   "icons": [
     {
-      "src": "https://laylamp.com/favicon.ico",
+      "src": "https://www.laylamp.com/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "https://laylamp.com/newLogo.ico",
+      "src": "https://www.laylamp.com/newLogo.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "https://laylamp.com/logo192.png",
+      "src": "https://www.laylamp.com/logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://laylamp.com/logo512.png",
+      "src": "https://www.laylamp.com/logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

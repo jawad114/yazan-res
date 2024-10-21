@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,Suspense, lazy,useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
   Typography,
@@ -12,26 +12,21 @@ import {
   Grid,
   Box
 } from "@mui/material";
-import { Avatar, Card, Spinner } from "@material-tailwind/react";
 import { ClockIcon} from "@heroicons/react/20/solid";
 import CustomModal from "../modal/modal";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CircularProgress from '@mui/material/CircularProgress';
 import AxiosRequest from "../../Components/AxiosRequest";
 import { useNavigate } from 'react-router-dom';
 import "./categoryDetails.module..css"
-import Carousels from "../../Home/Carousels/Carousels";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LocationIcon from '../../assets/Waze.jpeg';
-import OldPhoneIcon from '../../assets/landline.png';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faMotorcycle, faShoppingBag, faTimes, faUtensils } from "@fortawesome/free-solid-svg-icons";
 import { PhoneOutlined } from "@mui/icons-material";
 import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+const Avatar = lazy(() => import('@material-tailwind/react').then(module => ({ default: module.Avatar })));
 
 
 const CategoryDetails = () => {
@@ -40,7 +35,6 @@ const CategoryDetails = () => {
   const [quantities, setQuantities] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { resName, categoryName } = useParams();
-  const restaurantReceived = localStorage.getItem('resName');
   const [openM, setOpenM] = useState(false);
   const [errors, setErrors] = useState([]);
   const [imageLoading, setImageLoading] = useState(true);
@@ -58,71 +52,95 @@ const CategoryDetails = () => {
   const isClient = localStorage.getItem('isClient') === 'true';
   const customerId = localStorage.getItem('id');
   const token = localStorage.getItem('token');
-  const [availableOptions, setAvailableOptions] = useState([]);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [triggerAddToCart, setTriggerAddToCart] = useState(null);
 const [openDialog, setOpenDialog] = useState(false);
+const restaurantReceived = localStorage.getItem('resName');
 
-  useEffect(() => {
-      const fetchProducts = async () => {
-        try {
-          const response = await AxiosRequest.get(
-            `/restaurant/${resName}/category/${categoryName}/dishes`
-          );
-          if (response && response.data && response.data.products) {
-            let filteredProducts = response.data.products;
-    
-            // Filter products based on user role
-            if (!isOwner && !isAdmin){
-              filteredProducts = response.data.products.filter(product => product.visibility !== false);
-            }
-    
-            setProducts(filteredProducts);
-            setRestaurantImage(response.data.restaurantImage);
-            setRestaurantContact(response.data.contact);
-            setCategoryImage(response.data.categoryImage);    
-            const initialQuantities = {};
-            filteredProducts.forEach((product) => {
-              initialQuantities[product._id] = 1;
-            });
-            setQuantities(initialQuantities);
-          }
-        } catch (error) {
-          if (error.response && error.response.data && error.response.data.error) {
-            if (!toast.isActive("errorToast")) {
-              toast.error(error.response.data.error, { toastId: "errorToast" });
-            }
-          } else {
-            if (!toast.isActive("errorToast")) {
-              toast.error("An error occurred", { toastId: "errorToast" });
-            }
-          }
-        }finally{
-          setLoading(false);
-          setImageLoading(false);
-        }
-      };
 
-      const fetchResData = async () => {
-        setLoading(true);
-        try {     
-          const response = await AxiosRequest.get(`/get-one-res/${resName}`)
-    
-          if (response.status === 200) {
-            setOpeningHours(response.data.data.openingHours);
-            setRestaurantStatus(response.data.data.status);
-            setAvailableOptions(response.data.data.availableOptions);
-            setResLocation(response.data.data.coordinates);
-          }
-        } catch (error) {
-          console.error('Error fetching opening hours or status:', error);
-        } finally{
-          setLoading(false);
-        }
-      };
-   fetchProducts();
-   fetchResData();
-  }, [resName, categoryName,isOwner,isAdmin]);
+useEffect(() => {
+  if (!resName) {
+    navigate('/forbidden'); // Replace with your target route
+  }
+}, [resName, navigate]);
+
+useEffect(() => {
+  if(isOwner){
+  if(!restaurantReceived){
+  toast.error('Session has expired, Login Again');
+  navigate('/login-owner');
+  }
+  else if (restaurantReceived !== resName) {
+    toast.error('Not Your MarketPlace, you can only view your own marketplace');
+    navigate('/'); 
+  }
+}
+}, [isOwner,restaurantReceived,resName, navigate]);
+
+  // Memoize fetchProducts using useCallback
+const fetchProducts = useCallback(async () => {
+  try {
+    const response = await AxiosRequest.get(
+      `/restaurant/${resName}/category/${categoryName}/dishes`
+    );
+    if (response && response.data && response.data.products) {
+      let filteredProducts = response.data.products;
+
+      // Filter products based on user role
+      if (!isOwner && !isAdmin) {
+        filteredProducts = response.data.products.filter(
+          (product) => product.visibility !== false
+        );
+      }
+
+      setProducts(filteredProducts);
+      setRestaurantImage(response.data.restaurantImage);
+      setRestaurantContact(response.data.contact);
+      setCategoryImage(response.data.categoryImage);
+      const initialQuantities = {};
+      filteredProducts.forEach((product) => {
+        initialQuantities[product._id] = 1;
+      });
+      setQuantities(initialQuantities);
+    }
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.error) {
+      if (!toast.isActive("errorToast")) {
+        toast.error(error.response.data.error, { toastId: "errorToast" });
+      }
+    } else {
+      if (!toast.isActive("errorToast")) {
+        toast.error("An error occurred", { toastId: "errorToast" });
+      }
+    }
+  } finally {
+    setLoading(false);
+    setImageLoading(false);
+  }
+}, [resName, categoryName, isOwner, isAdmin]); // Dependencies: resName, categoryName, isOwner, isAdmin
+
+// Memoize fetchResData using useCallback
+const fetchResData = useCallback(async () => {
+  setLoading(true);
+  try {
+    const response = await AxiosRequest.get(`/get-one-res/${resName}`);
+    if (response.status === 200) {
+      setOpeningHours(response.data.data.openingHours);
+      setRestaurantStatus(response.data.data.status);
+      setResLocation(response.data.data.coordinates);
+    }
+  } catch (error) {
+    console.error("Error fetching opening hours or status:", error);
+  } finally {
+    setLoading(false);
+  }
+}, [resName]); // Dependency: resName
+
+useEffect(() => {
+  fetchProducts();
+  fetchResData();
+}, [fetchProducts, fetchResData]);
+
 
   useEffect(() => {
     if (selectedProduct) {
@@ -246,7 +264,7 @@ const [openDialog, setOpenDialog] = useState(false);
 
   const handleEdit = (product) => {
     // Navigate to the edit screen if user is admin or owner
-    if (isAdmin || (isOwner && resName === restaurantReceived)) {
+    if (isAdmin || isOwner) {
       navigate(`/edit/${resName}/${categoryName}/${product._id}`);
     }
   };
@@ -400,7 +418,13 @@ const [openDialog, setOpenDialog] = useState(false);
 
   return (
     <div className='bg-white'>
-    <img src={categoryImage} alt={alt}  className="w-full h-[36vh] md:h-[70vh] object-cover" />
+    {categoryImage ?(
+    <img src={categoryImage} loading='lazy' className="w-full h-[36vh] md:h-[70vh] object-cover" />
+  ):(
+    <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+    <LoadingSpinner width="200" height="200" />
+  </div>
+  )}
     {openingHours && (
   <Box 
     className='relative flex justify-between items-center w-full px-4 p-4 rounded-lg shadow-lg'
@@ -418,12 +442,20 @@ const [openDialog, setOpenDialog] = useState(false);
         {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
       </Typography>
     </Box>
-    <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
+    {/* <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
       <Avatar
-        src={restaurantImage} // Replace with dynamic category image if needed
+        src={restaurantImage}
         className="w-32 h-32 border-4 border-white"
       />
-    </div>
+    </div> */}
+<div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
+    <Suspense fallback={<div className="w-32 h-32 border-4 border-white bg-gray-200"></div>}>
+      <Avatar
+        src={restaurantImage}
+        className="w-32 h-32 border-4 border-white"
+      />
+    </Suspense>
+  </div>
     <Box className='flex flex-col justify-center'>
       {restaurantStatus === 'open' ? (
         <Typography 
@@ -444,14 +476,6 @@ const [openDialog, setOpenDialog] = useState(false);
     </Box>
   </Box>
 )}
-  {/* {restaurantContact && (
- <div className='relative flex justify-start items-center w-full  px-4 p-4' >
-    <a href={`tel:${restaurantContact}`} className="text-blue-500 hover:cursor-pointer">
- <PhoneIcon width={30} color="blue"/>
- </a>
-</div>
-)} */}
-
 <> 
   <div className="flex items-center mt-2 p-4 justify-between w-full">
     {restaurantContact && (
@@ -509,7 +533,7 @@ const [openDialog, setOpenDialog] = useState(false);
   className="p-0 bg-light rounded-5 shadow-lg flex-column"
 >
 <div className="relative">
-{(isAdmin || (isOwner && resName === restaurantReceived)) && (
+{(isAdmin || isOwner) && (
             <div
               className="absolute top-2 left-24 cursor-pointer z-10"
               onClick={() => toggleVisibility(product._id, product.visibility)}
@@ -542,6 +566,7 @@ const [openDialog, setOpenDialog] = useState(false);
           className="h-40 object-cover hover:cursor-pointer"
           onClick={() => handleOpenModal(product)}
             src={product.dishImage}
+            loading='lazy'
             alt={product.name}
           />
 
@@ -602,7 +627,7 @@ const [openDialog, setOpenDialog] = useState(false);
           ))}
         </Grid>
       )}
-      {(isAdmin || (isOwner && resName === restaurantReceived)) &&(
+      {(isAdmin || isOwner) &&(
         <div className="flex items-center justify-center">
       <Button variant="contained" className="mt-4" onClick={handleAddDish}>
       اضافة منتجات جديدة
@@ -620,12 +645,18 @@ const [openDialog, setOpenDialog] = useState(false);
                 <img
                   className="object-cover"
                   src={selectedProduct.dishImage}
+                  loading='lazy'
                 />
                 </div>
-                <ListItemText className="mb-[2vh] text-3xl text-center">
-                  {selectedProduct.name}
-                </ListItemText>
-                <ListItemText className="mb-[2vh] text-base text-center">
+                <ListItemText
+  className="mb-[2vh] text-base text-center"
+  primary={
+    <Typography variant="body1" fontWeight="bold" align="center">
+      {selectedProduct.name}
+    </Typography>
+  }
+/>
+                <ListItemText className="mb-[2vh]  text-base text-center">
                   {selectedProduct.description}
                 </ListItemText>
                 <Typography className="mb-[2vh] text-base text-center">
@@ -742,7 +773,7 @@ const [openDialog, setOpenDialog] = useState(false);
                       </Button>
                       </>
                       )}
-                  {(isAdmin || (isOwner && resName === restaurantReceived)) && (
+                  {(isAdmin || isOwner ) && (
                     <div className="flex flex-col justify-center md:flex-row md:justify-between md:space-x-[8vw] gap-4 md:gap-0  mt-4">
                       <Button
                         variant="outlined"

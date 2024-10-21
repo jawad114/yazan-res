@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoImage from './logolayy.png';
 import cartIcon from './CartIcon.png';
-import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined, Receipt, PasswordOutlined, PrivacyTip, PrivacyTipOutlined } from '@mui/icons-material';
+import { Dashboard, Favorite, FavoriteBorder, ListAlt, Menu as MenuIcon, Money, Phone, Logout, ExitToApp, Person, Settings, Image, Filter, Filter1, FilterList, Edit, DeliveryDiningSharp, CardTravel, ShoppingCart, ShoppingCartOutlined, Receipt, PasswordOutlined, PrivacyTip, PrivacyTipOutlined, LocalActivityOutlined, AccessTimeOutlined } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { Button, Menu, MenuItem, IconButton, Drawer } from '@mui/material';
 import { useWebSocket } from '../Components/WebSocketContext';
@@ -69,128 +69,6 @@ const Navbar: React.FC = () => {
   const customerId = localStorage.getItem('id');
   const loggedIn = localStorage.getItem('token') !== null;
   const restaurantName = localStorage.getItem('resName') ?? '';
-
-//   useEffect(() => {
-//       const checkUserLogin = () => {
-
-//           if (isAdmin) {
-//               setIsLoggedIn(true);
-//               setUserRole('isAdmin');
-//           } else if (isOwner) {
-//               setIsLoggedIn(true);
-//               setUserRole('isOwner');
-//               setOwnerRestaurantName(restaurantName); // Store the restaurant name
-//           } else if (isClient) {
-//               setIsLoggedIn(true);
-//               setUserRole('isClient');
-//               if (customerId) fetchCartDebounced(customerId);
-//           } else {
-//               setIsLoggedIn(loggedIn);
-//           }
-
-//           if (loggedIn && ws) {
-//               ws.onopen = () => {
-//                   console.log('WebSocket connection opened');
-//               };
-//             ws.onmessage = (event: MessageEvent) => {
-//                 try {
-//                     let data;
-
-//                     // Attempt to parse the data only if it is a valid JSON string
-//                     try {
-//                         data = JSON.parse(event.data);
-//                     } catch (error) {
-//                         return; // Exit early if parsing fails
-//                     }
-//                     console.log('WebSocket message received:', data);
-            
-//                     if (isClient) {
-//                         if (data.type === 'cartUpdated') {
-//                             if (customerId) fetchCartDebounced(customerId);
-//                         } else if (data.type === 'favoritesUpdated') {
-//                             setFavoritesUpdated(true);
-//                         }
-//                     }
-            
-//                     if (isOwner && data.type === 'newOrderReceived') {
-//                         if (data.restaurantName === ownerRestaurantName) {
-//                             console.log('New order received for your restaurant');
-            
-//                             const currentTime = Date.now();
-//                             if (currentTime - lastInteractionTime > INTERACTION_EXPIRY_TIME) {
-//                                 alert('Please interact with the page to enable audio notifications.');
-//                                 return;
-//                             }
-            
-//                             if (audio) {
-//                                 audio.pause();
-//                                 audio.currentTime = 0;
-//                                 audio.loop = false;
-//                                 setAudio(null);
-//                             }
-            
-//                             const newAudio = new Audio(notificationSound);
-//                             newAudio.loop = true;
-//                             newAudio.play();
-//                             setAudio(newAudio);
-            
-//                             const id = toast.success(
-//                                 <div className="toast-custom">
-//                                     <div>New Order Received for {ownerRestaurantName}</div>
-//                                     <button
-//                                         onClick={() => {
-//                                             toast.dismiss(id);
-//                                             if (newAudio) {
-//                                                 newAudio.pause();
-//                                                 newAudio.currentTime = 0;
-//                                                 newAudio.loop = false;
-//                                                 setAudio(null);
-//                                             }
-//                                             window.location.reload();
-//                                         }}
-//                                     >
-//                                         Got it
-//                                     </button>
-//                                 </div>,
-//                                 {
-//                                     autoClose: false,
-//                                     closeButton: false,
-//                                     hideProgressBar: true,
-//                                     className: 'toast-custom',
-//                                     bodyClassName: 'toast-body',
-//                                     onClose: () => {
-//                                         if (newAudio) {
-//                                             newAudio.pause();
-//                                             newAudio.currentTime = 0;
-//                                             newAudio.loop = false;
-//                                             setAudio(null);
-//                                         }
-//                                     }
-//                                 }
-//                             );
-            
-//                             setToastId(id as string);
-//                         }
-//                     }
-//                 } catch (error) {
-//                     console.error('Error parsing WebSocket message:', error);
-//                 }
-//             };
-            
-//             ws.onerror = (event) => {
-//                 console.error('WebSocket error:', event);
-//             };
-            
-//             ws.onclose = (event) => {
-//                 console.log('WebSocket closed:', event);
-//             };
-            
-//           };
-//       };
-
-//       checkUserLogin();
-//   }, [ws, notificationSound, audio, ownerRestaurantName, customerId, loggedIn, restaurantName]);
-
 
 useEffect(() => {
     const checkUserLogin = () => {
@@ -338,10 +216,10 @@ const showFallbackNotification = () => {
     window.location.reload();
 };
 
-    const fetchCart = async (customerId: string | null) => {
+    const fetchCart = useCallback(async (customerId: string | null) => {
         try {
             const response = await AxiosRequest.get(`/get-cart/${customerId}`);
-            if (response.data && response.data.totalItemsCount !== undefined) {
+            if (response.data?.totalItemsCount !== undefined) {
                 setCartCount(response.data.totalItemsCount);
             } else {
                 setCartCount(0);
@@ -350,9 +228,10 @@ const showFallbackNotification = () => {
             console.log('Error fetching cart:', error);
             setCartCount(0);
         }
-    };
+    }, []);
 
-    const fetchCartDebounced = debounce(fetchCart, 500);
+    // Debounce the fetchCart function
+    const fetchCartDebounced = useCallback(debounce(fetchCart, 500), [fetchCart]);
     const handleCartClick = () => {
         navigate('/cart'); // Navigate to /cart
       };
@@ -449,14 +328,24 @@ const showFallbackNotification = () => {
                                 </Link>
                         )} */}
                         {isOwner && (
+                            <>
                             <Link to={`/delivery-charges`} className="action-btn">
                                 <DeliveryDiningSharp style={{ marginRight: '0.5rem' }}/> رسوم
                             </Link>
+                             <Link to={`/coupon-list`} className="action-btn">
+                            <LocalActivityOutlined style={{ marginRight: '0.5rem' }}/> قسيمة
+                            </Link>
+                        </>
                         )}
                                                 {isAdmin && (
+                                                    <>
                             <Link to={`/delivery-charges`} className="action-btn">
                                 <DeliveryDiningSharp style={{ marginRight: '0.5rem' }}/> رسوم
                             </Link>
+                                                         <Link to={`/coupon-list`} className="action-btn">
+                                                         <LocalActivityOutlined style={{ marginRight: '0.5rem' }}/> قسيمة
+                                                         </Link>
+                                                         </>
                                                 )}
                         {/* {isAdmin && (
                             <Link to={`/all-orders`} className="action-btn">
@@ -646,6 +535,18 @@ const showFallbackNotification = () => {
                 >
             <DeliveryDiningSharp style={{ marginRight: '0.2rem' }}/> رسوم
             </MenuItem>
+            <MenuItem
+             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+             onClick={() => navigate(`/coupon-list`)}
+                >
+            <LocalActivityOutlined style={{ marginRight: '0.2rem' }}/> قسيمة
+            </MenuItem>
+            <MenuItem
+             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+             onClick={() => navigate(`/update-opening-hours/${restaurantName}`, { state: { resName: restaurantName } })}
+                >
+            <AccessTimeOutlined style={{ marginRight: '0.2rem' }}/> ساعات العمل
+            </MenuItem>
             </>
           )}
 
@@ -664,6 +565,18 @@ const showFallbackNotification = () => {
                 >
             <DeliveryDiningSharp style={{ marginRight: '0.2rem' }}/> رسوم
             </MenuItem>
+            <MenuItem
+             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+             onClick={() => navigate(`/coupon-list`)}
+                >
+            <LocalActivityOutlined style={{ marginRight: '0.2rem' }}/> قسيمة
+            </MenuItem>
+            {/* <MenuItem
+             className="hover:bg-gray-200 rounded-md p-2 text-white transition-colors duration-200"
+             onClick={() => navigate(`/coupon-list`)}
+                >
+            <AccessTimeOutlined style={{ marginRight: '0.2rem' }}/> Change
+            </MenuItem> */}
                             </>
                           )}
                 {isClient &&(    

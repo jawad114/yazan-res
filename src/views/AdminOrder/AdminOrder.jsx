@@ -222,8 +222,29 @@ export default function AdminOrder() {
         if (product.extras && product.extras.length > 0) {
             totalPrice += product.quantity * product.extras.reduce((acc, extra) => acc + extra.price, 0);
         }
-        return totalPrice.toFixed(2);
+        
+        return parseFloat(totalPrice.toFixed(2)); // Convert to float for accurate summation
     };
+    
+    // Function to calculate the order total
+    function calculateOrderTotal(order) {
+        let orderTotal = 0;
+        
+        // Iterate over each product and sum up the total price
+        order.products.forEach(product => {
+            orderTotal += calculateTotalPrice(product);
+        });
+         // Apply discount if applicable
+         if (order.discountApplied && order.discount) {
+            const discountAmount = (orderTotal * order.discount) / 100;
+            orderTotal -= discountAmount;
+        }
+        if (order.deliveryCharges && typeof order.deliveryCharges === 'number') {
+            orderTotal += order.deliveryCharges;
+          }
+        
+        return parseFloat(orderTotal.toFixed(2)); // Ensure the total is formatted to 2 decimal places
+    }
 
     const handleDelete = async (orderId) => {
         try {
@@ -507,7 +528,12 @@ export default function AdminOrder() {
                                                                     )}
                                                             {order?.deliveryCharges && (
                                                               <Typography variant="body2">
-                                                            Delivery Charges: {order.deliveryCharges}<br />
+                                                            Delivery Charges: {order.deliveryCharges} ₪<br />
+                                                            </Typography>
+                                                            )}
+                                                            {order?.discountApplied && (
+                                                              <Typography variant="body2">
+                                                            Discount: {order.discount} %<br />
                                                             </Typography>
                                                             )}
                                                               {order.shippingInfo?.address && (
@@ -522,12 +548,14 @@ export default function AdminOrder() {
                                                             )}
                                                             </>
                                                         )}
-                                                            Order Type: {order.shippingOption}
+                                                            Order Type: {order.shippingOption}<br/>
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
-                                                                Table Number: {order.tableNumber}
+                                                                Table Number: {order.tableNumber}<br/>
                                                                 </Typography>
                                                             )}
+                                                             Total Price: {calculateOrderTotal(order)} ₪<br />
+                                                             Ordered At: {formatDate(order.orderTime)}
                                                         </Typography>
                                                     </div>
                                                 </div>
@@ -542,9 +570,7 @@ export default function AdminOrder() {
                                                             Price: {product.price} ₪<br />
                                                             Extras: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
                                                             Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'}<br />
-                                                            Total Price: {calculateTotalPrice(product)} ₪<br />
                                                             Status: {order.status ? order.status : 'No Status Yet'}<br />
-                                                            Ordered At: {formatDate(order.orderTime)}
                                                         </Typography>
                                                     </div>
                                                 ))}
@@ -606,6 +632,11 @@ export default function AdminOrder() {
                                                             Delivery Charges: {order.deliveryCharges} ₪<br />
                                                             </Typography>
                                                             )}
+                                                             {order?.discountApplied && (
+                                                              <Typography variant="body2">
+                                                            Discount: {order.discount} %<br />
+                                                            </Typography>
+                                                            )}
                                                               {order.shippingInfo?.address && (
                                                               <Typography variant="body2">
                                                             Detailed Address: {order.shippingInfo.address}<br />
@@ -618,12 +649,14 @@ export default function AdminOrder() {
                                                   )}
                                        </>
                                             )}
-                                                            Order Type: {order.shippingOption}
+                                                            Order Type: {order.shippingOption}<br/>
                                                             {order.shippingOption === 'dine-in' &&(
                                                                 <Typography variant="body2">
-                                                                Table Number: {order.tableNumber}
+                                                                Table Number: {order.tableNumber}<br/>
                                                                 </Typography>
                                                             )}
+                                                            Total Price: {calculateOrderTotal(order)} ₪<br />
+                                                            Ordered At: {formatDate(order.orderTime)}
                                                     </Typography>
                                                 </div>
                                             </div>
@@ -637,9 +670,7 @@ export default function AdminOrder() {
                                                             Price: {product.price} ₪<br />
                                                             Extras: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.name).join(', ') : 'None'}<br />
                                                             Extras Price: {product.extras && product.extras.length > 0 ? product.extras.map(extra => extra.price).join(' ₪ , ') +' ₪' : 'None'}<br />
-                                                            Total Price: {calculateTotalPrice(product)} ₪<br />
                                                             Status: {order.status ? order.status : 'No Status Yet'}<br />
-                                                            Ordered At: {formatDate(order.orderTime)}
                                                         </Typography>
                                                     </div>
                                                 ))}

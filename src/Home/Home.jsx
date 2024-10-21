@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import Card from '../views/card/card';
-import { Typography, TextField, CircularProgress, Card as MuiCard, CardContent, CardMedia, Button } from '@mui/material';
+import React, { useEffect, useState, useMemo, Suspense, lazy } from 'react';
+import { Typography, TextField, CircularProgress, Button } from '@mui/material';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AxiosRequest from '../Components/AxiosRequest';
-import Carousels from './Carousels/Carousels';
 import { styled } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping, faShoppingBasket, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import './customScrollbar.css'
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import './customScrollbar.css';
 import { ReactComponent as LoadingSpinner } from '../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+import { useCallback } from 'react';
+
+// Lazy load the components
+const Carousels = lazy(() => import('./Carousels/Carousels'));
+const Card = lazy(() => import('../views/card/card'));
 
 // Styled card for filters
-const FilterCard = styled(MuiCard)(({ theme, selected }) => ({
+const FilterCard = styled('div')(({ theme, selected }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -25,10 +28,9 @@ const FilterCard = styled(MuiCard)(({ theme, selected }) => ({
   },
 }));
 
-
-
 const HomeComponent = () => {
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [isOwner, setIsOwner] = useState();
   const [searchTerm, setSearchTerm] = useState(''); 
@@ -38,83 +40,73 @@ const HomeComponent = () => {
   const name = localStorage.getItem('name');
   const [filter, setFilter] = useState([]);
 
-
-  const fetchProducts = async (searchTerm = '') => {
+  const fetchProducts = useCallback(async (searchTerm = '') => {
     try {
       const Owner = localStorage.getItem('isOwner');
       let endpoint = '/get-restaurants';
       let headers = {};
-
+  
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
-
+  
       if (Owner && resName) {
         endpoint = `/get-one-res/${resName}`;
         setIsOwner(Owner === "true");
       } else if (!Owner && searchTerm) {
         endpoint = `/search?q=${encodeURIComponent(searchTerm)}`;
       }
-
       const response = await AxiosRequest.get(endpoint, { headers });
       if (response && response.data) {
         setProducts(response.data.data || response.data); 
-      }
-      setLoading(false);
-
+      }  
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.error) {
-        if (!toast.isActive("errorToast")) {
-          toast.error(error.response.data.error, { toastId: "errorToast" });
-        }
-      } else {
-        if (!toast.isActive("errorToast")) {
-          toast.error("An error occurred", { toastId: "errorToast" });
-        }
+      const errorMessage = error.response?.data?.error || "An error occurred";
+      if (!toast.isActive("errorToast")) {
+        toast.error(errorMessage, { toastId: "errorToast" });
       }
+    }finally{
       setLoading(false);
     }
-  };
-
+  }, [token, resName]); // Dependencies: token and resName
+  
   useEffect(() => {
     fetchProducts();
-    const interval = setInterval(fetchProducts, 3 * 60 * 1000); 
-
+    const interval = setInterval(fetchProducts, 3 * 60 * 1000);
+  
     return () => clearInterval(interval);
-  }, [token, resName]);
+  }, [fetchProducts]);
+  
 
   useEffect(() => {
     const fetchFilters = async () => {
       try {
         const response = await AxiosRequest.get('/allFilters');
         setFilter(response.data);
-        setLoading(false);
       } catch (error) {
-        setLoading(false);
+      }finally{
+        setFilterLoading(false);
       }
     };
   
     fetchFilters();
   }, []);
-  
-  const filterImages = filter.reduce((acc, filters) => {
-    acc[filters.title] = filters.imageUrl;
-    return acc;
-  }, {});
 
-  const handleOrder = () => {
-    window.location.replace('/orders');
-  };
+  // Memoize filterImages
+  const filterImages = useMemo(() => 
+    filter.reduce((acc, filters) => {
+      acc[filters.title] = filters.imageUrl;
+      return acc;
+    }, {}), [filter]
+  );
 
-  const handleOwnerOrder = () => {
-    window.location.replace(`/owner`);
-  };
-
+  // Handle search input
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
     fetchProducts(event.target.value);
   };
 
+  // Handle filter selection
   const handleFilterSelect = (filter) => {
     if (selectedFilter === filter) {
       setSelectedFilter(''); 
@@ -125,9 +117,24 @@ const HomeComponent = () => {
     }
   };
 
+  // Handle redirections
+  const handleOrder = () => {
+    window.location.replace('/orders');
+  };
+
+  const handleOwnerOrder = () => {
+    window.location.replace(`/owner`);
+  };
+
   return (
     <div className="bg-white">
-      <Carousels />
+      <Suspense fallback={
+              <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+              <LoadingSpinner width="200" height="200" />
+            </div>
+      }>
+        <Carousels />
+      </Suspense>
       <div className="flex flex-col items-center p-4">
         {(localStorage.getItem('isClient') === 'true' || localStorage.getItem('isAdmin') === 'true') && (
           <TextField
@@ -189,84 +196,96 @@ const HomeComponent = () => {
             >
               {name ? `${name} :` : ''}أهلاً وسهلاً
             </Typography>
-
-</>
-)}
-                  {!isOwner && (
-<>       
-<Typography 
-  variant="h6" 
-  component="h1" 
-  className="!font-bold text-center mb-5 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
->
-<span className="text-3xl">😎</span>عن ماذا تبحث اليوم؟
-</Typography>
-        <div className="flex !flex-row justify-start w-full gap-4 mb-4 px-0 overflow-x-auto custom-scrollbar transition-all duration-300">
-        <div className="flex flex-nowrap w-max gap-2">
-    {Object.keys(filterImages).map((filter) => (
-      <FilterCard
-        key={filter}
-        selected={selectedFilter === filter}
-        onClick={() => handleFilterSelect(filter)}
-        className="flex flex-col shadow-lg bg-white rounded-lg items-center justify-center w-[20vw] min-w-[20vw] max-w-[20vw]"
-      >
-        {/* <CardMedia
-          component="img"
-          image={filterImages[filter]}
-          alt={filter}
-          className="w-full h-[10vh] md:h-[20vh] object-cover"
-        /> */}
-        <img src={filterImages[filter]} width={100}/>
-        <div className="flex items-start justify-start text-start">
-          <Typography className="font-bold text-black" component="div">
-            {filter}
-          </Typography>
-        </div>
-      </FilterCard>
-    ))}
-  </div>
-</div>
-        </>
+          </>
         )}
-              <Typography 
-  variant="h6" 
-  component="h1" 
-  className="!font-bold text-center mb-2 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
->
-<span className="text-3xl"><FontAwesomeIcon icon={faCartShopping} color='black'/></span> سوق إلكتروني
-</Typography>
-<div className={`grid ${isOwner ? 'grid-cols-1 md:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'} gap-4 w-full`}>
-{loading ? (
+        {!isOwner && (
+          <>       
+            <Typography 
+              variant="h6" 
+              component="h1" 
+              className="!font-bold text-center mb-5 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
+            >
+              <span className="text-3xl">😎</span>عن ماذا تبحث اليوم؟
+            </Typography>
+            <div className="flex !flex-row justify-start w-full gap-4 mb-4 px-0 overflow-x-auto custom-scrollbar transition-all duration-300">
+              <div className="flex flex-nowrap w-max gap-2">
+                {Object.keys(filterImages).map((filter) => (
+                  <FilterCard
+                    key={filter}
+                    selected={selectedFilter === filter}
+                    onClick={() => handleFilterSelect(filter)}
+                    className="flex flex-col shadow-lg bg-white rounded-lg items-center justify-center w-[20vw] min-w-[20vw] max-w-[20vw]"
+                  >
+                    <img src={filterImages[filter]} width={100} alt={filter} />
+                    <div className="flex items-start justify-start text-start">
+                      <Typography className="font-bold text-black" component="div">
+                        {filter}
+                      </Typography>
+                    </div>
+                  </FilterCard>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+        <Typography 
+          variant="h6" 
+          component="h1" 
+          className="!font-bold text-center mb-2 text-black shadow-md shadow-black rounded-lg p-2 bg-blue-100"
+        >
+          <span className="text-3xl"><FontAwesomeIcon icon={faCartShopping} color='black'/></span> سوق إلكتروني
+        </Typography>
+          {loading ? (
             <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
-            <LoadingSpinner width="200" height="200" />
-          </div>
+              <LoadingSpinner width="200" height="200" />
+            </div>
           ) : isOwner ? (
             <>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-4 w-full'>
               {products.length !== 0 && (
-                <Card key={products._id} product={products}/>
-              )
-              }
-              </>
-            ) :(
-            products.length > 0 ? (
-              products.map((product, index) => (
-                <Card product={product} key={index} />
-              ))
-            ) : (
-              <Typography variant="h5" component="h2" className="text-center col-span-full">
-                لم يتم العثور على المتجر المطلوب
-              </Typography>
-            )
+                <Suspense fallback={<CircularProgress />}>
+                    <Card
+                      key={products._id}
+                      product={products}
+                      isOwner={isOwner}
+                      onProductClick={() => {}}
+                      onAddToCart={() => {}}
+                    />
+                </Suspense>
+              )}
+              </div>
+            </>
+          ) :(
+            <>
+                    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full'>
+              {products.map((product) => (
+                <Suspense key={product._id} fallback={<CircularProgress />}>
+                  <Card
+                    product={product}
+                    onProductClick={() => {}}
+                    onAddToCart={() => {}}
+                  />
+                </Suspense>
+              ))}
+              </div>
+            </>
           )}
-        </div>
+           {!loading && (
+           <div className='flex items-center mt-4 justify-center'>
+            {products.length === 0 && (
+            <Typography
+              variant="h6"
+              component="h1"
+              className="!font-bold text-center mb-2 text-black shadow-md shadow-black rounded-lg p-2 bg-red-100"
+            >
+              المتجر او المنتج الذي تبحث عنه غير موجود حاليا
+            </Typography>
+          )}
+          </div>
+          )}
       </div>
     </div>
   );
 };
 
 export default HomeComponent;
-
-
-
-
-

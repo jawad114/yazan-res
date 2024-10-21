@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography,TextField, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid,Avatar } from '@mui/material';
+import { Typography,TextField, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@mui/material';
 import styles from './categories.module.css';
 import AxiosRequest from '../../Components/AxiosRequest';
 import { toast } from 'react-toastify';
-import CircularProgress from '@mui/material/CircularProgress';
-import Carousels from '../../Home/Carousels/Carousels';
-import { Card, Spinner } from "@material-tailwind/react";
+import { Card} from "@material-tailwind/react";
 import { ClockIcon} from '@heroicons/react/20/solid';
-import OldPhoneIcon from '../../assets/landline.png';
-import Phone from '../../assets/PhoneNew.jpeg';
 import LocationIcon from '../../assets/Waze.jpeg';
 import { faCheck, faMotorcycle, faPhone, faShoppingBag, faTimes, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { PhoneOutlined } from '@mui/icons-material';
 import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+const Avatar = lazy(() => import('@mui/material').then(module => ({ default: module.Avatar })));
+const Carousels = lazy(() => import('../../Home/Carousels/Carousels'));
 
 
 export default function Categories() {
@@ -49,6 +47,19 @@ export default function Categories() {
     }
   }, [resName, navigate]);
 
+  useEffect(() => {
+    if(isOwner){
+    if(!restaurantReceived){
+    toast.error('Session has expired, Login Again');
+    navigate('/login-owner');
+    }
+    else if (restaurantReceived !== resName) {
+      toast.error('Not Your MarketPlace, you can only view your own marketplace');
+      navigate('/'); 
+    }
+  }
+  }, [isOwner,restaurantReceived,resName, navigate]);
+
   const loggedIn = localStorage.getItem('token') !== null;
 
   useEffect(() => {
@@ -67,55 +78,56 @@ export default function Categories() {
     navigate('/register-client'); // Replace with your account creation route
   };
 
-  const fetchCategories = async (searchTerm = '') => {
-    try {
-      let endpoint = `/restaurant-categories/${resName}`;
-if (searchTerm) {
-  endpoint = `/search-categories/${resName}?q=${encodeURIComponent(searchTerm)}`;
-}
-      const response = await AxiosRequest.get(endpoint);
-      console.log('Search Term',searchTerm);
-      console.log('API Response:', response.data.categories);
-      if (response.data.status === "ok") {
-        setCategories(response.data.categories);
-        setRestaurantImage(response.data.restaurantImage);
-        setRestaurantContact(response.data.contact);
-        setNotFound(false); // Reset not found status when data is retrieved
-      } else if (response.data.status === "notfound") {
-        setCategories([]); // Clear categories
-        setRestaurantImage(response.data.restaurantImage);
-        setNotFound(true); // Set not found status
-
-      }
-    } catch (error) {
-      console.log(error.message || "Internal Server Error");
-    } finally {
-      setLoading(false);
-      setImageLoading(false);
+const fetchCategories = useCallback(async (searchTerm = '') => {
+  try {
+    let endpoint = `/restaurant-categories/${resName}`;
+    if (searchTerm) {
+      endpoint = `/search-categories/${resName}?q=${encodeURIComponent(searchTerm)}`;
     }
-  };
-
-  const fetchResData = async () => {
-    setLoading(true); // Set loading to true before fetching
-    try {     
-      const response = await AxiosRequest.get(`/get-one-res/${resName}`)
-
-      if (response.status === 200) {
-        setOpeningHours(response.data.data.openingHours);
-        setRestaurantStatus(response.data.data.status);
-        setAvailableOptions(response.data.data.availableOptions);
-        setResLocation(response.data.data.coordinates);
-      }
-    } catch (error) {
-      console.error('Error fetching opening hours or status:', error);
-    } finally{
-      setLoading(false);
+    const response = await AxiosRequest.get(endpoint);
+    console.log('Search Term', searchTerm);
+    console.log('API Response:', response.data.categories);
+    if (response.data.status === "ok") {
+      setCategories(response.data.categories);
+      setRestaurantImage(response.data.restaurantImage);
+      setRestaurantContact(response.data.contact);
+      setNotFound(false); // Reset not found status when data is retrieved
+    } else if (response.data.status === "notfound") {
+      setCategories([]); // Clear categories
+      setRestaurantImage(response.data.restaurantImage);
+      setNotFound(true); // Set not found status
     }
-  };
-  useEffect(() => {
-    fetchCategories();
-    fetchResData();
-  }, [resName]);
+  } catch (error) {
+    console.log(error.message || "Internal Server Error");
+  } finally {
+    setLoading(false);
+    setImageLoading(false);
+  }
+}, [resName]); // Dependencies: resName
+
+const fetchResData = useCallback(async () => {
+  setLoading(true); // Set loading to true before fetching
+  try {
+    const response = await AxiosRequest.get(`/get-one-res/${resName}`);
+    if (response.status === 200) {
+      setOpeningHours(response.data.data.openingHours);
+      setRestaurantStatus(response.data.data.status);
+      setAvailableOptions(response.data.data.availableOptions);
+      setResLocation(response.data.data.coordinates);
+    }
+  } catch (error) {
+    console.error('Error fetching opening hours or status:', error);
+  } finally {
+    setLoading(false);
+  }
+}, [resName]); // Dependencies: resName
+
+// Use useEffect to call memoized functions
+useEffect(() => {
+  fetchCategories();
+  fetchResData();
+}, [fetchCategories, fetchResData]);
+
 
 
   const handleAddCategory = () => {
@@ -246,7 +258,13 @@ if (searchTerm) {
 
   return (
     <div className='bg-white'>
-<Carousels/>
+      <Suspense fallback={
+              <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+              <LoadingSpinner width="200" height="200" />
+            </div>
+      }>
+        <Carousels />
+      </Suspense>
       <div className='flex flex-col w-full items-center text-center justify-center'>
         {loading ? (
            <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
@@ -271,9 +289,9 @@ if (searchTerm) {
         {restaurantStatus.charAt(0).toUpperCase() + restaurantStatus.slice(1)}
       </Typography>
     </Box>
-    <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
+    {/* <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
       <Avatar
-        src={restaurantImage} // Replace with dynamic category image if needed
+        src={restaurantImage}
         sx={{
           width: '8rem', 
           height: '8rem', 
@@ -282,7 +300,21 @@ if (searchTerm) {
           borderStyle: 'solid'
         }}        
       />
-    </div>
+    </div> */}
+    <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 z-10">
+    <Suspense fallback={<div className="w-32 h-32 border-4 border-white bg-gray-200"></div>}>
+      <Avatar
+        src={restaurantImage}
+        sx={{
+          width: '8rem', 
+          height: '8rem', 
+          borderWidth: '4px', 
+          borderColor: 'white', 
+          borderStyle: 'solid'
+        }}        
+      />
+    </Suspense>
+  </div>
     <Box className='flex flex-col justify-center'>
       {restaurantStatus !== 'closed' ? (
         <Typography 
@@ -303,22 +335,6 @@ if (searchTerm) {
     </Box>
   </Box>
 )}
-
-  {/* <> 
-    <div className="flex relative mt-2 p-4 justify-between w-full">
-      {restaurantContact && (
-      <a 
-        href={`tel:${restaurantContact}`} 
-        className="flex items-center space-x-4 hover:bg-blue-100 rounded-lg transition-colors duration-300"
-      >
-        <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-          <img src={OldPhoneIcon} width={30}/>
-        </div>
-      </a>
-      )}
-
-    </div>
-  </> */}
 
 <> 
   <div className="flex items-center mt-2 p-4 justify-between w-full">
@@ -386,17 +402,21 @@ if (searchTerm) {
                       </Button>
                       </div>
 )}
-            {/* <div>
+
+            <div>
               {categories.length === 0 ? (
+                <p className='font-bold'>الفئة غير موجودة</p>
+              ) : notFound ? (
                 <p className='font-bold'>الفئة غير موجودة</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[4vh]">
                   {categories.map((category, index) => (
-                    <div  className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white' key={index}>
+                    <div className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white' key={index}>
                       <img
                         src={category.categoryImage}
                         alt={`${category.categoryName}'s Image`}
                         width={200}
+                        loading='lazy'
                         onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
                         className='h-32 object-cover rounded-md hover:cursor-pointer'
                       />
@@ -404,10 +424,10 @@ if (searchTerm) {
                       <Button
                         variant='contained'
                         className={styles.btn}
-                        style={{direction:'rtl'}}
+                        style={{ direction: 'rtl' }}
                         onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
                       >
-                        عرض  فئة: {category.categoryName}
+                        عرض فئة: {category.categoryName}
                       </Button>
                       {(isAdmin || isOwner) && (
                         <div className="flex space-x-2 mt-2">
@@ -431,59 +451,8 @@ if (searchTerm) {
                   ))}
                 </div>
               )}
-            </div> */}
-
-
-
-            <div>
-              {categories.length === 0 ? (
-                <p className='font-bold'>الفئة غير موجودة</p>
-              ) : notFound ? (
-                <p className='font-bold'>الفئة غير موجودة</p>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[4vh]">
-                  {categories.map((category, index) => (
-                    <div className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md bg-white' key={index}>
-                      <img
-                        src={category.categoryImage}
-                        alt={`${category.categoryName}'s Image`}
-                        width={200}
-                        onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
-                        className='h-32 object-cover rounded-md hover:cursor-pointer'
-                      />
-                      <Typography className='text-lg font-semibold text-center'>{category.categoryName}</Typography>
-                      <Button
-                        variant='contained'
-                        className={styles.btn}
-                        style={{ direction: 'rtl' }}
-                        onClick={() => { navigate(`/categories/${resName}/${category.categoryName}`) }}
-                      >
-                        عرض فئة: {category.categoryName}
-                      </Button>
-                      {(isAdmin || (isOwner && resName === restaurantReceived)) && (
-                        <div className="flex space-x-2 mt-2">
-                          <Button
-                            variant='outlined'
-                            color='primary'
-                            onClick={() => handleEditCategory(category)}
-                          >
-                            تعديل
-                          </Button>
-                          <Button
-                            variant='outlined'
-                            color='secondary'
-                            onClick={() => handleDeleteCategory(category.categoryName)}
-                          >
-                            حذف
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-            {(isAdmin || (isOwner && resName === restaurantReceived)) && (
+            {(isAdmin || isOwner) && (
               <div className='flex w-[24vw] mb-4 items-center justify-center'>
                 <Button variant="contained" className='btn-global' onClick={handleAddCategory}>اضف فئة</Button>
               </div>

@@ -120,7 +120,7 @@ const Registration = () => {
     try {
       const response = await AxiosRequest.post("/register-client", formData);
       if (response.data.status === "ok") {
-        alert("Registration successful");
+        alert("تم انشاء حسابك بنجاح انتقل لتسجيل الدخول");
         navigate('/login-client');
       }
     } catch (error) {

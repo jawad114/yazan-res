@@ -6,6 +6,9 @@ import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpi
 const Carousels = () => {
   const [sliderImages, setSliderImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isOwner = localStorage.getItem('isOwner');
+
+  console.log('IsOwner',isOwner);
 
   useEffect(() => {
     const fetchSliderImages = async () => {
@@ -50,14 +53,33 @@ const Carousels = () => {
         )}
       >
         {sliderImages.map((image, index) => (
-          <a href={image.url} target="_blank" rel="noopener noreferrer">
-          <img
-            key={index}
-            src={image.imageUrl}
-            alt={`image ${index + 1}`}
-            className="h-full w-full"
-          />
-          </a>
+          // <a href={image.url} target="_blank" rel="noopener noreferrer">
+          // <img
+          //   key={index}
+          //   loading='lazy'
+          //   src={image.imageUrl}
+          //   alt={`image ${index + 1}`}
+          //   className="h-full w-full"
+          // />
+          // </a>
+          isOwner ? (
+            <img
+              key={index}
+              // loading='lazy'
+              src={image.imageUrl}
+              alt={`image ${index + 1}`}
+              className="h-full w-full"
+            />
+          ) : (
+            <a href={image.url} target="_blank" rel="noopener noreferrer" key={index}>
+              <img
+                // loading='lazy'
+                src={image.imageUrl}
+                alt={`image ${index + 1}`}
+                className="h-full w-full"
+              />
+            </a>
+          )
         ))}
       </Carousel>
     </div>

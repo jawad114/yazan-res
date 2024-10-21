@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,Suspense,lazy,useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Orders.css'
 import {
@@ -28,8 +28,8 @@ import { Avatar } from '@material-tailwind/react';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AxiosRequest from '../Components/AxiosRequest';
-import Carousels from '../Home/Carousels/Carousels';
 import { ReactComponent as LoadingSpinner } from '../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+const Carousels = lazy(() => import('../Home/Carousels/Carousels'));
 
 
 const Orders = () => {
@@ -56,26 +56,26 @@ const Orders = () => {
     setNavigationApp(event.target.value);
   };
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await AxiosRequest.get(`/order/${customerId}`);
-        setOrders(response.data.orders);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-        setLoading(false);
-      }
-    };
+  const fetchOrders = useCallback(async () => {
+    try {
+      const response = await AxiosRequest.get(`/order/${customerId}`);
+      setOrders(response.data.orders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [customerId]);
 
-    fetchOrders();
+  useEffect(() => {
+    fetchOrders(); // Fetch orders immediately on mount
 
     const interval = setInterval(() => {
-      fetchOrders();
-    }, 60000); // Fetch orders every 1 minute
+      fetchOrders(); // Fetch orders every 1 minute
+    }, 60000);
 
     return () => clearInterval(interval);
-  }, [customerId]);
+  }, [fetchOrders]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -166,20 +166,18 @@ const openWaze = (latitude, longitude) => {
 
   return (
     <div className='bg-white'>
-      <Carousels/>
+      <Suspense fallback={
+              <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+              <LoadingSpinner width="200" height="200" />
+            </div>
+      }>
+        <Carousels />
+      </Suspense>
     <Box className='flex flex-col items-center text-center mt-10'>
       <div className="orders-header mb-4">
         <h2 className="text-3xl font-bold">طلباتك</h2>
         <h4 className="text-lg"><span>تريد مساعدة؟  </span><Link to="/contact-us" className="text-blue-500">تواصل معنا</Link></h4>
       </div>
-      {/* <ButtonGroup className="filter-buttons mb-4 flex md:flex-row flex-col justify-center gap-1 md:gap-2">
-        <Button className='!border !border-blue-200' onClick={() => setFilter('all')} variant={filter === 'all' ? 'contained' : 'outlined'}>All Orders</Button>
-        <Button className='!border !border-blue-200' onClick={() => setFilter('new')} variant={filter === 'new' ? 'contained' : 'outlined'}>New Orders</Button>
-        <Button className='!border !border-blue-200' onClick={() => setFilter('preparing')} variant={filter === 'preparing' ? 'contained' : 'outlined'}>Preparing Orders</Button>
-        <Button className='!border !border-blue-200' onClick={() => setFilter('delivered')} variant={filter === 'delivered' ? 'contained' : 'outlined'}>Delivered Orders</Button>
-        <Button className='!border !border-blue-200' onClick={() => setFilter('completed')} variant={filter === 'completed' ? 'contained' : 'outlined'}>Completed Orders</Button>
-        <Button className='!border !border-blue-200' onClick={() => setFilter('declined')} variant={filter === 'declined' ? 'contained' : 'outlined'}>Declined Orders</Button>
-      </ButtonGroup> */}
       <Button
         className="filter-dropdown mb-4"
         variant="contained"
@@ -336,6 +334,13 @@ const openWaze = (latitude, longitude) => {
             رسوم التوصيل: ₪ {selectedOrder.deliveryCharges}
           </Typography>
         )}
+                </div>
+                <div className='flex justify-start' style={{direction:'rtl'}}>
+          {selectedOrder?.discountApplied &&(
+          <Typography variant="body1" className='text-start' gutterBottom>
+            خصم: % {selectedOrder.discount}
+          </Typography>
+        )}
         </div>
         </>
       )}
@@ -354,85 +359,6 @@ const openWaze = (latitude, longitude) => {
             <div className='flex justify-start' style={{direction:'rtl'}}>
             <Typography variant="body1" className='text-end'>تم الطلب في: {formatDate(selectedOrder.orderTime)}</Typography>
             </div>
-            {/* {selectedOrder.products.map((product) => (
-              <div key={product._id} className='mt-[4vh] text-end'>
-                <div className='flex items-center justify-end'>
-                <Avatar src={product.dishImage}/>
-                </div>
-                <Typography variant="body1">{product.orderFrom}: اسم المتجر</Typography>
-                <Typography component="span" variant="body2" >{product.name}: المنتج</Typography><br />
-                <Typography component="span" variant="body2" >{product.quantity}: العدد</Typography><br />
-                <Typography component="span" variant="body2" >₪{product.price}: السعر</Typography><br />
-                {product.extras && product.extras.length > 0 ? (
-  <>
-    <Typography component="span" variant="body2" >
-      {product.extras.map(extra => extra.name).join(', ')}: اضافات
-    </Typography><br />
-
-    <Typography component="span" variant="body2">
-      ₪ {product.extras ? product.extras.reduce((acc, extra) => acc + extra.price, 0) : 0}: سعر الاضافات
-    </Typography><br />
-  </>
-):(
-  <>
-  <Typography component="span" variant="body2" className='text-end'>
-  لايوجد اضافات
-</Typography><br />
-</>
-)}
-                                     <div className="status-info mt-[2vh] mb-[2vh]">
-                          <Typography variant="body1" className='text-end'>حالة الطلب</Typography>
-                          {selectedOrder.status === 'Approved' && (
-                            <Paper elevation={3} className="status-card accepted" style={{ backgroundColor: 'green', textAlign: 'end' }}>
-                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
-                              تم قبول الطلب
-                              </Typography><br />
-                            </Paper>
-                          )}
-                          {selectedOrder.status === 'Completed' && (
-                            <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'end' }}>
-                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
-                              الطلب جاهز
-                              </Typography><br />
-                            </Paper>
-                          )}
-
-
-                          {selectedOrder.status === 'Delivered' && (
-                            <Paper elevation={3} className="status-card delivered" style={{ backgroundColor: 'lightblue', textAlign: 'end' }}>
-                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
-                              تم الارسال
-                              </Typography><br />
-                            </Paper>
-                          )}
-
-                          {selectedOrder.status === 'Not Approved' && (
-                            <Paper elevation={3} className="status-card declined" style={{ backgroundColor: 'red', textAlign: 'end' }}>
-                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
-                              طلب مرفوض
-                              </Typography><br />
-                            </Paper>
-                          )}
-
-                          {selectedOrder.status === 'Preparing' && selectedOrder.preparingStartedAt && (
-                            <Paper elevation={3} className="status-card preparing" style={{ backgroundColor: 'yellow', textAlign: 'end' }}>
-                              <Typography component="span" variant="body2" className='text-end' style={{ fontWeight: 'bold' }}>
-                              طلب قيد التجهيز
-                              </Typography><br />
-                              <Typography component="span" variant="body2" className='text-end'>Preparing Time Left:{calculateRemainingPreparingTime(selectedOrder)} minutes</Typography>
-                            </Paper>
-                          )}
-
-                          {!selectedOrder.status && (
-                            <Paper elevation={3} className="status-card no-status text-end">
-                              <Typography component="span" variant="body2" className='text-end'>
-                              الطلب قيد الانتظار
-                              </Typography><br />
-                            </Paper>
-                          )}
-                        </div>
-              </div>
-            ))} */}
    {selectedOrder.products.map((product) => (
   <div key={product._id} className='mt-[4vh] text-start'>
     <div className='flex items-center justify-start !text-start' style={{direction:'rtl'}}>
@@ -531,9 +457,15 @@ const openWaze = (latitude, longitude) => {
         });
       }
     });
+        // Apply discount if applicable
+        if (order.discountApplied && order.discount) {
+          const discountAmount = (totalPrice * order.discount) / 100;
+          totalPrice -= discountAmount;
+      }
     if (order.deliveryCharges && typeof order.deliveryCharges === 'number') {
       totalPrice += order.deliveryCharges;
     }
+
 
     return totalPrice.toFixed(2);
   }

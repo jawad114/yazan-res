@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Redirect non-www to www
+  RewriteCond %{HTTP_HOST} ^laylamp\.com [NC]
+  RewriteRule ^(.*)$ http://www.laylamp.com/$1 [L,R=301]
+
+  # Redirect everything to index.html except existing files and directories
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Handle 404 error
+ErrorDocument 404 /index.html

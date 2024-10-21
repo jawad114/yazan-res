@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,Suspense,lazy } from 'react';
 import { CircularProgress, Grid, Card, CardContent, Typography } from '@mui/material';
 import AxiosRequest from '../../Components/AxiosRequest';
-import Carousels from '../../Home/Carousels/Carousels';
 import { ReactComponent as LoadingSpinner } from '../../../src/assets/LoadingSpinner.svg'; // Adjust path as needed
+import { useCallback } from 'react';
+const Carousels = lazy(() => import('../../Home/Carousels/Carousels'));
 
 
 const Favorites = () => {
@@ -13,50 +14,53 @@ const Favorites = () => {
   const isClient = localStorage.getItem('isClient') === 'true';
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response = await AxiosRequest.get(`/favorites/${id}`);
-        setFavorites(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching favorites:', error);
-        setLoading(false);
-      }
-    };
+  const fetchFavorites = useCallback(async () => {
+    try {
+      const response = await AxiosRequest.get(`/favorites/${id}`);
+      setFavorites(response.data);
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
+  const fetchRestaurantDetails = useCallback(async (restaurantName) => {
+    try {
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await AxiosRequest.get(`/get-one-res/${restaurantName}`, { headers });
+      setRestaurantDetails((prevDetails) => ({
+        ...prevDetails,
+        [restaurantName]: response.data.data,
+      }));
+    } catch (error) {
+      console.error('Error fetching restaurant details:', error);
+    }
+  }, [token]);
+
+  useEffect(() => {
     if (isClient) {
       fetchFavorites();
     }
-  }, [id, isClient,token]);
+  }, [fetchFavorites, isClient]);
 
   useEffect(() => {
-    const fetchRestaurantDetails = async (restaurantName) => {
-      try {
-        let headers = {};
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
-        const response = await AxiosRequest.get(`/get-one-res/${restaurantName}`, { headers });
-        setRestaurantDetails((prevDetails) => ({
-          ...prevDetails,
-          [restaurantName]: response.data.data,
-        }));
-      } catch (error) {
-        console.error('Error fetching restaurant details:', error);
-      }
-    };
-
     favorites.forEach((favorite) => {
       if (!restaurantDetails[favorite.restaurantName]) {
         fetchRestaurantDetails(favorite.restaurantName);
       }
     });
-  }, [favorites, restaurantDetails]);
+  }, [favorites, restaurantDetails, fetchRestaurantDetails]);
 
   return (
     <div className='bg-white'>
-      <Carousels/>
+           <Suspense fallback={
+              <div className="flex items-center bg-white justify-center min-h-screen font-poppins">
+              <LoadingSpinner width="200" height="200" />
+            </div>
+      }>
+        <Carousels />
+      </Suspense>
     <div className="flex flex-col items-center p-4">
       {isClient ? (
         <>

@@ -94,12 +94,24 @@ const Checkout = () => {
   const [showMap, setShowMap] = useState(false);
   const locationData = useLocation();
   const cartReceived = locationData.state?.cart;
+  const discountedTotalPrice = locationData.state?.discountedTotalPrice;
+  const couponCode = locationData.state?.couponCode;
+  console.log('Discounted Total Price:', discountedTotalPrice);
+
+
+  // const { cartReceived, discountedTotalPrice } = location.state || {};
+  // const { cartReceived = [], discountedTotalPrice = 0 } = location.state || {};
+
   const [showRestaurantLocationModal, setShowRestaurantLocationModal] = useState(false);
   const [resLocation, setResLocation] = useState(null);
   const [selectedDeliveryCharge, setSelectedDeliveryCharge] = useState('free');
   const [deliveryCharges, setDeliveryCharges] = useState({});
   const navigate = useNavigate();
-  console.log('cartDATA received: ' + JSON.stringify(cartReceived));
+  // console.log('cartDATA received: ' + JSON.stringify(cartReceived));
+  console.log('cartDATA received:', cartReceived);
+  // console.log('discountedTotalPrice:', discountedTotalPrice);
+  
+
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
     email: '',
@@ -448,8 +460,23 @@ useEffect(() => {
       }
     }
   
-    console.log('Total Price:', totalPrice);
-    return totalPrice;
+    // console.log('Total Price:', totalPrice);
+    // return totalPrice;
+
+    // Determine if discountedTotalPrice is available
+  // const finalPrice = discountedTotalPrice !== undefined ? discountedTotalPrice : totalPrice;
+  const roundedTotalPrice = parseFloat(totalPrice.toFixed(2));
+
+  const finalPrice = discountedTotalPrice !== undefined
+  ? parseFloat(discountedTotalPrice) + (selectedOption === 'delivery' && selectedDeliveryCharge !== 'free' ? deliveryCharges[selectedDeliveryCharge] : 0)
+  : roundedTotalPrice;
+
+  const roundedFinalPrice = parseFloat(finalPrice.toFixed(2));
+
+  console.log('Total Price:', roundedTotalPrice);
+  console.log('Final Price:', roundedFinalPrice);
+
+  return roundedFinalPrice;
   };
   
   
@@ -506,7 +533,10 @@ useEffect(() => {
         userLocation: currentLocation,
         ...(shippingOption === 'dine-in' && tableNumber && { tableNumber: parseInt(tableNumber, 10) }), // Conditionally add tableNumber
         ...(shippingOption === 'delivery' && deliveryCharges && { deliveryCharges: deliveryCharges[selectedDeliveryCharge],deliveryCity:selectedDeliveryCharge }) // Conditionally add deliveryCharges
-      };      
+      }; 
+      if (couponCode) {
+        orderData.couponCode = couponCode;
+      }     
       const response = await AxiosRequest.post(`/create-order/${customerId}`, orderData);
       toast.success(<div style={{direction:'rtl'}}>تم إنشاء الطلبية بنجاح</div>);
       if (selectedOption === 'self-pickup' ) {
